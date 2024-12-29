@@ -14,7 +14,6 @@ final class HeaderCell: UITableViewCell {
         // UI
         static let contentViewBgColor: UIColor = .clear
         static let cellBgColor: UIColor = .clear
-        static let contentViewHeight: CGFloat = 60
         
         // todayLabel
         static let todayLabelText: String = "Today"
@@ -38,6 +37,7 @@ final class HeaderCell: UITableViewCell {
         // stack
         static let stackSpacing: CGFloat = 0
         static let stackLeadingIndent: CGFloat = 18
+        static let stackHeight: CGFloat = 60
         
         // labelsStack
         static let labelsStackSpacing: CGFloat = 2
@@ -100,7 +100,7 @@ final class HeaderCell: UITableViewCell {
         stack.pinLeft(to: contentView.leadingAnchor, Constants.stackLeadingIndent)
         stack.pinCenterX(to: contentView.centerXAnchor)
         stack.pinTop(to: contentView.topAnchor)
-        stack.setHeight(Constants.contentViewHeight)
+        stack.setHeight(Constants.stackHeight)
         stack.pinBottom(to: contentView.bottomAnchor)
     }
     

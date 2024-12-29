@@ -66,7 +66,10 @@ final class HomeViewController: UIViewController {
         
         table.delegate = self
         table.dataSource = self
+        table.separatorStyle = .none
         table.register(HeaderCell.self, forCellReuseIdentifier: HeaderCell.reuseId)
+        table.register(HorizontalDateCollectionCell.self, forCellReuseIdentifier: HorizontalDateCollectionCell.reuseId)
+        table.layer.masksToBounds = false
         
         table.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -78,21 +81,48 @@ final class HomeViewController: UIViewController {
 
 // MARK: - UITableViewDelegate
 extension HomeViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 100
+        }
+        return UITableView.automaticDimension
+    }
 }
 
 // MARK: - UITableViewDataSource
 extension HomeViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 20
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let spacerView: UIView = UIView()
+        spacerView.backgroundColor = .clear
+        return spacerView
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
-        cell.selectionStyle = .none
-        guard let headerCell = cell as? HeaderCell else { return cell }
-        
-        return headerCell
+        if indexPath.section == 0 {
+            let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let headerCell = cell as? HeaderCell else { return cell }
+            
+            return headerCell
+        } else {
+            let cell = table.dequeueReusableCell(withIdentifier: HorizontalDateCollectionCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let horizontalDateCollectionCell = cell as? HorizontalDateCollectionCell else { return cell }
+            
+            return horizontalDateCollectionCell
+        }
     }
     
     
