@@ -11,11 +11,19 @@ import UIKit
 final class HomeViewController: UIViewController {
     // MARK: - Constants
     private enum Constants {
-        // UI
-        static let bgImageName: String = "ultramarineBackground"
+        enum Background {
+            static let imageName: String = "ultramarineBackground"
+        }
         
-        // table
-        static let tableBgColor: UIColor = .clear
+        enum Table {
+            static let bgColor: UIColor = .clear
+            static let separatorStyle: UITableViewCell.SeparatorStyle = .none
+            static let headerCellHeight: CGFloat = 60
+            static let horizontalDateCollectionCellHeight: CGFloat = 100
+            static let numberOfSections: Int = 2
+            static let numberOfRowsInSection: Int = 1
+            static let indentBetweenSections: CGFloat = 20
+        }
     }
     
     // UI Components
@@ -50,7 +58,7 @@ final class HomeViewController: UIViewController {
     private func configureBackground() {
         view.addSubview(background)
         
-        background.image = UIImage(named: "ultramarineBackground")
+        background.image = UIImage(named: Constants.Background.imageName)
         background.pin(to: view)
                 
         // Размытие заднего фона
@@ -66,7 +74,7 @@ final class HomeViewController: UIViewController {
         
         table.delegate = self
         table.dataSource = self
-        table.separatorStyle = .none
+        table.separatorStyle = Constants.Table.separatorStyle
         table.register(HeaderCell.self, forCellReuseIdentifier: HeaderCell.reuseId)
         table.register(HorizontalDateCollectionCell.self, forCellReuseIdentifier: HorizontalDateCollectionCell.reuseId)
         table.layer.masksToBounds = false
@@ -75,32 +83,34 @@ final class HomeViewController: UIViewController {
         table.pinBottom(to: view.bottomAnchor)
         table.pinHorizontal(to: view)
         
-        table.backgroundColor = Constants.tableBgColor
+        table.backgroundColor = Constants.Table.bgColor
     }
 }
 
 // MARK: - UITableViewDelegate
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 1 {
-            return 100
+        let sectionIndex = indexPath.section
+        switch sectionIndex {
+        case 0: return Constants.Table.headerCellHeight
+        case 1: return Constants.Table.horizontalDateCollectionCellHeight
+        default: return UITableView.automaticDimension
         }
-        return UITableView.automaticDimension
     }
 }
 
 // MARK: - UITableViewDataSource
 extension HomeViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return Constants.Table.numberOfSections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return Constants.Table.numberOfRowsInSection
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 20
+        return Constants.Table.indentBetweenSections
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -110,7 +120,8 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        let sectionIndex = indexPath.section
+        if sectionIndex == 0 {
             let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
             cell.selectionStyle = .none
             guard let headerCell = cell as? HeaderCell else { return cell }
