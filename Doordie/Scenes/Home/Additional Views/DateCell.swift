@@ -17,7 +17,6 @@ final class DateCell: UICollectionViewCell {
         
         enum ContentView {
             static let bgColor: UIColor = .clear
-            static let height: CGFloat = 100
         }
         
         enum Wrap {

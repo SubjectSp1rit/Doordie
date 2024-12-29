@@ -115,6 +115,8 @@ extension HomeViewController: UITableViewDataSource {
             cell.selectionStyle = .none
             guard let headerCell = cell as? HeaderCell else { return cell }
             
+            headerCell.configure()
+            
             return headerCell
         } else {
             let cell = table.dequeueReusableCell(withIdentifier: HorizontalDateCollectionCell.reuseId, for: indexPath)
