@@ -11,10 +11,30 @@ import UIKit
 final class HorizontalDateCollectionCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
-        // UI
-        static let contentViewBgColor: UIColor = .clear
-        static let cellBgColor: UIColor = .clear
-        static let contentViewHeight: CGFloat = 100
+        enum Cell {
+            static let bgColor: UIColor = .clear
+        }
+        
+        enum ContentView {
+            static let bgColor: UIColor = .clear
+            static let height: CGFloat = 100
+        }
+        
+        enum Layout {
+            static let scrollDirection: UICollectionView.ScrollDirection = .horizontal
+            static let width: CGFloat = 80
+            static let height: CGFloat = 100
+            static let minimumLineSpacing: CGFloat = 10
+            static let minimumInteritemSpacing: CGFloat = 10
+        }
+        
+        enum DateTable {
+            static let bgColor: UIColor = .clear
+            static let elementsLeadingIndent: CGFloat = 18
+            static let elementsTrailingIndent: CGFloat = 18
+            static let elementsTopIndent: CGFloat = 0
+            static let elementsBottomIndent: CGFloat = 0
+        }
     }
     
     static let reuseId: String = "HorizontalDateCollectionCell"
@@ -47,21 +67,20 @@ final class HorizontalDateCollectionCell: UITableViewCell {
     // MARK: - Private Methods
     private static func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 80, height: 100)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
+        layout.scrollDirection = Constants.Layout.scrollDirection
+        layout.itemSize = CGSize(width: Constants.Layout.width, height: Constants.Layout.height)
+        layout.minimumLineSpacing = Constants.Layout.minimumLineSpacing
+        layout.minimumInteritemSpacing = Constants.Layout.minimumInteritemSpacing
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .clear
         collectionView.layer.masksToBounds = false
         return collectionView
     }
     
     private func configureUI() {
-        backgroundColor = Constants.cellBgColor
-        contentView.backgroundColor = Constants.contentViewBgColor
+        backgroundColor = Constants.Cell.bgColor
+        contentView.backgroundColor = Constants.ContentView.bgColor
         
         configureDateTable()
     }
@@ -70,7 +89,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         contentView.addSubview(dateTable)
     
         dateTable.showsHorizontalScrollIndicator = false
-        dateTable.backgroundColor = .clear
+        dateTable.backgroundColor = Constants.DateTable.bgColor
         dateTable.delegate = self
         dateTable.dataSource = self
         dateTable.register(DateCell.self, forCellWithReuseIdentifier: DateCell.reuseId)
@@ -96,7 +115,10 @@ extension HorizontalDateCollectionCell: UICollectionViewDelegate {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension HorizontalDateCollectionCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18) // Отступы слева и справа
+        return UIEdgeInsets(top: Constants.DateTable.elementsTopIndent,
+                            left: Constants.DateTable.elementsLeadingIndent,
+                            bottom: Constants.DateTable.elementsBottomIndent,
+                            right: Constants.DateTable.elementsTrailingIndent) // Отступы слева и справа
     }
 }
 
