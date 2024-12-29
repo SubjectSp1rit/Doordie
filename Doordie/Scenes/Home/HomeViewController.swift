@@ -13,10 +13,14 @@ final class HomeViewController: UIViewController {
     private enum Constants {
         // UI
         static let bgImageName: String = "ultramarineBackground"
+        
+        // table
+        static let tableBgColor: UIColor = .clear
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
+    private let table: UITableView = UITableView()
     
     // MARK: - Variables
     private var interactor: HomeBusinessLogic
@@ -40,6 +44,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Private Methods
     private func configureUI() {
         configureBackground()
+        configureTable()
     }
     
     private func configureBackground() {
@@ -55,4 +60,40 @@ final class HomeViewController: UIViewController {
         
         blurEffectView.pin(to: view)
     }
+    
+    private func configureTable() {
+        view.addSubview(table)
+        
+        table.delegate = self
+        table.dataSource = self
+        table.register(HeaderCell.self, forCellReuseIdentifier: HeaderCell.reuseId)
+        
+        table.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
+        table.pinBottom(to: view.bottomAnchor)
+        table.pinHorizontal(to: view)
+        
+        table.backgroundColor = Constants.tableBgColor
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension HomeViewController: UITableViewDelegate {
+    
+}
+
+// MARK: - UITableViewDataSource
+extension HomeViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
+        cell.selectionStyle = .none
+        guard let headerCell = cell as? HeaderCell else { return cell }
+        
+        return headerCell
+    }
+    
+    
 }

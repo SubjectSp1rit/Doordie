@@ -20,7 +20,7 @@ final class CustomTabBar: UITabBar {
         static let plusButtonTintColor: UIColor = .white
         
         // tabBar
-        static let tabBarBgColorHexCode: String = "4C60C2"
+        static let tabBarBgColorHexCode: String = "2A50AB"
         static let tabBarBgColor: UIColor = UIColor(hex: tabBarBgColorHexCode)
         static let tabBarTintColor: UIColor = .white
         static let tabBarUnselectedTintColor: UIColor = .white.withAlphaComponent(0.3)
@@ -38,7 +38,6 @@ final class CustomTabBar: UITabBar {
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
         fatalError("init(coder:) has not been implemented")
     }
     
