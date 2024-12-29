@@ -11,24 +11,27 @@ import UIKit
 final class DateCell: UICollectionViewCell {
     // MARK: - Constants
     private enum Constants {
-        // UI
-        static let contentViewBgColor: UIColor = .clear
-        static let cellBgColor: UIColor = .clear
-        static let contentViewHeight: CGFloat = 100
+        enum Cell {
+            static let bgColor: UIColor = .clear
+        }
         
-        // wrap
-        static let unselectedWrapBgColorHexCode: String = "6A729F"
-        static let unselectedWrapBgColor: UIColor = UIColor(hex: unselectedWrapBgColorHexCode).withAlphaComponent(0.5)
-        static let selectedWrapBgColorHexCode: String = "3A50C2"
-        static let selectedWrapBgColor: UIColor = UIColor(hex: selectedWrapBgColorHexCode)
-        static let wrapCornerRadius: CGFloat = 20
-        static let wrapHeight: CGFloat = 100
-        static let wrapWidth: CGFloat = 80
-        static let wrapShadowColor: CGColor = UIColor.black.cgColor
-        static let wrapShadowOpacity: Float = 0.5
-        static let wrapXOffset: CGFloat = 0
-        static let wrapYOffset: CGFloat = 4
-        static let wrapShadowRadius: CGFloat = 8
+        enum ContentView {
+            static let bgColor: UIColor = .clear
+            static let height: CGFloat = 100
+        }
+        
+        enum Wrap {
+            static let unselectedBgColor: UIColor = UIColor(hex: "6A729F").withAlphaComponent(0.5)
+            static let selectedBgColor: UIColor = UIColor(hex: "3A50C2")
+            static let cornerRadius: CGFloat = 20
+            static let height: CGFloat = 100
+            static let width: CGFloat = 80
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
+        }
         
         enum Stack {
             static let axis: NSLayoutConstraint.Axis = .vertical
@@ -44,19 +47,20 @@ final class DateCell: UICollectionViewCell {
             static let textColor: UIColor = .white.withAlphaComponent(0.9)
         }
         
-        // dayOfWeekLabel
-        static let dayOfWeekLabelFontSize: CGFloat = 20
-        static let dayOfWeekLabelFontWeight: UIFont.Weight = .light
-        static let dayOfWeekLabelTextAlignment: NSTextAlignment = .center
-        static let dayOfWeekLabelTextColor: UIColor = .lightGray.withAlphaComponent(0.8)
+        enum DayOfWeekLabel {
+            static let fontSize: CGFloat = 20
+            static let fontWeight: UIFont.Weight = .light
+            static let textAlignment: NSTextAlignment = .center
+            static let textColor: UIColor = .lightGray.withAlphaComponent(0.8)
+        }
     }
     
     static let reuseId: String = "DateCell"
     
     // MARK: - UI Components
     private let stack: UIStackView = UIStackView()
-    private let wrap: UIView = UIView()
     private let numberLabel: UILabel = UILabel()
+    private let wrap: UIView = UIView()
     private let dayOfWeekLabel: UILabel = UILabel()
     
     // MARK: - Variables
@@ -80,17 +84,17 @@ final class DateCell: UICollectionViewCell {
     }
     
     func didSelect() {
-        wrap.backgroundColor = Constants.selectedWrapBgColor
+        wrap.backgroundColor = Constants.Wrap.selectedBgColor
     }
     
     func unselect() {
-        wrap.backgroundColor = Constants.unselectedWrapBgColor
+        wrap.backgroundColor = Constants.Wrap.unselectedBgColor
     }
     
     // MARK: - Private Methods
     private func configureUI() {
-        backgroundColor = Constants.cellBgColor
-        contentView.backgroundColor = Constants.contentViewBgColor
+        backgroundColor = Constants.Cell.bgColor
+        contentView.backgroundColor = Constants.ContentView.bgColor
         contentView.layer.masksToBounds = false
         
         configureWrap()
@@ -100,16 +104,16 @@ final class DateCell: UICollectionViewCell {
     private func configureWrap() {
         contentView.addSubview(wrap)
         
-        wrap.backgroundColor = Constants.unselectedWrapBgColor
-        wrap.layer.cornerRadius = Constants.wrapCornerRadius
-        wrap.setWidth(Constants.wrapWidth)
-        wrap.setHeight(Constants.wrapHeight)
+        wrap.backgroundColor = Constants.Wrap.unselectedBgColor
+        wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
+        wrap.setWidth(Constants.Wrap.width)
+        wrap.setHeight(Constants.Wrap.height)
         
         // Тень
-        wrap.layer.shadowColor = Constants.wrapShadowColor
-        wrap.layer.shadowOpacity = Constants.wrapShadowOpacity
-        wrap.layer.shadowOffset = CGSize(width: Constants.wrapXOffset, height: Constants.wrapYOffset)
-        wrap.layer.shadowRadius = Constants.wrapShadowRadius
+        wrap.layer.shadowColor = Constants.Wrap.shadowColor
+        wrap.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        wrap.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        wrap.layer.shadowRadius = Constants.Wrap.shadowRadius
         wrap.layer.masksToBounds = false
         
         wrap.pinLeft(to: contentView.leadingAnchor)
@@ -137,16 +141,14 @@ final class DateCell: UICollectionViewCell {
     }
     
     private func configureNumberLabel() {
-        numberLabel.font = UIFont.systemFont(ofSize: Constants.numberLabelFontSize, weight: Constants.numberLabelFontWeight)
-        numberLabel.textAlignment = Constants.numberLabelTextAlignment
-        numberLabel.textColor = Constants.numberLabelTextColor
+        numberLabel.font = UIFont.systemFont(ofSize: Constants.NumberLabel.fontSize, weight: Constants.NumberLabel.fontWeight)
+        numberLabel.textAlignment = Constants.NumberLabel.textAlignment
+        numberLabel.textColor = Constants.NumberLabel.textColor
     }
     
     private func configureDayOfWeekLabel() {
-        dayOfWeekLabel.font = UIFont.systemFont(ofSize: Constants.dayOfWeekLabelFontSize, weight: Constants.dayOfWeekLabelFontWeight)
-        dayOfWeekLabel.textAlignment = Constants.dayOfWeekLabelTextAlignment
-        dayOfWeekLabel.textColor = Constants.dayOfWeekLabelTextColor
+        dayOfWeekLabel.font = UIFont.systemFont(ofSize: Constants.DayOfWeekLabel.fontSize, weight: Constants.DayOfWeekLabel.fontWeight)
+        dayOfWeekLabel.textAlignment = Constants.DayOfWeekLabel.textAlignment
+        dayOfWeekLabel.textColor = Constants.DayOfWeekLabel.textColor
     }
-    
-    // MARK: - Factories
 }
