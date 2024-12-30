@@ -18,11 +18,13 @@ final class HomeViewController: UIViewController {
         enum Table {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
-            static let headerCellHeight: CGFloat = 60
-            static let horizontalDateCollectionCellHeight: CGFloat = 100
-            static let numberOfSections: Int = 2
+            static let numberOfSections: Int = 3
             static let numberOfRowsInSection: Int = 1
             static let indentBetweenSections: CGFloat = 20
+            
+            static let headerCellHeight: CGFloat = 60
+            static let horizontalDateCollectionCellHeight: CGFloat = 100
+            static let dayPartSelectorCell: CGFloat = 40
         }
     }
     
@@ -77,6 +79,7 @@ final class HomeViewController: UIViewController {
         table.separatorStyle = Constants.Table.separatorStyle
         table.register(HeaderCell.self, forCellReuseIdentifier: HeaderCell.reuseId)
         table.register(HorizontalDateCollectionCell.self, forCellReuseIdentifier: HorizontalDateCollectionCell.reuseId)
+        table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
         table.layer.masksToBounds = false
         
         table.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
@@ -94,6 +97,7 @@ extension HomeViewController: UITableViewDelegate {
         switch sectionIndex {
         case 0: return Constants.Table.headerCellHeight
         case 1: return Constants.Table.horizontalDateCollectionCellHeight
+        case 2: return Constants.Table.dayPartSelectorCell
         default: return UITableView.automaticDimension
         }
     }
@@ -121,7 +125,7 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sectionIndex = indexPath.section
-        if sectionIndex == 0 {
+        if sectionIndex == 0 {          // HeaderCell
             let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
             cell.selectionStyle = .none
             guard let headerCell = cell as? HeaderCell else { return cell }
@@ -129,14 +133,17 @@ extension HomeViewController: UITableViewDataSource {
             headerCell.configure()
             
             return headerCell
-        } else {
+        } else if sectionIndex == 1 {   // HorizontalDateCollectionCell
             let cell = table.dequeueReusableCell(withIdentifier: HorizontalDateCollectionCell.reuseId, for: indexPath)
             cell.selectionStyle = .none
             guard let horizontalDateCollectionCell = cell as? HorizontalDateCollectionCell else { return cell }
             
             return horizontalDateCollectionCell
+        } else {                        // dayPartSelectorCell
+            let cell = table.dequeueReusableCell(withIdentifier: DayPartSelectorCell.reuseId, for: indexPath)
+            guard let dayPartSelectorCell = cell as? DayPartSelectorCell else { return cell }
+            
+            return dayPartSelectorCell
         }
     }
-    
-    
 }

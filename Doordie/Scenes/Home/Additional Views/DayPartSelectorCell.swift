@@ -1,14 +1,14 @@
 //
-//  MonthDateCell.swift
+//  DayPartSelectorCell.swift
 //  Doordie
 //
-//  Created by Arseniy on 29.12.2024.
+//  Created by Arseniy on 30.12.2024.
 //
 
 import Foundation
 import UIKit
 
-final class HorizontalDateCollectionCell: UITableViewCell {
+final class DayPartSelectorCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -21,13 +21,14 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         
         enum Layout {
             static let scrollDirection: UICollectionView.ScrollDirection = .horizontal
-            static let width: CGFloat = 80
-            static let height: CGFloat = 100
-            static let minimumLineSpacing: CGFloat = 10
-            static let minimumInteritemSpacing: CGFloat = 10
+            static let width: CGFloat = 100
+            static let height: CGFloat = 40
+            static let minimumLineSpacing: CGFloat = 0
+            static let minimumInteritemSpacing: CGFloat = 0
         }
         
-        enum DateTable {
+        enum DayPartTable {
+            static let parts: [String] = ["All day", "Morning", "Day", "Evening", "Night"]
             static let bgColor: UIColor = .clear
             static let elementsLeadingIndent: CGFloat = 18
             static let elementsTrailingIndent: CGFloat = 18
@@ -36,31 +37,25 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "HorizontalDateCollectionCell"
+    static let reuseId: String = "DayPartSelectorCell"
     
     // MARK: - UI Components
-    private let dateTable: UICollectionView
+    private let dayPartTable: UICollectionView
     
     // MARK: - Variables
-    var onDateTapped: (() -> Void)?
+    var onDayPartTapped: (() -> Void)?
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        self.dateTable = HorizontalDateCollectionCell.createCollectionView()
+        self.dayPartTable = DayPartSelectorCell.createCollectionView()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         configureUI()
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Public Methods
-    func configure() {
-        
     }
     
     // MARK: - Private Methods
@@ -81,66 +76,66 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         backgroundColor = Constants.Cell.bgColor
         contentView.backgroundColor = Constants.ContentView.bgColor
         
-        configureDateTable()
+        configureDayPartTable()
     }
     
-    private func configureDateTable() {
-        contentView.addSubview(dateTable)
+    private func configureDayPartTable() {
+        contentView.addSubview(dayPartTable)
     
-        dateTable.showsHorizontalScrollIndicator = false
-        dateTable.backgroundColor = Constants.DateTable.bgColor
-        dateTable.delegate = self
-        dateTable.dataSource = self
-        dateTable.register(DateCell.self, forCellWithReuseIdentifier: DateCell.reuseId)
+        dayPartTable.showsHorizontalScrollIndicator = false
+        dayPartTable.backgroundColor = Constants.DayPartTable.bgColor
+        dayPartTable.delegate = self
+        dayPartTable.dataSource = self
+        dayPartTable.register(DayPartCell.self, forCellWithReuseIdentifier: DayPartCell.reuseId)
         
-        dateTable.pinLeft(to: contentView.leadingAnchor)
-        dateTable.pinRight(to: contentView.trailingAnchor)
-        dateTable.pinTop(to: contentView.topAnchor)
-        dateTable.pinBottom(to: contentView.bottomAnchor)
+        dayPartTable.pinLeft(to: contentView.leadingAnchor)
+        dayPartTable.pinRight(to: contentView.trailingAnchor)
+        dayPartTable.pinTop(to: contentView.topAnchor)
+        dayPartTable.pinBottom(to: contentView.bottomAnchor)
     }
     
     // MARK: - Actions
     @objc
-    private func dateTapped() {
-        onDateTapped?()
+    private func dayPartTapped() {
+        onDayPartTapped?()
     }
 }
 
 // MARK: - UICollectionViewDelegate
-extension HorizontalDateCollectionCell: UICollectionViewDelegate {
-
+extension DayPartSelectorCell: UICollectionViewDelegate {
+    
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension HorizontalDateCollectionCell: UICollectionViewDelegateFlowLayout {
+extension DayPartSelectorCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: Constants.DateTable.elementsTopIndent,
-                            left: Constants.DateTable.elementsLeadingIndent,
-                            bottom: Constants.DateTable.elementsBottomIndent,
-                            right: Constants.DateTable.elementsTrailingIndent) // Отступы слева и справа
+        return UIEdgeInsets(top: Constants.DayPartTable.elementsTopIndent,
+                            left: Constants.DayPartTable.elementsLeadingIndent,
+                            bottom: Constants.DayPartTable.elementsBottomIndent,
+                            right: Constants.DayPartTable.elementsTrailingIndent) // Отступы слева и справа
     }
 }
 
 // MARK: - UICollectionViewDataSource
-extension HorizontalDateCollectionCell: UICollectionViewDataSource {
+extension DayPartSelectorCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return Constants.DayPartTable.parts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dateTable.dequeueReusableCell(withReuseIdentifier: DateCell.reuseId, for: indexPath)
-        guard let dateCell = cell as? DateCell else { return cell }
+        let cell = dayPartTable.dequeueReusableCell(withReuseIdentifier: DayPartCell.reuseId, for: indexPath)
+        guard let dayPartCell = cell as? DayPartCell else { return cell }
         
-        dateCell.configure()
+        dayPartCell.configure(with: Constants.DayPartTable.parts[indexPath.row])
         
         // Устанавливаем цвет ячейки в зависимости от того, выбрана ли она
         if selectedIndexPath == indexPath {
-            dateCell.didSelect()
+            dayPartCell.didSelect()
         } else {
-            dateCell.unselect()
+            dayPartCell.unselect()
         }
         
-        return dateCell
+        return dayPartCell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

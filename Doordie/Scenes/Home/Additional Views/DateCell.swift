@@ -62,9 +62,6 @@ final class DateCell: UICollectionViewCell {
     private let wrap: UIView = UIView()
     private let dayOfWeekLabel: UILabel = UILabel()
     
-    // MARK: - Variables
-    var onProfileImageTapped: (() -> Void)?
-    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
