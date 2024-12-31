@@ -26,14 +26,34 @@ final class HomeViewController: UIViewController {
             static let horizontalDateCollectionCellHeight: CGFloat = 100
             static let dayPartSelectorCell: CGFloat = 40
         }
+        
+        enum NavigationBar {
+            static let maxBlurAlpha: CGFloat = 1.0
+            static let minBlurAlpha: CGFloat = 0.0
+            static let fadeThreshold: CGFloat = 10 // Высота прокрутки, после которой размытие максимально
+            static let blurColor: UIColor = UIColor(hex: "2A50AB").withAlphaComponent(0.2)
+            static let height: CGFloat = 100
+        }
+        
+        enum NavBarCenteredTitle {
+            static let maxBlurAlpha: CGFloat = 0.8
+            static let minBlurAlpha: CGFloat = 0.0
+            static let fadeThreshold: CGFloat = 10 // Высота прокрутки, после которой размытие максимально
+            static let alignment: NSTextAlignment = .center
+            static let fontSize: CGFloat = 18
+            static let fontWeight: UIFont.Weight = .bold
+            static let color: UIColor = .white
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let table: UITableView = UITableView()
+    private let navBarCenteredTitle: UILabel = UILabel()
     
     // MARK: - Variables
     private var interactor: HomeBusinessLogic
+    private var blurredNavBarView: UIVisualEffectView?
     
     // MARK: - Lifecycle
     init(interactor: HomeBusinessLogic) {
@@ -51,10 +71,21 @@ final class HomeViewController: UIViewController {
         configureUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        navBarCenteredTitle.alpha = Constants.NavBarCenteredTitle.minBlurAlpha
+        blurredNavBarView?.alpha = Constants.NavigationBar.minBlurAlpha
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureNavBar()
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureBackground()
         configureTable()
+        configureNavBarCenteredTitle()
     }
     
     private func configureBackground() {
@@ -71,6 +102,62 @@ final class HomeViewController: UIViewController {
         blurEffectView.pin(to: view)
     }
     
+    private func configureNavBarCenteredTitle() {
+        navBarCenteredTitle.text = "December 31"
+        navBarCenteredTitle.textAlignment = Constants.NavBarCenteredTitle.alignment
+        navBarCenteredTitle.font = UIFont.systemFont(ofSize: Constants.NavBarCenteredTitle.fontSize, weight: Constants.NavBarCenteredTitle.fontWeight)
+        navBarCenteredTitle.textColor = Constants.NavBarCenteredTitle.color
+        navBarCenteredTitle.sizeToFit()
+        
+        navigationItem.titleView = navBarCenteredTitle
+    }
+
+    private func configureNavBar() {
+        // Создаём кастомный цвет размытия
+        let blurredNavBarView = createCustomBlurView(with: Constants.NavigationBar.blurColor)
+        view.addSubview(blurredNavBarView)
+        
+        let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
+        let totalNavBarHeight = statusBarHeight + navigationBarHeight
+        
+        blurredNavBarView.pinTop(to: view.topAnchor)
+        blurredNavBarView.pinLeft(to: view.leadingAnchor)
+        blurredNavBarView.pinRight(to: view.trailingAnchor)
+        blurredNavBarView.setHeight(totalNavBarHeight)
+
+        // Сохранение ссылки на размытие
+        self.blurredNavBarView = blurredNavBarView
+
+        // Удаление стандартного фона у навбара
+        guard let navigationBar = navigationController?.navigationBar else { return }
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .clear
+        appearance.shadowColor = nil
+
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+        navigationBar.compactAppearance = appearance
+    }
+    
+    private func createCustomBlurView(with color: UIColor) -> UIVisualEffectView {
+        // Стандартное размытие
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        // Цветной полупрозрачный слой поверх размытия
+        let colorOverlay = UIView()
+        colorOverlay.backgroundColor = color // Прозрачность слоя
+        
+        // Добавление цветного слоя поверх основного слоя размытия
+        blurEffectView.contentView.addSubview(colorOverlay)
+        colorOverlay.pin(to: blurEffectView.contentView)
+        
+        return blurEffectView
+    }
+    
     private func configureTable() {
         view.addSubview(table)
         
@@ -82,7 +169,7 @@ final class HomeViewController: UIViewController {
         table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
         table.layer.masksToBounds = false
         
-        table.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
+        table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
         table.pinHorizontal(to: view)
         
@@ -145,5 +232,25 @@ extension HomeViewController: UITableViewDataSource {
             
             return dayPartSelectorCell
         }
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension HomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let blurredNavBarView = blurredNavBarView else { return }
+        
+        let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
+        let totalNavBarHeight = statusBarHeight + navigationBarHeight
+        
+        let offset = scrollView.contentOffset.y + totalNavBarHeight
+        
+        let blurAlpha = max(Constants.NavigationBar.minBlurAlpha,
+                        min(Constants.NavigationBar.maxBlurAlpha, offset / Constants.NavigationBar.fadeThreshold))
+        let titleAlpha = max(Constants.NavBarCenteredTitle.minBlurAlpha,
+                             min(Constants.NavBarCenteredTitle.maxBlurAlpha, offset / Constants.NavBarCenteredTitle.fadeThreshold))
+        blurredNavBarView.alpha = blurAlpha
+        navBarCenteredTitle.alpha = titleAlpha
     }
 }

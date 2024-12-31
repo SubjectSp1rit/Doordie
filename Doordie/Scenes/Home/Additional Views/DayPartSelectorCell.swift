@@ -142,7 +142,7 @@ extension DayPartSelectorCell: UICollectionViewDataSource {
         let previousIndexPath = selectedIndexPath
         selectedIndexPath = indexPath
         
-        // Обновляем текущую и предыдущую ячейкРи
+        // Обновляем текущую и предыдущую ячейки
         var indexPathsToReload = [indexPath]
         if let previousIndexPath = previousIndexPath {
             indexPathsToReload.append(previousIndexPath)

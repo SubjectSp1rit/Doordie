@@ -36,7 +36,7 @@ final class HeaderCell: UITableViewCell {
         }
         
         enum ProfileImage {
-            static let contentMode: UIView.ContentMode = .scaleAspectFit
+            static let contentMode: UIView.ContentMode = .scaleAspectFill
             static let cornerRadius: CGFloat = 30
             static let imageSide: CGFloat = 60
         }
