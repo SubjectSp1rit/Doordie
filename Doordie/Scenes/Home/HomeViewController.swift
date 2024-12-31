@@ -44,12 +44,21 @@ final class HomeViewController: UIViewController {
             static let fontWeight: UIFont.Weight = .bold
             static let color: UIColor = .white
         }
+        
+        enum NavBarNotificationBtn {
+            static let maxBlurAlpha: CGFloat = 0.8
+            static let minBlurAlpha: CGFloat = 0.0
+            static let fadeThreshold: CGFloat = 10 // Высота прокрутки, после которой размытие максимально
+            static let tintColor: UIColor = .white
+            static let imageName: String = "bell.fill"
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let table: UITableView = UITableView()
     private let navBarCenteredTitle: UILabel = UILabel()
+    private let navBarNotificationBtn: UIButton = UIButton(type: .system)
     
     // MARK: - Variables
     private var interactor: HomeBusinessLogic
@@ -74,6 +83,7 @@ final class HomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         navBarCenteredTitle.alpha = Constants.NavBarCenteredTitle.minBlurAlpha
         blurredNavBarView?.alpha = Constants.NavigationBar.minBlurAlpha
+        navBarNotificationBtn.alpha = Constants.NavBarNotificationBtn.minBlurAlpha
     }
     
     override func viewDidLayoutSubviews() {
@@ -86,6 +96,7 @@ final class HomeViewController: UIViewController {
         configureBackground()
         configureTable()
         configureNavBarCenteredTitle()
+        configureNavBarNotificationBtn()
     }
     
     private func configureBackground() {
@@ -110,6 +121,15 @@ final class HomeViewController: UIViewController {
         navBarCenteredTitle.sizeToFit()
         
         navigationItem.titleView = navBarCenteredTitle
+    }
+    
+    private func configureNavBarNotificationBtn() {
+        navBarNotificationBtn.setImage(UIImage(systemName: Constants.NavBarNotificationBtn.imageName), for: .normal)
+        navBarNotificationBtn.tintColor = Constants.NavBarNotificationBtn.tintColor
+        navBarNotificationBtn.addTarget(self, action: #selector(notificationButtonPressed), for: .touchUpInside)
+        
+        let barButton = UIBarButtonItem(customView: navBarNotificationBtn)
+        navigationItem.rightBarButtonItem = barButton
     }
 
     private func configureNavBar() {
@@ -175,6 +195,11 @@ final class HomeViewController: UIViewController {
         
         table.backgroundColor = Constants.Table.bgColor
     }
+    
+    @objc
+    private func notificationButtonPressed() {
+        print("NOTIFICATION SCREEN")
+    }
 }
 
 // MARK: - UITableViewDelegate
@@ -219,6 +244,14 @@ extension HomeViewController: UITableViewDataSource {
             
             headerCell.configure()
             
+            headerCell.onProfileImageTapped = {
+                print(1)
+            }
+            
+            headerCell.onTodayLabelTapped = {
+                headerCell.swapTodayAndDateLabels()
+            }
+            
             return headerCell
         } else if sectionIndex == 1 {   // HorizontalDateCollectionCell
             let cell = table.dequeueReusableCell(withIdentifier: HorizontalDateCollectionCell.reuseId, for: indexPath)
@@ -250,7 +283,10 @@ extension HomeViewController: UIScrollViewDelegate {
                         min(Constants.NavigationBar.maxBlurAlpha, offset / Constants.NavigationBar.fadeThreshold))
         let titleAlpha = max(Constants.NavBarCenteredTitle.minBlurAlpha,
                              min(Constants.NavBarCenteredTitle.maxBlurAlpha, offset / Constants.NavBarCenteredTitle.fadeThreshold))
+        let notificationBtnAlpha = max(Constants.NavBarNotificationBtn.minBlurAlpha,
+                             min(Constants.NavBarNotificationBtn.maxBlurAlpha, offset / Constants.NavBarNotificationBtn.fadeThreshold))
         blurredNavBarView.alpha = blurAlpha
         navBarCenteredTitle.alpha = titleAlpha
+        navBarNotificationBtn.alpha = notificationBtnAlpha
     }
 }

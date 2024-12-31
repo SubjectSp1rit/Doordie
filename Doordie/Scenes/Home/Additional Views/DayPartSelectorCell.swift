@@ -148,5 +148,7 @@ extension DayPartSelectorCell: UICollectionViewDataSource {
             indexPathsToReload.append(previousIndexPath)
         }
         collectionView.reloadItems(at: indexPathsToReload)
+        
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 }
