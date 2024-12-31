@@ -80,15 +80,18 @@ final class HomeViewController: UIViewController {
         configureUI()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        navBarCenteredTitle.alpha = Constants.NavBarCenteredTitle.minBlurAlpha
-        blurredNavBarView?.alpha = Constants.NavigationBar.minBlurAlpha
-        navBarNotificationBtn.alpha = Constants.NavBarNotificationBtn.minBlurAlpha
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureNavBar()
+        configureNavBarCenteredTitle()
+        configureNavBarNotificationBtn()
+        scrollViewDidScroll(table)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         configureNavBar()
+        scrollViewDidScroll(table)
     }
     
     // MARK: - Private Methods
@@ -118,15 +121,17 @@ final class HomeViewController: UIViewController {
         navBarCenteredTitle.textAlignment = Constants.NavBarCenteredTitle.alignment
         navBarCenteredTitle.font = UIFont.systemFont(ofSize: Constants.NavBarCenteredTitle.fontSize, weight: Constants.NavBarCenteredTitle.fontWeight)
         navBarCenteredTitle.textColor = Constants.NavBarCenteredTitle.color
-        navBarCenteredTitle.sizeToFit()
+        navBarCenteredTitle.alpha = Constants.NavBarCenteredTitle.minBlurAlpha
         
         navigationItem.titleView = navBarCenteredTitle
+        navigationItem.titleView?.alpha = Constants.NavBarCenteredTitle.minBlurAlpha
     }
     
     private func configureNavBarNotificationBtn() {
         navBarNotificationBtn.setImage(UIImage(systemName: Constants.NavBarNotificationBtn.imageName), for: .normal)
         navBarNotificationBtn.tintColor = Constants.NavBarNotificationBtn.tintColor
         navBarNotificationBtn.addTarget(self, action: #selector(notificationButtonPressed), for: .touchUpInside)
+        navBarNotificationBtn.alpha = Constants.NavBarNotificationBtn.minBlurAlpha
         
         let barButton = UIBarButtonItem(customView: navBarNotificationBtn)
         navigationItem.rightBarButtonItem = barButton
@@ -134,8 +139,10 @@ final class HomeViewController: UIViewController {
 
     private func configureNavBar() {
         // Создаём кастомный цвет размытия
-        let blurredNavBarView = createCustomBlurView(with: Constants.NavigationBar.blurColor)
+        blurredNavBarView = createCustomBlurView(with: Constants.NavigationBar.blurColor)
+        guard let blurredNavBarView = blurredNavBarView else { return }
         view.addSubview(blurredNavBarView)
+        blurredNavBarView.alpha = Constants.NavigationBar.minBlurAlpha
         
         let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
@@ -145,9 +152,6 @@ final class HomeViewController: UIViewController {
         blurredNavBarView.pinLeft(to: view.leadingAnchor)
         blurredNavBarView.pinRight(to: view.trailingAnchor)
         blurredNavBarView.setHeight(totalNavBarHeight)
-
-        // Сохранение ссылки на размытие
-        self.blurredNavBarView = blurredNavBarView
 
         // Удаление стандартного фона у навбара
         guard let navigationBar = navigationController?.navigationBar else { return }
@@ -277,7 +281,7 @@ extension HomeViewController: UIScrollViewDelegate {
         let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
         let totalNavBarHeight = statusBarHeight + navigationBarHeight
         
-        let offset = scrollView.contentOffset.y + totalNavBarHeight
+        let offset = max(scrollView.contentOffset.y + totalNavBarHeight, 0)
         
         let blurAlpha = max(Constants.NavigationBar.minBlurAlpha,
                         min(Constants.NavigationBar.maxBlurAlpha, offset / Constants.NavigationBar.fadeThreshold))
