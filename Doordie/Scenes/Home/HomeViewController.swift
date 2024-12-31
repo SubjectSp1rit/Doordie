@@ -63,6 +63,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Variables
     private var interactor: HomeBusinessLogic
     private var blurredNavBarView: UIVisualEffectView?
+    private var navBarRendered: Bool = false
     
     // MARK: - Lifecycle
     init(interactor: HomeBusinessLogic) {
@@ -78,28 +79,38 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureNotificationCenter()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        configureNavBar()
-        configureNavBarCenteredTitle()
-        configureNavBarNotificationBtn()
-        scrollViewDidScroll(table)
+        updateNavBarTransparency()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        configureNavBar()
-        scrollViewDidScroll(table)
+        
+        // Так как расчет высоты статус бара и навбара происходит уже после построения интерфейса, то строим навбар в самом конце
+        if !navBarRendered {
+            configureNavBar()
+            configureNavBarCenteredTitle()
+            configureNavBarNotificationBtn()
+            navBarRendered = true
+        }
+        updateNavBarTransparency()
     }
     
     // MARK: - Private Methods
     private func configureUI() {
         configureBackground()
         configureTable()
-        configureNavBarCenteredTitle()
-        configureNavBarNotificationBtn()
+    }
+    
+    private func configureNotificationCenter() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleAppWillEnterForeground),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
     }
     
     private func configureBackground() {
@@ -200,9 +211,22 @@ final class HomeViewController: UIViewController {
         table.backgroundColor = Constants.Table.bgColor
     }
     
+    private func updateNavBarTransparency() {
+        DispatchQueue.main.async {
+            self.scrollViewDidScroll(self.table)
+        }
+    }
+    
     @objc
     private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
+    }
+    
+    @objc
+    private func handleAppWillEnterForeground() {
+        DispatchQueue.main.async {
+            self.scrollViewDidScroll(self.table)
+        }
     }
 }
 
