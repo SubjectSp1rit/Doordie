@@ -18,13 +18,13 @@ final class HomeViewController: UIViewController {
         enum Table {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
-            static let numberOfSections: Int = 3
+            static let numberOfSections: Int = 4
             static let numberOfRowsInSection: Int = 1
             static let indentBetweenSections: CGFloat = 20
             
             static let headerCellHeight: CGFloat = 60
             static let horizontalDateCollectionCellHeight: CGFloat = 100
-            static let dayPartSelectorCell: CGFloat = 40
+            static let dayPartSelectorCellHeight: CGFloat = 40
         }
         
         enum NavigationBar {
@@ -59,6 +59,7 @@ final class HomeViewController: UIViewController {
     private let table: UITableView = UITableView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let navBarNotificationBtn: UIButton = UIButton(type: .system)
+    private let yourHabitsLabel: UILabel = UILabel()
     
     // MARK: - Variables
     private var interactor: HomeBusinessLogic
@@ -202,11 +203,13 @@ final class HomeViewController: UIViewController {
         table.register(HeaderCell.self, forCellReuseIdentifier: HeaderCell.reuseId)
         table.register(HorizontalDateCollectionCell.self, forCellReuseIdentifier: HorizontalDateCollectionCell.reuseId)
         table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
+        table.register(HabitCell.self, forCellReuseIdentifier: HabitCell.reuseId)
         table.layer.masksToBounds = false
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
-        table.pinHorizontal(to: view)
+        table.pinLeft(to: view.leadingAnchor)
+        table.pinRight(to: view.trailingAnchor)
         
         table.backgroundColor = Constants.Table.bgColor
     }
@@ -237,7 +240,8 @@ extension HomeViewController: UITableViewDelegate {
         switch sectionIndex {
         case 0: return Constants.Table.headerCellHeight
         case 1: return Constants.Table.horizontalDateCollectionCellHeight
-        case 2: return Constants.Table.dayPartSelectorCell
+        case 2: return Constants.Table.dayPartSelectorCellHeight
+        case 3: return 80
         default: return UITableView.automaticDimension
         }
     }
@@ -246,10 +250,13 @@ extension HomeViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension HomeViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return Constants.Table.numberOfSections
+        Constants.Table.numberOfSections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 3 {
+            return 2
+        }
         return Constants.Table.numberOfRowsInSection
     }
     
@@ -287,11 +294,16 @@ extension HomeViewController: UITableViewDataSource {
             guard let horizontalDateCollectionCell = cell as? HorizontalDateCollectionCell else { return cell }
             
             return horizontalDateCollectionCell
-        } else {                        // dayPartSelectorCell
+        } else if sectionIndex == 2 {                        // dayPartSelectorCell
             let cell = table.dequeueReusableCell(withIdentifier: DayPartSelectorCell.reuseId, for: indexPath)
             guard let dayPartSelectorCell = cell as? DayPartSelectorCell else { return cell }
             
             return dayPartSelectorCell
+        } else {
+            let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
+            guard let habitCell = cell as? HabitCell else { return cell }
+            
+            return habitCell
         }
     }
 }

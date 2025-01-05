@@ -121,6 +121,8 @@ final class DayPartCell: UICollectionViewCell {
         
         stack.pinCenterX(to: wrap)
         stack.pinCenterY(to: wrap)
+        stack.pinTop(to: wrap.topAnchor)
+        stack.pinBottom(to: wrap.bottomAnchor)
     }
     
     private func configureDayPartLabel() {
