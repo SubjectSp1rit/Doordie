@@ -255,7 +255,7 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 3 {
-            return 2
+            return 20
         }
         return Constants.Table.numberOfRowsInSection
     }

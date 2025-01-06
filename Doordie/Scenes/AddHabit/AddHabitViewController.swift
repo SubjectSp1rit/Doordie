@@ -11,10 +11,6 @@ import UIKit
 final class AddHabitViewController: UIViewController {
     // MARK: - Constants
     private enum Constants {
-        enum Background {
-            static let imageName: String = "ultramarineBackground"
-        }
-        
         enum NavBarCenteredTitle {
             static let title: String = "Create habit"
             static let alignment: NSTextAlignment = .center
@@ -62,11 +58,6 @@ final class AddHabitViewController: UIViewController {
     }
     
     private func configureBackground() {
-        view.addSubview(background)
-        
-        background.image = UIImage(named: Constants.Background.imageName)
-        background.pin(to: view)
-                
         // Размытие заднего фона
         let blurEffect = UIBlurEffect(style: .dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
