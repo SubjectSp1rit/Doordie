@@ -29,10 +29,12 @@ final class CustomTabBar: UITabBar {
     // MARK: - UI Components
     private let plusButton: UIButton = UIButton(type: .custom)
     
+    // MARK: - Variables
+    weak var tabBarController: CustomTabBarController?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         configureUI()
     }
     
@@ -71,7 +73,7 @@ final class CustomTabBar: UITabBar {
     // MARK: - Actions
     @objc
     private func plusButtonTapped() {
-        print("ADD HABIT HANDLER")
+        tabBarController?.presentAddHabitViewController()
     }
     
     // MARK: - Overrided

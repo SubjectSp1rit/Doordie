@@ -34,7 +34,7 @@ final class CustomTabBarController: UITabBarController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .clear
         configureUI()
     }
     
@@ -46,7 +46,9 @@ final class CustomTabBarController: UITabBarController {
     
     private func configureTabBar() {
         // Заменяем стандартный tabBar на кастомный
-        self.setValue(CustomTabBar(), forKey: "tabBar")
+        let customTabBar = CustomTabBar()
+        customTabBar.tabBarController = self
+        self.setValue(customTabBar, forKey: "tabBar")
     }
     
     private func configureTabs() {
@@ -62,27 +64,27 @@ final class CustomTabBarController: UITabBarController {
         // 2) Analytics
         let analyticsTabTitle: String = Constants.analyticsTitle
         let analyticsTabImage: UIImage? = UIImage(systemName: Constants.analyticsImageName)
-        let analyticsTabVC: UIViewController = UIViewController()
+        let analyticsTabVC: UIViewController = AnalyticsAssembly.build()
         
         let analyticsTab = createTab(with: analyticsTabTitle, and: analyticsTabImage, vc: analyticsTabVC)
         
         // 3) Пустой контроллер под «плюс»-кнопку (фейковая вкладка)
         let plusDummyTabTitle: String = Constants.dummyTitle
         let plusDummyTabImage: UIImage? = nil
-        let plusDummyTabVC = UIViewController()
+        let plusDummyTabVC = AddHabitAssembly.build()
         let plusDummyTab = createTab(with: plusDummyTabTitle, and: plusDummyTabImage, vc: plusDummyTabVC)
         
         // 4) Friends
         let friendTabTitle: String = Constants.friendsTitle
         let friendsTabImage: UIImage? = UIImage(systemName: Constants.friendImageName)
-        let friendsTabVC: UIViewController = UIViewController()
+        let friendsTabVC: UIViewController = FriendsAssembly.build()
         
         let friendsTab = createTab(with: friendTabTitle, and: friendsTabImage, vc: friendsTabVC)
         
         // 5) Settings
         let settingsTabTitle: String = Constants.settingsTitle
         let settingsTabImage: UIImage? = UIImage(systemName: Constants.settingsImageName)
-        let settingsTabVC: UIViewController = UIViewController()
+        let settingsTabVC: UIViewController = SettingsAssembly.build()
         
         let settingsTab = createTab(with: settingsTabTitle, and: settingsTabImage, vc: settingsTabVC)
         
@@ -92,7 +94,7 @@ final class CustomTabBarController: UITabBarController {
             plusDummyTab,
             friendsTab,
             settingsTab
-        ], animated: true)
+        ], animated: false)
     }
     
     private func createTab(with title: String, and image: UIImage?, vc: UIViewController) -> UINavigationController {
@@ -101,5 +103,14 @@ final class CustomTabBarController: UITabBarController {
         tab.tabBarItem.image = image
         
         return tab
+    }
+}
+
+extension CustomTabBarController {
+    func presentAddHabitViewController() {
+        let addHabitVC = AddHabitAssembly.build()
+        let navController = UINavigationController(rootViewController: addHabitVC)
+        navController.modalPresentationStyle = .overFullScreen
+        present(navController, animated: true, completion: nil)
     }
 }
