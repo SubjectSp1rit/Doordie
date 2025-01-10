@@ -125,6 +125,7 @@ final class AddHabitViewController: UIViewController {
         table.register(HabitTitleCell.self, forCellWithReuseIdentifier: HabitTitleCell.reuseId)
         table.register(HabitMotivationsCell.self, forCellWithReuseIdentifier: HabitMotivationsCell.reuseId)
         table.register(HabitColorCell.self, forCellWithReuseIdentifier: HabitColorCell.reuseId)
+        table.register(HabitIconCell.self, forCellWithReuseIdentifier: HabitIconCell.reuseId)
         
         table.pinLeft(to: view.leadingAnchor)
         table.pinRight(to: view.trailingAnchor)
@@ -210,10 +211,17 @@ extension AddHabitViewController: UICollectionViewDataSource {
             
             return habitMotivationsCell
         } else if indexPath.section == 2 {
-            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
-            guard let habitColorCell = cell as? HabitColorCell else { return cell }
-            
-            return habitColorCell
+            if indexPath.row == 0 {
+                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
+                guard let habitColorCell = cell as? HabitColorCell else { return cell }
+                
+                return habitColorCell
+            } else if indexPath.row == 1 {
+                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitIconCell.reuseId, for: indexPath)
+                guard let habitIconCell = cell as? HabitIconCell else { return cell }
+                
+                return habitIconCell
+            }
         }
         return UICollectionViewCell()
     }

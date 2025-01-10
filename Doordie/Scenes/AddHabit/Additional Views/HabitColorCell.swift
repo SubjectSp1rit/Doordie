@@ -50,8 +50,15 @@ final class HabitColorCell: UICollectionViewCell {
             static let width: CGFloat = 34
             static let cornerRadius: CGFloat = 12
             static let trailingIndent: CGFloat = 8
-            static let imageName: String = "chevron.down"
+            static let imageName: String = "chevron.up.chevron.down"
             static let tintColor: UIColor = .white.withAlphaComponent(0.7)
+        }
+        
+        enum ColorPicker {
+            static let menuImageName: String = "circle.fill"
+            static let menuTitle: String = "Choose a background icon color"
+            static let colorHexCodes: [String] = ["FF0000", "F28500", "FFF200", "006400", "90EE90", "ADD8E6", "524F81", "6475CC", "6F2DA8", "FC8EAC", "41424C"]
+            static let colorNames: [String] = ["Tomato", "Tangerine", "Banana", "Basil", "Sage", "Peacock", "Blueberry", "Lavender", "Grape", "Flamingo", "Graphite"]
         }
     }
     
@@ -63,6 +70,7 @@ final class HabitColorCell: UICollectionViewCell {
     private let coloredWrap: UIView = UIView()
     private let coloredCircle: UIView = UIView()
     private let showColorsButton: UIButton = UIButton(type: .system)
+    private let colorPickerMenu: UIMenu = UIMenu()
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -82,6 +90,7 @@ final class HabitColorCell: UICollectionViewCell {
         configureColoredWrap()
         configureColoredCircle()
         configureShowColorButton()
+        configureColorPickerMenu()
     }
     
     private func configureWrap() {
@@ -144,5 +153,23 @@ final class HabitColorCell: UICollectionViewCell {
         showColorsButton.setWidth(Constants.ShowColorsButton.width)
         showColorsButton.pinCenterY(to: coloredWrap.centerYAnchor)
         showColorsButton.pinRight(to: coloredWrap.trailingAnchor, Constants.ShowColorsButton.trailingIndent)
+    }
+    
+    private func configureColorPickerMenu() {
+        var menuActions: [UIAction] = []
+        
+        for (index, color) in Constants.ColorPicker.colorHexCodes.enumerated() {
+            let image = UIImage(systemName: Constants.ColorPicker.menuImageName)?.withTintColor(UIColor(hex: color), renderingMode: .alwaysOriginal)
+            let title = Constants.ColorPicker.colorNames[index]
+            let action = UIAction(title: title, image: image) { [weak self] _ in
+                self?.coloredCircle.backgroundColor = UIColor(hex: color)
+            }
+            menuActions.append(action)
+        }
+        
+        let menu = UIMenu(title: Constants.ColorPicker.menuTitle, children: menuActions)
+        
+        showColorsButton.menu = menu
+        showColorsButton.showsMenuAsPrimaryAction = true
     }
 }
