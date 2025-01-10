@@ -25,6 +25,45 @@ final class HabitCell: UITableViewCell {
             static let cornerRadius: CGFloat = 14
             static let leadingIndent: CGFloat = 18
             static let trailingIndent: CGFloat = 18
+            static let bottomIndent: CGFloat = 10
+        }
+        
+        enum CheckmarkButton {
+            static let cornerRadius: CGFloat = 12
+            static let height: CGFloat = 24
+            static let width: CGFloat = 24
+            static let unselectedBgColor: UIColor = UIColor(hex: "5769C9")
+            static let selectedBgColor: UIColor = UIColor(hex: "478039").withAlphaComponent(0.9)
+            static let imageName: String = "greenCheckmark"
+            static let leadingIndent: CGFloat = 12
+            static let imageHeight: CGFloat = 14
+            static let imageWidth: CGFloat = 14
+        }
+        
+        enum HabitImageWrap {
+            static let height: CGFloat = 46
+            static let width: CGFloat = 46
+            static let cornerRadius: CGFloat = 14
+            static let bgColor: UIColor = UIColor(hex: "6475CC")
+            static let leadingIndent: CGFloat = 14
+        }
+        
+        enum HabitImage {
+            static let tintColor: UIColor = .white
+            static let width: CGFloat = 36
+        }
+        
+        enum HabitTitle {
+            static let textAlignment: NSTextAlignment = .left
+            static let textColor: UIColor = .white
+            static let numberOfLines: Int = 1
+            static let leadingIndent: CGFloat = 8
+        }
+        
+        enum ChevronRight {
+            static let imageName: String = "chevron.right"
+            static let trailingIndent: CGFloat = 12
+            static let tintColor: UIColor = .white
         }
     }
     
@@ -32,6 +71,14 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
+    private let checkmarkButton: UIButton = UIButton(type: .custom)
+    private let habitImageWrap: UIView = UIView()
+    private let habitImage: UIImageView = UIImageView()
+    private let habitTitle: UILabel = UILabel()
+    private let chevronRight: UIImageView = UIImageView()
+    
+    // MARK: - Variables
+    private var isCheckmarkVisible: Bool = false
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -47,7 +94,10 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - Public Methods
     func configure() {
+        let image = UIImage(systemName: "dumbbell.fill")
+        habitImage.image = image
         
+        habitTitle.text = "Workout"
     }
     
     // MARK: - Private Methods
@@ -57,6 +107,11 @@ final class HabitCell: UITableViewCell {
         contentView.layer.masksToBounds = false
         
         configureWrap()
+        configureCheckmarkButton()
+        configureHabitImageWrap()
+        configureHabitImage()
+        configureHabitTitle()
+        configureChevronRight()
     }
     
     private func configureWrap() {
@@ -67,8 +122,84 @@ final class HabitCell: UITableViewCell {
         
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
-        wrap.pinBottom(to: contentView.bottomAnchor, 10)
+        wrap.pinBottom(to: contentView.bottomAnchor, Constants.Wrap.bottomIndent)
         wrap.pinLeft(to: contentView.leadingAnchor, Constants.Wrap.leadingIndent)
         wrap.pinRight(to: contentView.trailingAnchor, Constants.Wrap.trailingIndent)
+    }
+    
+    private func configureCheckmarkButton() {
+        wrap.addSubview(checkmarkButton)
+        
+        checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
+        checkmarkButton.layer.cornerRadius = Constants.CheckmarkButton.cornerRadius
+        checkmarkButton.setImage(nil, for: .normal)
+        checkmarkButton.addTarget(self, action: #selector(checkmarkButtonPressed), for: .touchUpInside)
+        
+        checkmarkButton.setHeight(Constants.CheckmarkButton.height)
+        checkmarkButton.setWidth(Constants.CheckmarkButton.width)
+        
+        checkmarkButton.pinCenterY(to: wrap.centerYAnchor)
+        checkmarkButton.pinLeft(to: wrap.leadingAnchor, Constants.CheckmarkButton.leadingIndent)
+    }
+    
+    private func configureHabitImageWrap() {
+        wrap.addSubview(habitImageWrap)
+        
+        habitImageWrap.backgroundColor = Constants.HabitImageWrap.bgColor
+        habitImageWrap.layer.cornerRadius = Constants.HabitImageWrap.cornerRadius
+        
+        habitImageWrap.setHeight(Constants.HabitImageWrap.height)
+        habitImageWrap.setWidth(Constants.HabitImageWrap.width)
+        
+        habitImageWrap.pinCenterY(to: wrap.centerYAnchor)
+        habitImageWrap.pinLeft(to: checkmarkButton.trailingAnchor, Constants.HabitImageWrap.leadingIndent)
+    }
+    
+    private func configureHabitImage() {
+        habitImageWrap.addSubview(habitImage)
+        
+        habitImage.tintColor = Constants.HabitImage.tintColor
+        
+        habitImage.contentMode = .scaleAspectFill
+        habitImage.setWidth(Constants.HabitImage.width)
+        
+        habitImage.pinCenterX(to: habitImageWrap.centerXAnchor)
+        habitImage.pinCenterY(to: habitImageWrap.centerYAnchor)
+    }
+    
+    private func configureHabitTitle() {
+        wrap.addSubview(habitTitle)
+        
+        habitTitle.textColor = Constants.HabitTitle.textColor
+        habitTitle.textAlignment = Constants.HabitTitle.textAlignment
+        habitTitle.numberOfLines = Constants.HabitTitle.numberOfLines
+        
+        habitTitle.pinCenterY(to: wrap.centerYAnchor)
+        habitTitle.pinLeft(to: habitImageWrap.trailingAnchor, Constants.HabitTitle.leadingIndent)
+    }
+    
+    private func configureChevronRight() {
+        wrap.addSubview(chevronRight)
+        
+        chevronRight.image = UIImage(systemName: Constants.ChevronRight.imageName)
+        chevronRight.tintColor = Constants.ChevronRight.tintColor
+        
+        chevronRight.pinCenterY(to: wrap.centerYAnchor)
+        chevronRight.pinRight(to: wrap.trailingAnchor, Constants.ChevronRight.trailingIndent)
+    }
+    
+    // MARK: - Actions
+    @objc
+    private func checkmarkButtonPressed() {
+        isCheckmarkVisible.toggle() // Переключаем состояние
+        if isCheckmarkVisible {
+            let image = UIImage(named: Constants.CheckmarkButton.imageName)?.withRenderingMode(.alwaysOriginal)
+            let resizedImage = image?.resize(to: CGSize(width: Constants.CheckmarkButton.imageWidth, height: Constants.CheckmarkButton.imageHeight))
+            checkmarkButton.setImage(resizedImage, for: .normal)
+            checkmarkButton.backgroundColor = Constants.CheckmarkButton.selectedBgColor
+        } else {
+            checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
+            checkmarkButton.setImage(nil, for: .normal) // Убираем изображение
+        }
     }
 }

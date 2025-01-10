@@ -302,6 +302,8 @@ extension HomeViewController: UITableViewDataSource {
         } else {
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
+            habitCell.selectionStyle = .none
+            habitCell.configure()
             
             return habitCell
         }

@@ -24,12 +24,27 @@ final class AddHabitViewController: UIViewController {
             static let imageName: String = "chevron.down"
             static let imageWeight: UIImage.SymbolWeight = .medium
         }
+        
+        enum Layout {
+            static let scrollDirection: UICollectionView.ScrollDirection = .vertical
+            static let minimumLineSpacing: CGFloat = 0
+            static let minimumInteritemSpacing: CGFloat = 0
+        }
+        
+        enum Table {
+            static let bgColor: UIColor = .clear
+            static let elementsLeadingIndent: CGFloat = 18
+            static let elementsTrailingIndent: CGFloat = 18
+            static let elementsTopIndent: CGFloat = 12
+            static let elementsBottomIndent: CGFloat = 0
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let navBarDismissButton: UIButton = UIButton(type: .system)
+    private let table: UICollectionView
     
     // MARK: - Variables
     private var interactor: AddHabitBusinessLogic
@@ -37,6 +52,7 @@ final class AddHabitViewController: UIViewController {
     // MARK: - Lifecycle
     init(interactor: AddHabitBusinessLogic) {
         self.interactor = interactor
+        self.table = AddHabitViewController.createCollectionView()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -51,10 +67,23 @@ final class AddHabitViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    private static func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = Constants.Layout.scrollDirection
+        layout.minimumLineSpacing = Constants.Layout.minimumLineSpacing
+        layout.minimumInteritemSpacing = Constants.Layout.minimumInteritemSpacing
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.layer.masksToBounds = false
+        return collectionView
+    }
+    
     private func configureUI() {
         configureBackground()
         configureNavBar()
         configureNavBarDismissButton()
+        configureTable()
     }
     
     private func configureBackground() {
@@ -85,9 +114,82 @@ final class AddHabitViewController: UIViewController {
         navigationItem.leftBarButtonItem = barButton
     }
     
+    private func configureTable() {
+        view.addSubview(table)
+        
+        table.showsVerticalScrollIndicator = false
+        table.isScrollEnabled = true
+        table.backgroundColor = Constants.Table.bgColor
+        table.delegate = self
+        table.dataSource = self
+        table.register(HabitTitleCell.self, forCellWithReuseIdentifier: HabitTitleCell.reuseId)
+        
+        table.pinLeft(to: view.leadingAnchor)
+        table.pinRight(to: view.trailingAnchor)
+        table.pinTop(to: view.topAnchor)
+        table.pinBottom(to: view.bottomAnchor)
+    }
+    
     // MARK: - Actions
     @objc
     private func dismissButtonPressed() {
         dismiss(animated: true)
     }
 }
+
+// MARK: - UICollectionViewDelegate
+extension AddHabitViewController: UICollectionViewDelegate {
+    
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: Constants.Table.elementsTopIndent,
+                            left: Constants.Table.elementsLeadingIndent,
+                            bottom: Constants.Table.elementsBottomIndent,
+                            right: Constants.Table.elementsTrailingIndent)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.section == 0 || indexPath.section == 2 {
+            // Тип 1: Полная ширина
+            let width = collectionView.bounds.width - 36 // С учётом отступов
+            let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
+            return CGSize(width: width, height: height)
+        } else {
+            // Тип 2: Половина ширины
+            let availableWidth = collectionView.bounds.width - 36 - 20 // Учитываем отступы и межстрочный отступ
+            let width = availableWidth / 2
+            let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
+            return CGSize(width: width, height: height)
+        }
+    }
+    
+    private func calculateHeightForHabitTitleCell(indexPath: IndexPath) -> CGFloat {
+        let dummyCell = HabitTitleCell()
+        dummyCell.layoutIfNeeded()
+        let calculatedHeight = dummyCell.contentView.systemLayoutSizeFitting(CGSize(width: 0, height: UIView.layoutFittingCompressedSize.height)).height
+        return calculatedHeight
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+extension AddHabitViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 1 { return 2 }
+        return 1
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
+        guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
+        
+        return habitTitleCell
+    }
+}
+
