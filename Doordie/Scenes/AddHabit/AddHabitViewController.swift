@@ -123,6 +123,7 @@ final class AddHabitViewController: UIViewController {
         table.delegate = self
         table.dataSource = self
         table.register(HabitTitleCell.self, forCellWithReuseIdentifier: HabitTitleCell.reuseId)
+        table.register(HabitMotivationsCell.self, forCellWithReuseIdentifier: HabitMotivationsCell.reuseId)
         
         table.pinLeft(to: view.leadingAnchor)
         table.pinRight(to: view.trailingAnchor)
@@ -152,7 +153,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 0 || indexPath.section == 2 {
+        if indexPath.section == 0 || indexPath.section == 1 {
             // Тип 1: Полная ширина
             let width = collectionView.bounds.width - 36 // С учётом отступов
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
@@ -167,7 +168,13 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
     }
     
     private func calculateHeightForHabitTitleCell(indexPath: IndexPath) -> CGFloat {
-        let dummyCell = HabitTitleCell()
+        var dummyCell: UICollectionViewCell
+        switch indexPath.section {
+        case 0: dummyCell = HabitTitleCell()
+        case 1: dummyCell = HabitMotivationsCell()
+        default: dummyCell = UICollectionViewCell()
+        }
+        
         dummyCell.layoutIfNeeded()
         let calculatedHeight = dummyCell.contentView.systemLayoutSizeFitting(CGSize(width: 0, height: UIView.layoutFittingCompressedSize.height)).height
         return calculatedHeight
@@ -177,19 +184,29 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDataSource
 extension AddHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 1 { return 2 }
-        return 1
+        if section == 0 || section == 1 {
+            return 1
+        }
+        return 0
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
-        guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
-        
-        return habitTitleCell
+        if indexPath.section == 0 {
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
+            guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
+            
+            return habitTitleCell
+        } else if indexPath.section == 1 {
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMotivationsCell.reuseId, for: indexPath)
+            guard let habitMotivationsCell = cell as? HabitMotivationsCell else { return cell }
+            
+            return habitMotivationsCell
+        }
+        return UICollectionViewCell()
     }
 }
 
