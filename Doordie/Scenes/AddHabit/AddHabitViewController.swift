@@ -124,6 +124,7 @@ final class AddHabitViewController: UIViewController {
         table.dataSource = self
         table.register(HabitTitleCell.self, forCellWithReuseIdentifier: HabitTitleCell.reuseId)
         table.register(HabitMotivationsCell.self, forCellWithReuseIdentifier: HabitMotivationsCell.reuseId)
+        table.register(HabitColorCell.self, forCellWithReuseIdentifier: HabitColorCell.reuseId)
         
         table.pinLeft(to: view.leadingAnchor)
         table.pinRight(to: view.trailingAnchor)
@@ -172,6 +173,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
         switch indexPath.section {
         case 0: dummyCell = HabitTitleCell()
         case 1: dummyCell = HabitMotivationsCell()
+        case 2: dummyCell = HabitColorCell()
         default: dummyCell = UICollectionViewCell()
         }
         
@@ -186,12 +188,14 @@ extension AddHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 || section == 1 {
             return 1
+        } else if section == 2 {
+            return 2
         }
         return 0
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -205,6 +209,11 @@ extension AddHabitViewController: UICollectionViewDataSource {
             guard let habitMotivationsCell = cell as? HabitMotivationsCell else { return cell }
             
             return habitMotivationsCell
+        } else if indexPath.section == 2 {
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
+            guard let habitColorCell = cell as? HabitColorCell else { return cell }
+            
+            return habitColorCell
         }
         return UICollectionViewCell()
     }
