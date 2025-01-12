@@ -146,6 +146,16 @@ final class AddHabitViewController: UIViewController {
     
     // MARK: - Cell Methods
     private func showQuantityInput(for indexPath: IndexPath) {
+        func showErrorAlert() {
+            let errorAlert = UIAlertController(title: "Invalid Input", message: "Please enter a valid number.", preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.showQuantityInput(for: indexPath)
+            }
+            
+            errorAlert.addAction(dismissAction)
+            present(errorAlert, animated: true, completion: nil)
+        }
+        
         let alertController = UIAlertController(title: "Enter a Number", message: nil, preferredStyle: .alert)
                 
             alertController.addTextField { textField in
@@ -155,6 +165,7 @@ final class AddHabitViewController: UIViewController {
             
             let confirmAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
                 guard let text = alertController.textFields?.first?.text, let number = Int(text) else {
+                    showErrorAlert()
                     return
                 }
                 
