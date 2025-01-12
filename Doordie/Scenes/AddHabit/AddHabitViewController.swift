@@ -162,7 +162,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: width, height: height)
         } else {
             // Тип 2: Половина ширины
-            let availableWidth = collectionView.bounds.width - 36 - 20 // Учитываем отступы и межстрочный отступ
+            let availableWidth = collectionView.bounds.width - 36 - 18 // Учитываем отступы и межстрочный отступ
             let width = availableWidth / 2
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)

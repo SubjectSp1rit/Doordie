@@ -5,7 +5,6 @@
 //  Created by Arseniy on 10.01.2025.
 //
 
-import Foundation
 import UIKit
 
 final class HabitIconCell: UICollectionViewCell {
@@ -54,10 +53,40 @@ final class HabitIconCell: UICollectionViewCell {
             static let tintColor: UIColor = .white.withAlphaComponent(0.7)
         }
         
-        enum IconPicker {
+        enum IconPickerMenu {
             static let menuTitle: String = "Choose an icon"
-            static let icons: [String] = ["heart", "figure.walk", "figure.run", "figure.run.treadmill"]
-            static let iconNames: [String] = ["Heart", "Walk", "Run", "Treadmill"]
+            static let lightThemeIconsColor: UIColor = .black
+            static let darkThemeIconsColor: UIColor = .white
+        }
+        
+        enum MenuOther {
+            static let title: String = "Other"
+            static let icons: [String] = ["heart", "trophy.fill", "medal.fill", "gauge.with.needle.fill", "pill.fill", "cross.fill", "face.smiling", "eyes", "sparkles", "atom", "message.fill", "phone.fill", "exclamationmark.triangle.fill", "lightbulb.fill", "cart.fill"]
+        }
+        
+        enum MenuSports {
+            static let title: String = "Sports"
+            static let icons: [String] = ["figure.walk", "figure.run", "figure.run.treadmill", "figure.basketball", "figure.boxing", "figure.cooldown", "figure.core.training", "figure.outdoor.cycle", "figure.mind.and.body", "figure.pilates", "figure.indoor.rowing", "figure.strengthtraining.traditional", "figure.yoga", "dumbbell.fill", "basketball.fill", "baseball.fill", "tennis.racket", "volleyball.fill", ""]
+        }
+        
+        enum MenuFood {
+            static let title: String = "Food"
+            static let icons: [String] = ["waterbottle.fill", "fish.fill", "carrot.fill"]
+        }
+        
+        enum MenuTransport {
+            static let title: String = "Transport"
+            static let icons: [String] = ["airplane", "car.fill", "bolt.car.fill", "scooter", "motorcycle.fill", "fuelpump.fill", "ev.charger.fill"]
+        }
+        
+        enum MenuNature {
+            static let title: String = "Nature"
+            static let icons: [String] = ["sun.max.fill", "moon.fill", "cloud.fill", "cloud.drizzle.fill", "snowflake", "drop.fill", "bolt.fill", "cat.fill", "dog.fill", "tortoise.fill", "bird.fill", "pawprint.fill", "leaf.fill", "tree.fill"]
+        }
+        
+        enum MenuEntertainment {
+            static let title: String = "Entertainment"
+            static let icons: [String] = ["gamecontroller.fill", "playstation.logo", "xmark.triangle.circle.square", "xbox.logo", "formfitting.gamecontroller.fill", "headset"]
         }
     }
     
@@ -155,31 +184,33 @@ final class HabitIconCell: UICollectionViewCell {
     }
     
     private func configureIconPickerMenu() {
-        var menuOtherActions: [UIAction] = []
-        
-        for (index, icon) in Constants.IconPicker.icons.enumerated() {
-            let image = UIImage(systemName: icon)?.withTintColor(Constants.SelectedIcon.tintColor, renderingMode: .alwaysOriginal)
-            let title = Constants.IconPicker.iconNames[index]
-            let action = UIAction(title: title, image: image) { [weak self] _ in
-                self?.selectedIcon.image = image
+        func createIconSubmenu(with title: String, iconNames: [String]) -> UIMenu {
+            var menuActions: [UIAction] = []
+            
+            for iconName in iconNames {
+                let image: UIImage?
+                let userTheme = traitCollection.userInterfaceStyle
+                image = UIImage(systemName: iconName)?.getWithTint(for: userTheme)
+                let action = UIAction(title: "", image: image) { [weak self] _ in
+                    self?.selectedIcon.image = image
+                }
+                menuActions.append(action)
             }
-            menuOtherActions.append(action)
+            
+            let menu: UIMenu = UIMenu(title: title, options: .displayAsPalette, children: menuActions)
+            
+            return menu
         }
-        let menuOther: UIMenu = UIMenu(title: "Other", options: .displayAsPalette, children: menuOtherActions)
         
+        let menuOther = createIconSubmenu(with: Constants.MenuOther.title, iconNames: Constants.MenuOther.icons)
+        let menuSports = createIconSubmenu(with: Constants.MenuSports.title, iconNames: Constants.MenuSports.icons)
+        let menuFood = createIconSubmenu(with: Constants.MenuFood.title, iconNames: Constants.MenuFood.icons)
+        let menuTransport = createIconSubmenu(with: Constants.MenuTransport.title, iconNames: Constants.MenuTransport.icons)
+        let menuNature = createIconSubmenu(with: Constants.MenuNature.title, iconNames: Constants.MenuNature.icons)
+        let menuEntertainment = createIconSubmenu(with: Constants.MenuEntertainment.title, iconNames: Constants.MenuEntertainment.icons)
         
-        var menuSportsActions: [UIAction] = []
-        for (index, icon) in Constants.IconPicker.icons.enumerated() {
-            let image = UIImage(systemName: icon)?.withTintColor(Constants.SelectedIcon.tintColor, renderingMode: .alwaysOriginal)
-            let title = Constants.IconPicker.iconNames[index]
-            let action = UIAction(title: title, image: image) { [weak self] _ in
-                self?.selectedIcon.image = image
-            }
-            menuSportsActions.append(action)
-        }
-        let menuSports: UIMenu = UIMenu(title: "Sports", options: .displayAsPalette, children: menuOtherActions)
-        
-        let menu = UIMenu(title: Constants.IconPicker.menuTitle, children: [menuOther, menuSports])
+        let submenusArray: [UIMenu] = [menuOther, menuSports, menuFood, menuTransport, menuNature, menuEntertainment]
+        let menu = UIMenu(title: Constants.IconPickerMenu.menuTitle, children: submenusArray)
         
         showIconsButton.menu = menu
         showIconsButton.showsMenuAsPrimaryAction = true

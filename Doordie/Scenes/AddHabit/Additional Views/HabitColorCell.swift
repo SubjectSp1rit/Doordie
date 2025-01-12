@@ -5,7 +5,6 @@
 //  Created by Arseniy on 10.01.2025.
 //
 
-import Foundation
 import UIKit
 
 final class HabitColorCell: UICollectionViewCell {
@@ -156,7 +155,7 @@ final class HabitColorCell: UICollectionViewCell {
     }
     
     private func configureColorPickerMenu() {
-        var menuActions: [UIAction] = []
+        var menuColors: [UIAction] = []
         
         for (index, color) in Constants.ColorPicker.colorHexCodes.enumerated() {
             let image = UIImage(systemName: Constants.ColorPicker.menuImageName)?.withTintColor(UIColor(hex: color), renderingMode: .alwaysOriginal)
@@ -164,10 +163,10 @@ final class HabitColorCell: UICollectionViewCell {
             let action = UIAction(title: title, image: image) { [weak self] _ in
                 self?.coloredCircle.backgroundColor = UIColor(hex: color)
             }
-            menuActions.append(action)
+            menuColors.append(action)
         }
         
-        let menu = UIMenu(title: Constants.ColorPicker.menuTitle, children: menuActions)
+        let menu = UIMenu(title: Constants.ColorPicker.menuTitle, children: menuColors)
         
         showColorsButton.menu = menu
         showColorsButton.showsMenuAsPrimaryAction = true
