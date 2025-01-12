@@ -46,8 +46,17 @@ final class AddHabitViewController: UIViewController {
     private let navBarDismissButton: UIButton = UIButton(type: .system)
     private let table: UICollectionView
     
-    // MARK: - Variables
+    // MARK: - Properties
     private var interactor: AddHabitBusinessLogic
+    
+    private var habitTitle: String?
+    private var habitMotivations: String?
+    private var habitColor: String?
+    private var habitIcon: String?
+    private var habitQuantityValue: String?
+    private var habitMeasurementType: String?
+    private var habitPeriod: String?
+    private var habitDayPart: String?
     
     // MARK: - Lifecycle
     init(interactor: AddHabitBusinessLogic) {
@@ -126,11 +135,39 @@ final class AddHabitViewController: UIViewController {
         table.register(HabitMotivationsCell.self, forCellWithReuseIdentifier: HabitMotivationsCell.reuseId)
         table.register(HabitColorCell.self, forCellWithReuseIdentifier: HabitColorCell.reuseId)
         table.register(HabitIconCell.self, forCellWithReuseIdentifier: HabitIconCell.reuseId)
+        table.register(HabitQuantityCell.self, forCellWithReuseIdentifier: HabitQuantityCell.reuseId)
         
         table.pinLeft(to: view.leadingAnchor)
         table.pinRight(to: view.trailingAnchor)
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
+    }
+    
+    // MARK: - Cell Methods
+    private func showQuantityInput(for indexPath: IndexPath) {
+        let alertController = UIAlertController(title: "Enter a Number", message: nil, preferredStyle: .alert)
+                
+            alertController.addTextField { textField in
+                textField.placeholder = "Enter number"
+                textField.keyboardType = .numberPad
+            }
+            
+            let confirmAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                guard let text = alertController.textFields?.first?.text, let number = Int(text) else {
+                    return
+                }
+                
+                // Обновляем данные и ячейку
+                self?.habitQuantityValue = String(number)
+                self?.table.reloadItems(at: [indexPath])
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            alertController.addAction(confirmAction)
+            alertController.addAction(cancelAction)
+            
+            present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Actions
@@ -157,12 +194,12 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 0 || indexPath.section == 1 {
             // Тип 1: Полная ширина
-            let width = collectionView.bounds.width - 36 // С учётом отступов
+            let width = collectionView.bounds.width - 36 // 36 - отступы от краев в сумме
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)
         } else {
             // Тип 2: Половина ширины
-            let availableWidth = collectionView.bounds.width - 36 - 18 // Учитываем отступы и межстрочный отступ
+            let availableWidth = collectionView.bounds.width - 36 - 18 // 36 - отступы от краев в сумме, 18 - отступ между ячейками
             let width = availableWidth / 2
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)
@@ -175,6 +212,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
         case 0: dummyCell = HabitTitleCell()
         case 1: dummyCell = HabitMotivationsCell()
         case 2: dummyCell = HabitColorCell()
+        case 3: dummyCell = HabitQuantityCell()
         default: dummyCell = UICollectionViewCell()
         }
         
@@ -189,14 +227,14 @@ extension AddHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 || section == 1 {
             return 1
-        } else if section == 2 {
+        } else if section == 2  || section == 3{
             return 2
         }
         return 0
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -222,8 +260,34 @@ extension AddHabitViewController: UICollectionViewDataSource {
                 
                 return habitIconCell
             }
+        } else if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitQuantityCell.reuseId, for: indexPath)
+                guard let habitQuantityCell = cell as? HabitQuantityCell else { return cell }
+                
+                habitQuantityCell.onEnterQuantityButtonPressed = {
+                    self.showQuantityInput(for: indexPath)
+                }
+                
+                if let number = habitQuantityValue {
+                    habitQuantityCell.configureQuantityValueLabel(with: number)
+                }
+                
+                return habitQuantityCell
+            } else if indexPath.row == 1 {
+                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitQuantityCell.reuseId, for: indexPath)
+                guard let habitMeasurementCell = cell as? HabitQuantityCell else { return cell }
+                
+                return habitMeasurementCell
+            }
         }
         return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 3 && indexPath.row == 0 {
+            showQuantityInput(for: indexPath)
+        }
     }
 }
 
