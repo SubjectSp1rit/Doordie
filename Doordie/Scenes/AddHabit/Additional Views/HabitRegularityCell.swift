@@ -66,9 +66,6 @@ final class HabitRegularityCell: UICollectionViewCell {
     private let currentRegularityLabel: UILabel = UILabel()
     private let chooseRegularityButton: UIButton = UIButton(type: .system)
     
-    // MARK: - Properties
-    var onChooseRegularityButtonPressed: (() -> Void)?
-    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
