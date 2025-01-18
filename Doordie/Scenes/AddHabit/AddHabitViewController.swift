@@ -139,6 +139,7 @@ final class AddHabitViewController: UIViewController {
         table.register(HabitMeasurementCell.self, forCellWithReuseIdentifier: HabitMeasurementCell.reuseId)
         table.register(HabitRegularityCell.self, forCellWithReuseIdentifier: HabitRegularityCell.reuseId)
         table.register(HabitDayPartCell.self, forCellWithReuseIdentifier: HabitDayPartCell.reuseId)
+        table.register(HabitConfirmCreationCell.self, forCellWithReuseIdentifier: HabitConfirmCreationCell.reuseId)
         
         table.pinLeft(to: view.leadingAnchor)
         table.pinRight(to: view.trailingAnchor)
@@ -206,7 +207,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 0 || indexPath.section == 1 || indexPath.section == 4 || indexPath.section == 5 {
+        if indexPath.section == 0 || indexPath.section == 1 || indexPath.section == 4 || indexPath.section == 5 || indexPath.section == 6 {
             // Тип 1: Полная ширина
             let width = collectionView.bounds.width - 36 // 36 - отступы от краев в сумме
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
@@ -229,6 +230,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
         case 3: dummyCell = HabitQuantityCell()
         case 4: dummyCell = HabitRegularityCell()
         case 5: dummyCell = HabitDayPartCell()
+        case 6: dummyCell = HabitConfirmCreationCell()
         default: dummyCell = UICollectionViewCell()
         }
         
@@ -241,7 +243,7 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDataSource
 extension AddHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 || section == 1 || section == 4 || section == 5 {
+        if section == 0 || section == 1 || section == 4 || section == 5 || section == 6 {
             return 1
         } else if section == 2  || section == 3 {
             return 2
@@ -250,7 +252,7 @@ extension AddHabitViewController: UICollectionViewDataSource {
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 6
+        return 7
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -306,6 +308,15 @@ extension AddHabitViewController: UICollectionViewDataSource {
             guard let habitDayPartCell = cell as? HabitDayPartCell else { return cell }
             
             return habitDayPartCell
+        } else if indexPath.section == 6 {
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitConfirmCreationCell.reuseId, for: indexPath)
+            guard let habitConfirmHabitCreationCell = cell as? HabitConfirmCreationCell else { return cell }
+            
+            habitConfirmHabitCreationCell.onCreateHabitButtonPressed = {
+                print("CREATED")
+            }
+            
+            return habitConfirmHabitCreationCell
         }
         return UICollectionViewCell()
     }
