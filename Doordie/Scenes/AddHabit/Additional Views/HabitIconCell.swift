@@ -100,6 +100,9 @@ final class HabitIconCell: UICollectionViewCell {
     private let showIconsButton: UIButton = UIButton(type: .system)
     private let iconPickerMenu: UIMenu = UIMenu()
     
+    // MARK: - Properties
+    var onIconChanged: ((String) -> Void)?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -193,6 +196,7 @@ final class HabitIconCell: UICollectionViewCell {
                 image = UIImage(systemName: iconName)?.getWithTint(for: userTheme)
                 let action = UIAction(title: "", image: image) { [weak self] _ in
                     self?.selectedIcon.image = image
+                    self?.onIconChanged?(iconName)
                 }
                 menuActions.append(action)
             }

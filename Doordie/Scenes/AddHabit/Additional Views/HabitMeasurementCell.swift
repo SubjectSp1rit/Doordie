@@ -68,7 +68,7 @@ final class HabitMeasurementCell: UICollectionViewCell {
     private let chooseMeasurementButton: UIButton = UIButton(type: .system)
     
     // MARK: - Properties
-    var onChooseMeasurementButtonPressed: (() -> Void)?
+    var onMeasurementChanged: ((String) -> Void)?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -151,9 +151,6 @@ final class HabitMeasurementCell: UICollectionViewCell {
         chooseMeasurementButton.setImage(UIImage(systemName: Constants.ChooseMeasurementButton.imageName), for: .normal)
         chooseMeasurementButton.tintColor = Constants.ChooseMeasurementButton.tintColor
         
-        chooseMeasurementButton.addTarget(self, action: #selector(enterQuantityButtonPressed), for: .touchUpInside)
-        
-        
         chooseMeasurementButton.setHeight(Constants.ChooseMeasurementButton.height)
         chooseMeasurementButton.setWidth(Constants.ChooseMeasurementButton.width)
         chooseMeasurementButton.pinCenterY(to: coloredWrap.centerYAnchor)
@@ -167,6 +164,7 @@ final class HabitMeasurementCell: UICollectionViewCell {
             let title = measurement
             let action = UIAction(title: title, image: nil) { [weak self] _ in
                 self?.measurementValueLabel.text = title
+                self?.onMeasurementChanged?(title)
             }
             menuColors.append(action)
         }
@@ -175,12 +173,6 @@ final class HabitMeasurementCell: UICollectionViewCell {
         
         chooseMeasurementButton.menu = menu
         chooseMeasurementButton.showsMenuAsPrimaryAction = true
-    }
-    
-    // MARK: - Actions
-    @objc
-    private func enterQuantityButtonPressed() {
-        onChooseMeasurementButtonPressed?()
     }
 }
 

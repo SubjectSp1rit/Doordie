@@ -71,6 +71,9 @@ final class HabitColorCell: UICollectionViewCell {
     private let showColorsButton: UIButton = UIButton(type: .system)
     private let colorPickerMenu: UIMenu = UIMenu()
     
+    // MARK: - Properties
+    var onColorChanged: ((String) -> Void)?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -162,6 +165,7 @@ final class HabitColorCell: UICollectionViewCell {
             let title = Constants.ColorPicker.colorNames[index]
             let action = UIAction(title: title, image: image) { [weak self] _ in
                 self?.coloredCircle.backgroundColor = UIColor(hex: color)
+                self?.onColorChanged?(color)
             }
             menuColors.append(action)
         }

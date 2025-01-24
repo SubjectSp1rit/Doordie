@@ -66,6 +66,9 @@ final class HabitRegularityCell: UICollectionViewCell {
     private let currentRegularityLabel: UILabel = UILabel()
     private let chooseRegularityButton: UIButton = UIButton(type: .system)
     
+    // MARK: - Properties
+    var onRegularityChanged: ((String) -> Void)?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -160,6 +163,7 @@ final class HabitRegularityCell: UICollectionViewCell {
             let title = measurement
             let action = UIAction(title: title, image: nil) { [weak self] _ in
                 self?.currentRegularityLabel.text = title
+                self?.onRegularityChanged?(title)
             }
             menuActions.append(action)
         }

@@ -66,6 +66,9 @@ final class HabitDayPartCell: UICollectionViewCell {
     private let currentDayPartLabel: UILabel = UILabel()
     private let chooseDayPartButton: UIButton = UIButton(type: .system)
     
+    // MARK: - Properties
+    var onDayPartChanged: ((String) -> Void)?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -160,6 +163,7 @@ final class HabitDayPartCell: UICollectionViewCell {
             let title = measurement
             let action = UIAction(title: title, image: nil) { [weak self] _ in
                 self?.currentDayPartLabel.text = title
+                self?.onDayPartChanged?(title)
             }
             menuActions.append(action)
         }

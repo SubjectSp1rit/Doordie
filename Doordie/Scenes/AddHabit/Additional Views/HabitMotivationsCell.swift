@@ -56,6 +56,9 @@ final class HabitMotivationsCell: UICollectionViewCell {
     private let habitMotivationsLabel: UILabel = UILabel()
     private let habitMotivationsTextView: UITextView = UITextView()
     
+    // MARK: - Properties
+    var onMotivationsChanged: ((String) -> Void)?
+    
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,11 +116,20 @@ final class HabitMotivationsCell: UICollectionViewCell {
         habitMotivationsTextView.isScrollEnabled = true
         habitMotivationsTextView.textContainerInset = UIEdgeInsets(top: Constants.HabitTitleTextView.textTopIndent, left: Constants.HabitTitleTextView.textLeadingIndent, bottom: Constants.HabitTitleTextView.textBottomIndent, right: Constants.HabitTitleTextView.textTrailingIndent)
         
+        habitMotivationsTextView.delegate = self
+        
         habitMotivationsTextView.setHeight(Constants.HabitTitleTextView.height)
         habitMotivationsTextView.pinTop(to: habitMotivationsLabel.bottomAnchor, Constants.HabitTitleTextView.topIndent)
         habitMotivationsTextView.pinBottom(to: wrap.bottomAnchor)
         habitMotivationsTextView.pinLeft(to: wrap.leadingAnchor)
         habitMotivationsTextView.pinRight(to: wrap.trailingAnchor)
+    }
+}
+
+extension HabitMotivationsCell: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        let text = habitMotivationsTextView.text
+        onMotivationsChanged?(text ?? "")
     }
 }
 

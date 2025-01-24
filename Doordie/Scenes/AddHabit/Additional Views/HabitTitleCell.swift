@@ -38,6 +38,9 @@ final class HabitTitleCell: UICollectionViewCell {
             static let clearButtonMode: UITextField.ViewMode = .always
             static let textAlignment: NSTextAlignment = .left
             static let leftTextPadding: CGFloat = 8
+            static let minimumBorderWidth: CGFloat = 0
+            static let maximumBorderWidth: CGFloat = 2
+            static let borderColor: CGColor = UIColor.systemRed.cgColor
         }
     }
     
@@ -46,6 +49,9 @@ final class HabitTitleCell: UICollectionViewCell {
     // MARK: - UI Components
     private let habitTitleLabel: UILabel = UILabel()
     private let habitTitleTextField: UITextField = UITextField()
+    
+    // MARK: - Properties
+    var onTitleChanged: ((String) -> Void)?
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -89,11 +95,23 @@ final class HabitTitleCell: UICollectionViewCell {
         habitTitleTextField.clearButtonMode = Constants.HabitTitleTextField.clearButtonMode
         habitTitleTextField.textAlignment = Constants.HabitTitleTextField.textAlignment
         habitTitleTextField.setLeftPadding(left: Constants.HabitTitleTextField.leftTextPadding)
+        habitTitleTextField.layer.borderColor = Constants.HabitTitleTextField.borderColor
+        
+        habitTitleTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         
         habitTitleTextField.setHeight(Constants.HabitTitleTextField.height)
         habitTitleTextField.pinTop(to: habitTitleLabel.bottomAnchor, Constants.HabitTitleTextField.topIndent)
         habitTitleTextField.pinBottom(to: contentView.bottomAnchor)
         habitTitleTextField.pinLeft(to: contentView.leadingAnchor)
         habitTitleTextField.pinRight(to: contentView.trailingAnchor)
+    }
+    
+    // MARK: - Actions
+    @objc
+    private func textDidChange() {
+        habitTitleTextField.layer.borderWidth = Constants.HabitTitleTextField.minimumBorderWidth
+        
+        let text = habitTitleTextField.text
+        onTitleChanged?(text ?? "")
     }
 }
