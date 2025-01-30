@@ -11,3 +11,8 @@ import UIKit
 enum HomeModels {
     
 }
+
+struct HabitModel {
+    var title: String?
+    var motivations: String?
+}

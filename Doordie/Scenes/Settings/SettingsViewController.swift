@@ -27,12 +27,27 @@ final class SettingsViewController: UIViewController {
             static let tintColor: UIColor = .white
             static let imageName: String = "bell.fill"
         }
+        
+        enum Table {
+            static let bgColor: UIColor = .clear
+            static let separatorStyle: UITableViewCell.SeparatorStyle = .none
+            static let numberOfSections: Int = 3
+            static let numberOfRowsInSection0: Int = 1
+            static let numberOfRowsInSection1: Int = 2
+            static let numberOfRowsInSection2: Int = 4
+            static let indentBetweenSections: CGFloat = 20
+        }
+        
+        enum HeaderView {
+            
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let navBarNotificationBtn: UIButton = UIButton(type: .system)
+    private let table: UITableView = UITableView()
     
     // MARK: - Variables
     private var interactor: SettingsBusinessLogic
@@ -58,6 +73,7 @@ final class SettingsViewController: UIViewController {
         configureBackground()
         configureNavBar()
         configureNavBarNotificationBtn()
+        configureTable()
     }
     
     private func configureBackground() {
@@ -92,9 +108,69 @@ final class SettingsViewController: UIViewController {
         navigationItem.rightBarButtonItem = barButton
     }
     
+    private func configureTable() {
+        view.addSubview(table)
+        
+        table.delegate = self
+        table.dataSource = self
+        table.separatorStyle = Constants.Table.separatorStyle
+        
+        table.register(ProfileCell.self, forCellReuseIdentifier: ProfileCell.reuseId)
+        
+        table.pinTop(to: view.topAnchor)
+        table.pinBottom(to: view.bottomAnchor)
+        table.pinLeft(to: view.leadingAnchor)
+        table.pinRight(to: view.trailingAnchor)
+        
+        table.backgroundColor = Constants.Table.bgColor
+    }
+    
     // MARK: - Actions
     @objc
     private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension SettingsViewController: UITableViewDelegate { }
+
+// MARK: - UITableViewDataSource
+extension SettingsViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Constants.Table.numberOfSections
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+            
+        case 0: return Constants.Table.numberOfRowsInSection0
+            
+        case 1: return Constants.Table.numberOfRowsInSection1
+            
+        case 2: return Constants.Table.numberOfRowsInSection2
+            
+        default: return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = table.dequeueReusableCell(withIdentifier: ProfileCell.reuseId, for: indexPath)
+        cell.selectionStyle = .none
+        guard let profileCell = cell as? ProfileCell else { return cell }
+        
+        profileCell.configure()
+        
+        return profileCell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return Constants.Table.indentBetweenSections
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let spacerView: UIView = UIView()
+        spacerView.backgroundColor = .clear
+        return spacerView
     }
 }
