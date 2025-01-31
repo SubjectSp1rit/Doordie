@@ -38,8 +38,8 @@ final class SettingsViewController: UIViewController {
             static let indentBetweenSections: CGFloat = 20
         }
         
-        enum HeaderView {
-            
+        enum Utilities {
+            static let telegramChannelLink: String = "doordie_app"
         }
     }
     
@@ -239,5 +239,19 @@ extension SettingsViewController: UITableViewDataSource {
         let spacerView: UIView = UIView()
         spacerView.backgroundColor = .clear
         return spacerView
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = indexPath.section
+        let row = indexPath.row
+        
+        switch (section, row) {
+            
+        case (2, 3):
+            interactor.openTelegram(SettingsModels.OpenTelegram.Request(link: Constants.Utilities.telegramChannelLink))
+            
+        default:
+            return
+        }
     }
 }

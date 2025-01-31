@@ -9,5 +9,12 @@ import Foundation
 import UIKit
 
 enum SettingsModels {
-    
+    enum OpenTelegram {
+        struct Request {
+            let link: String
+        }
+        struct Response {
+            let link: String
+        }
+    }
 }

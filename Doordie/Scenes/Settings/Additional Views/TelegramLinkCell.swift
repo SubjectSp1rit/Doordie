@@ -27,7 +27,7 @@ final class TelegramLinkCell: UITableViewCell {
         }
         
         enum Chevron {
-            static let imageName: String = "chevron.right"
+            static let imageName: String = "square.and.arrow.up"
             static let trailingIndent: CGFloat = 12
             static let tintColor: UIColor = UIColor(hex: "B3B3B3")
         }

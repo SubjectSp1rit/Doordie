@@ -16,4 +16,9 @@ final class SettingsInteractor: SettingsBusinessLogic {
     init(presenter: SettingsPresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Public Methods
+    func openTelegram(_ request: SettingsModels.OpenTelegram.Request) {
+        presenter.presentTelegram(SettingsModels.OpenTelegram.Response(link: request.link))
+    }
 }
