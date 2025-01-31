@@ -117,6 +117,7 @@ final class SettingsViewController: UIViewController {
         
         table.register(ProfileCell.self, forCellReuseIdentifier: ProfileCell.reuseId)
         table.register(AppLanguageCell.self, forCellReuseIdentifier: AppLanguageCell.reuseId)
+        table.register(AppThemeCell.self, forCellReuseIdentifier: AppThemeCell.reuseId)
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -178,6 +179,16 @@ extension SettingsViewController: UITableViewDataSource {
             appLanguageCell.configure()
             
             return appLanguageCell
+            
+        // AppThemeCell
+        case (1, 1):
+            let cell = table.dequeueReusableCell(withIdentifier: AppThemeCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let appThemeCell = cell as? AppThemeCell else { return cell }
+            
+            appThemeCell.configure()
+            
+            return appThemeCell
             
         default:
             return UITableViewCell()

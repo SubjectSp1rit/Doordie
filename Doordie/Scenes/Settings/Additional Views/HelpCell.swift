@@ -1,5 +1,5 @@
 //
-//  AppThemeCell.swift
+//  HelpCell.swift
 //  Doordie
 //
 //  Created by Arseniy on 31.01.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class AppThemeCell: UITableViewCell {
+final class AppLanguageCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -32,15 +32,15 @@ final class AppThemeCell: UITableViewCell {
             static let tintColor: UIColor = UIColor(hex: "B3B3B3")
         }
         
-        enum ThemeImage {
-            static let imageName: String = "sun.max"
+        enum LanguageImage {
+            static let imageName: String = "globe"
             static let tintColor: UIColor = .white
             static let imageSide: CGFloat = 24
             static let leadingIndent: CGFloat = 18
         }
         
-        enum AppThemeLabel {
-            static let text: String = "App theme"
+        enum AppLanguageLabel {
+            static let text: String = "App language"
             static let textColor: UIColor = .white
             static let textAlignment: NSTextAlignment = .left
             static let fontWeight: UIFont.Weight = .medium
@@ -48,7 +48,7 @@ final class AppThemeCell: UITableViewCell {
             static let leadingIndent: CGFloat = 12
         }
         
-        enum CurrentAppThemeLabel {
+        enum CurrentAppLanguageLabel {
             static let textColor: UIColor = UIColor(hex: "B3B3B3")
             static let textAlignment: NSTextAlignment = .right
             static let fontSize: CGFloat = 18
@@ -57,14 +57,14 @@ final class AppThemeCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "AppThemeCell"
+    static let reuseId: String = "AppLanguageCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
     private let chevron: UIImageView = UIImageView()
-    private let themeImage: UIImageView = UIImageView()
-    private let appThemeLabel: UILabel = UILabel()
-    private let currentAppThemeLabel: UILabel = UILabel()
+    private let languageImage: UIImageView = UIImageView()
+    private let appLanguageLabel: UILabel = UILabel()
+    private let currentAppLanguageLabel: UILabel = UILabel()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -80,7 +80,7 @@ final class AppThemeCell: UITableViewCell {
     
     // MARK: - Public Methods
     func configure() {
-        currentAppThemeLabel.text = "Ultramarine"
+        currentAppLanguageLabel.text = "English"
     }
     
     // MARK: - Private Methods
@@ -91,9 +91,9 @@ final class AppThemeCell: UITableViewCell {
         
         configureWrap()
         configureChevron()
-        configureThemeImage()
-        configureAppThemeLabel()
-        configureCurrentAppThemeLabel()
+        configureLanguageImage()
+        configureAppLanguageLabel()
+        configureCurrentAppLanguageLabel()
     }
     
     private func configureWrap() {
@@ -101,7 +101,7 @@ final class AppThemeCell: UITableViewCell {
         
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
-        wrap.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        wrap.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
@@ -120,40 +120,40 @@ final class AppThemeCell: UITableViewCell {
         chevron.pinRight(to: wrap.trailingAnchor, Constants.Chevron.trailingIndent)
     }
     
-    private func configureThemeImage() {
-        wrap.addSubview(themeImage)
+    private func configureLanguageImage() {
+        wrap.addSubview(languageImage)
         
-        themeImage.image = UIImage(systemName: Constants.ThemeImage.imageName)
-        themeImage.tintColor = Constants.ThemeImage.tintColor
-        themeImage.clipsToBounds = true
-        themeImage.setWidth(Constants.ThemeImage.imageSide)
-        themeImage.setHeight(Constants.ThemeImage.imageSide)
+        languageImage.image = UIImage(systemName: Constants.LanguageImage.imageName)
+        languageImage.tintColor = Constants.LanguageImage.tintColor
+        languageImage.clipsToBounds = true
+        languageImage.setWidth(Constants.LanguageImage.imageSide)
+        languageImage.setHeight(Constants.LanguageImage.imageSide)
         
-        themeImage.pinCenterY(to: wrap.centerYAnchor)
-        themeImage.pinLeft(to: wrap.leadingAnchor, Constants.ThemeImage.leadingIndent)
+        languageImage.pinCenterY(to: wrap.centerYAnchor)
+        languageImage.pinLeft(to: wrap.leadingAnchor, Constants.LanguageImage.leadingIndent)
     }
     
-    private func configureAppThemeLabel() {
-        wrap.addSubview(appThemeLabel)
+    private func configureAppLanguageLabel() {
+        wrap.addSubview(appLanguageLabel)
         
-        appThemeLabel.text = Constants.AppThemeLabel.text
-        appThemeLabel.textColor = Constants.AppThemeLabel.textColor
-        appThemeLabel.textAlignment = Constants.AppThemeLabel.textAlignment
-        appThemeLabel.font = UIFont.systemFont(ofSize: Constants.AppThemeLabel.fontSize, weight: Constants.AppThemeLabel.fontWeight)
+        appLanguageLabel.text = Constants.AppLanguageLabel.text
+        appLanguageLabel.textColor = Constants.AppLanguageLabel.textColor
+        appLanguageLabel.textAlignment = Constants.AppLanguageLabel.textAlignment
+        appLanguageLabel.font = UIFont.systemFont(ofSize: Constants.AppLanguageLabel.fontSize, weight: Constants.AppLanguageLabel.fontWeight)
         
-        appThemeLabel.pinCenterY(to: wrap.centerYAnchor)
-        appThemeLabel.pinLeft(to: themeImage.trailingAnchor, Constants.AppThemeLabel.leadingIndent)
+        appLanguageLabel.pinCenterY(to: wrap.centerYAnchor)
+        appLanguageLabel.pinLeft(to: languageImage.trailingAnchor, Constants.AppLanguageLabel.leadingIndent)
     }
     
-    private func configureCurrentAppThemeLabel() {
-        wrap.addSubview(currentAppThemeLabel)
+    private func configureCurrentAppLanguageLabel() {
+        wrap.addSubview(currentAppLanguageLabel)
         
-        currentAppThemeLabel.textColor = Constants.CurrentAppThemeLabel.textColor
-        currentAppThemeLabel.textAlignment = Constants.CurrentAppThemeLabel.textAlignment
-        currentAppThemeLabel.font = UIFont.systemFont(ofSize: Constants.CurrentAppThemeLabel.fontSize, weight: Constants.CurrentAppThemeLabel.fontWeight)
+        currentAppLanguageLabel.textColor = Constants.CurrentAppLanguageLabel.textColor
+        currentAppLanguageLabel.textAlignment = Constants.CurrentAppLanguageLabel.textAlignment
+        currentAppLanguageLabel.font = UIFont.systemFont(ofSize: Constants.CurrentAppLanguageLabel.fontSize, weight: Constants.CurrentAppLanguageLabel.fontWeight)
         
-        currentAppThemeLabel.pinCenterY(to: wrap.centerYAnchor)
-        currentAppThemeLabel.pinRight(to: chevron.leadingAnchor, Constants.CurrentAppThemeLabel.trailingIndent)
+        currentAppLanguageLabel.pinCenterY(to: wrap.centerYAnchor)
+        currentAppLanguageLabel.pinRight(to: chevron.leadingAnchor, Constants.CurrentAppLanguageLabel.trailingIndent)
     }
 }
 
