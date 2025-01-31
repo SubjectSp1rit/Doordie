@@ -121,6 +121,7 @@ final class SettingsViewController: UIViewController {
         table.register(HelpCell.self, forCellReuseIdentifier: HelpCell.reuseId)
         table.register(TermsOfUseCell.self, forCellReuseIdentifier: TermsOfUseCell.reuseId)
         table.register(AppInfoCell.self, forCellReuseIdentifier: AppInfoCell.reuseId)
+        table.register(TelegramLinkCell.self, forCellReuseIdentifier: TelegramLinkCell.reuseId)
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -216,6 +217,14 @@ extension SettingsViewController: UITableViewDataSource {
             guard let appInfoCell = cell as? AppInfoCell else { return cell }
             
             return appInfoCell
+            
+        // TelegramLinkCell
+        case (2, 3):
+            let cell = table.dequeueReusableCell(withIdentifier: TelegramLinkCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let telegramLinkCell = cell as? TelegramLinkCell else { return cell }
+            
+            return telegramLinkCell
             
         default:
             return UITableViewCell()
