@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HelpCell: UITableViewCell {
+final class TermsOfUseCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -21,7 +21,6 @@ final class HelpCell: UITableViewCell {
         enum Wrap {
             static let height: CGFloat = 55
             static let bgColor: UIColor = UIColor(hex: "3A50C2").withAlphaComponent(0.6)
-            static let cornerRadius: CGFloat = 20
             static let leadingIndent: CGFloat = 18
             static let trailingIndent: CGFloat = 18
         }
@@ -32,15 +31,15 @@ final class HelpCell: UITableViewCell {
             static let tintColor: UIColor = UIColor(hex: "B3B3B3")
         }
         
-        enum HelpImage {
-            static let imageName: String = "questionmark.circle"
+        enum TermsOfUseImage {
+            static let imageName: String = "text.document"
             static let tintColor: UIColor = .white
             static let imageSide: CGFloat = 24
             static let leadingIndent: CGFloat = 18
         }
         
-        enum HelpLabel {
-            static let text: String = "Help"
+        enum TermsOfUseLabel {
+            static let text: String = "Terms of use"
             static let textColor: UIColor = .white
             static let textAlignment: NSTextAlignment = .left
             static let fontWeight: UIFont.Weight = .medium
@@ -49,13 +48,13 @@ final class HelpCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "HelpCell"
+    static let reuseId: String = "TermsOfUseCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
     private let chevron: UIImageView = UIImageView()
-    private let helpImage: UIImageView = UIImageView()
-    private let helpLabel: UILabel = UILabel()
+    private let termsOfUseImage: UIImageView = UIImageView()
+    private let termsOfUseLabel: UILabel = UILabel()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -77,16 +76,14 @@ final class HelpCell: UITableViewCell {
         
         configureWrap()
         configureChevron()
-        configureHelpImage()
-        configureHelpLabel()
+        configureTermsOfUseImage()
+        configureTermsOfUseLabel()
     }
     
     private func configureWrap() {
         contentView.addSubview(wrap)
         
         wrap.backgroundColor = Constants.Wrap.bgColor
-        wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
-        wrap.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
@@ -105,29 +102,29 @@ final class HelpCell: UITableViewCell {
         chevron.pinRight(to: wrap.trailingAnchor, Constants.Chevron.trailingIndent)
     }
     
-    private func configureHelpImage() {
-        wrap.addSubview(helpImage)
+    private func configureTermsOfUseImage() {
+        wrap.addSubview(termsOfUseImage)
         
-        helpImage.image = UIImage(systemName: Constants.HelpImage.imageName)
-        helpImage.tintColor = Constants.HelpImage.tintColor
-        helpImage.clipsToBounds = true
-        helpImage.setWidth(Constants.HelpImage.imageSide)
-        helpImage.setHeight(Constants.HelpImage.imageSide)
+        termsOfUseImage.image = UIImage(systemName: Constants.TermsOfUseImage.imageName)
+        termsOfUseImage.tintColor = Constants.TermsOfUseImage.tintColor
+        termsOfUseImage.clipsToBounds = true
+        termsOfUseImage.setWidth(Constants.TermsOfUseImage.imageSide)
+        termsOfUseImage.setHeight(Constants.TermsOfUseImage.imageSide)
         
-        helpImage.pinCenterY(to: wrap.centerYAnchor)
-        helpImage.pinLeft(to: wrap.leadingAnchor, Constants.HelpImage.leadingIndent)
+        termsOfUseImage.pinCenterY(to: wrap.centerYAnchor)
+        termsOfUseImage.pinLeft(to: wrap.leadingAnchor, Constants.TermsOfUseImage.leadingIndent)
     }
     
-    private func configureHelpLabel() {
-        wrap.addSubview(helpLabel)
+    private func configureTermsOfUseLabel() {
+        wrap.addSubview(termsOfUseLabel)
         
-        helpLabel.text = Constants.HelpLabel.text
-        helpLabel.textColor = Constants.HelpLabel.textColor
-        helpLabel.textAlignment = Constants.HelpLabel.textAlignment
-        helpLabel.font = UIFont.systemFont(ofSize: Constants.HelpLabel.fontSize, weight: Constants.HelpLabel.fontWeight)
+        termsOfUseLabel.text = Constants.TermsOfUseLabel.text
+        termsOfUseLabel.textColor = Constants.TermsOfUseLabel.textColor
+        termsOfUseLabel.textAlignment = Constants.TermsOfUseLabel.textAlignment
+        termsOfUseLabel.font = UIFont.systemFont(ofSize: Constants.TermsOfUseLabel.fontSize, weight: Constants.TermsOfUseLabel.fontWeight)
         
-        helpLabel.pinCenterY(to: wrap.centerYAnchor)
-        helpLabel.pinLeft(to: helpImage.trailingAnchor, Constants.HelpLabel.leadingIndent)
+        termsOfUseLabel.pinCenterY(to: wrap.centerYAnchor)
+        termsOfUseLabel.pinLeft(to: termsOfUseImage.trailingAnchor, Constants.TermsOfUseLabel.leadingIndent)
     }
 }
 
