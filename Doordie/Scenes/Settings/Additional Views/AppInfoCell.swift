@@ -1,5 +1,5 @@
 //
-//  TermsOfUseCell.swift
+//  AppInfoCell.swift
 //  Doordie
 //
 //  Created by Arseniy on 31.01.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TermsOfUseCell: UITableViewCell {
+final class AppInfoCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -31,15 +31,15 @@ final class TermsOfUseCell: UITableViewCell {
             static let tintColor: UIColor = UIColor(hex: "B3B3B3")
         }
         
-        enum TermsOfUseImage {
-            static let imageName: String = "text.document"
+        enum AppInfoImage {
+            static let imageName: String = "heart"
             static let tintColor: UIColor = .white
             static let imageSide: CGFloat = 24
             static let leadingIndent: CGFloat = 18
         }
         
-        enum TermsOfUseLabel {
-            static let text: String = "Terms of use"
+        enum AppInfoLabel {
+            static let text: String = "App info"
             static let textColor: UIColor = .white
             static let textAlignment: NSTextAlignment = .left
             static let fontWeight: UIFont.Weight = .medium
@@ -48,13 +48,13 @@ final class TermsOfUseCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "TermsOfUseCell"
+    static let reuseId: String = "AppInfoCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
     private let chevron: UIImageView = UIImageView()
-    private let termsOfUseImage: UIImageView = UIImageView()
-    private let termsOfUseLabel: UILabel = UILabel()
+    private let appInfoImage: UIImageView = UIImageView()
+    private let appInfoLabel: UILabel = UILabel()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -76,8 +76,8 @@ final class TermsOfUseCell: UITableViewCell {
         
         configureWrap()
         configureChevron()
-        configureTermsOfUseImage()
-        configureTermsOfUseLabel()
+        configureAppInfoImage()
+        configureAppInfoLabel()
     }
     
     private func configureWrap() {
@@ -102,28 +102,28 @@ final class TermsOfUseCell: UITableViewCell {
         chevron.pinRight(to: wrap.trailingAnchor, Constants.Chevron.trailingIndent)
     }
     
-    private func configureTermsOfUseImage() {
-        wrap.addSubview(termsOfUseImage)
+    private func configureAppInfoImage() {
+        wrap.addSubview(appInfoImage)
         
-        termsOfUseImage.image = UIImage(systemName: Constants.TermsOfUseImage.imageName)
-        termsOfUseImage.tintColor = Constants.TermsOfUseImage.tintColor
-        termsOfUseImage.clipsToBounds = true
-        termsOfUseImage.setWidth(Constants.TermsOfUseImage.imageSide)
-        termsOfUseImage.setHeight(Constants.TermsOfUseImage.imageSide)
+        appInfoImage.image = UIImage(systemName: Constants.AppInfoImage.imageName)
+        appInfoImage.tintColor = Constants.AppInfoImage.tintColor
+        appInfoImage.clipsToBounds = true
+        appInfoImage.setWidth(Constants.AppInfoImage.imageSide)
+        appInfoImage.setHeight(Constants.AppInfoImage.imageSide)
         
-        termsOfUseImage.pinCenterY(to: wrap.centerYAnchor)
-        termsOfUseImage.pinLeft(to: wrap.leadingAnchor, Constants.TermsOfUseImage.leadingIndent)
+        appInfoImage.pinCenterY(to: wrap.centerYAnchor)
+        appInfoImage.pinLeft(to: wrap.leadingAnchor, Constants.AppInfoImage.leadingIndent)
     }
     
-    private func configureTermsOfUseLabel() {
-        wrap.addSubview(termsOfUseLabel)
+    private func configureAppInfoLabel() {
+        wrap.addSubview(appInfoLabel)
         
-        termsOfUseLabel.text = Constants.TermsOfUseLabel.text
-        termsOfUseLabel.textColor = Constants.TermsOfUseLabel.textColor
-        termsOfUseLabel.textAlignment = Constants.TermsOfUseLabel.textAlignment
-        termsOfUseLabel.font = UIFont.systemFont(ofSize: Constants.TermsOfUseLabel.fontSize, weight: Constants.TermsOfUseLabel.fontWeight)
+        appInfoLabel.text = Constants.AppInfoLabel.text
+        appInfoLabel.textColor = Constants.AppInfoLabel.textColor
+        appInfoLabel.textAlignment = Constants.AppInfoLabel.textAlignment
+        appInfoLabel.font = UIFont.systemFont(ofSize: Constants.AppInfoLabel.fontSize, weight: Constants.AppInfoLabel.fontWeight)
         
-        termsOfUseLabel.pinCenterY(to: wrap.centerYAnchor)
-        termsOfUseLabel.pinLeft(to: termsOfUseImage.trailingAnchor, Constants.TermsOfUseLabel.leadingIndent)
+        appInfoLabel.pinCenterY(to: wrap.centerYAnchor)
+        appInfoLabel.pinLeft(to: appInfoImage.trailingAnchor, Constants.AppInfoLabel.leadingIndent)
     }
 }
