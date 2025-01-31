@@ -1,5 +1,5 @@
 //
-//  HelpCell.swift
+//  TermsOfUseCell.swift
 //  Doordie
 //
 //  Created by Arseniy on 31.01.2025.
@@ -130,4 +130,5 @@ final class HelpCell: UITableViewCell {
         helpLabel.pinLeft(to: helpImage.trailingAnchor, Constants.HelpLabel.leadingIndent)
     }
 }
+
 
