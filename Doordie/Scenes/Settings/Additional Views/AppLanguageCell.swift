@@ -27,14 +27,15 @@ final class AppLanguageCell: UITableViewCell {
             static let trailingIndent: CGFloat = 18
         }
         
-        enum ChevronRight {
-            static let imageName: String = "chevron.right"
+        enum Chevron {
+            static let imageName: String = "chevron.up.chevron.down"
             static let trailingIndent: CGFloat = 12
-            static let tintColor: UIColor = .white
+            static let tintColor: UIColor = UIColor(hex: "B3B3B3")
         }
         
         enum LanguageImage {
-            static let imageName: String = ""
+            static let imageName: String = "globe"
+            static let tintColor: UIColor = .white
             static let imageSide: CGFloat = 24
             static let leadingIndent: CGFloat = 18
         }
@@ -43,15 +44,15 @@ final class AppLanguageCell: UITableViewCell {
             static let text: String = "App language"
             static let textColor: UIColor = .white
             static let textAlignment: NSTextAlignment = .left
-            static let fontWeight: UIFont.Weight = .regular
-            static let fontSize: CGFloat = 22
+            static let fontWeight: UIFont.Weight = .medium
+            static let fontSize: CGFloat = 18
             static let leadingIndent: CGFloat = 12
         }
         
         enum CurrentAppLanguageLabel {
             static let textColor: UIColor = UIColor(hex: "B3B3B3")
             static let textAlignment: NSTextAlignment = .right
-            static let fontSize: CGFloat = 22
+            static let fontSize: CGFloat = 18
             static let fontWeight: UIFont.Weight = .light
             static let trailingIndent: CGFloat = 2
         }
@@ -61,7 +62,7 @@ final class AppLanguageCell: UITableViewCell {
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
-    private let chevronRight: UIImageView = UIImageView()
+    private let chevron: UIImageView = UIImageView()
     private let languageImage: UIImageView = UIImageView()
     private let appLanguageLabel: UILabel = UILabel()
     private let currentAppLanguageLabel: UILabel = UILabel()
@@ -80,8 +81,7 @@ final class AppLanguageCell: UITableViewCell {
     
     // MARK: - Public Methods
     func configure() {
-        languageImage.image = UIImage(named: "profileImage")
-        appLanguageLabel.text = "Dinarikk <3"
+        currentAppLanguageLabel.text = "English"
     }
     
     // MARK: - Private Methods
@@ -91,7 +91,7 @@ final class AppLanguageCell: UITableViewCell {
         contentView.layer.masksToBounds = false
         
         configureWrap()
-        configureChevronRight()
+        configureChevron()
         configureLanguageImage()
         configureAppLanguageLabel()
         configureCurrentAppLanguageLabel()
@@ -102,6 +102,7 @@ final class AppLanguageCell: UITableViewCell {
         
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
+        wrap.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
@@ -110,20 +111,21 @@ final class AppLanguageCell: UITableViewCell {
         wrap.pinRight(to: contentView.trailingAnchor, Constants.Wrap.trailingIndent)
     }
     
-    private func configureChevronRight() {
-        wrap.addSubview(chevronRight)
+    private func configureChevron() {
+        wrap.addSubview(chevron)
         
-        chevronRight.image = UIImage(systemName: Constants.ChevronRight.imageName)
-        chevronRight.tintColor = Constants.ChevronRight.tintColor
+        chevron.image = UIImage(systemName: Constants.Chevron.imageName)
+        chevron.tintColor = Constants.Chevron.tintColor
         
-        chevronRight.pinCenterY(to: wrap.centerYAnchor)
-        chevronRight.pinRight(to: wrap.trailingAnchor, Constants.ChevronRight.trailingIndent)
+        chevron.pinCenterY(to: wrap.centerYAnchor)
+        chevron.pinRight(to: wrap.trailingAnchor, Constants.Chevron.trailingIndent)
     }
     
     private func configureLanguageImage() {
         wrap.addSubview(languageImage)
         
         languageImage.image = UIImage(systemName: Constants.LanguageImage.imageName)
+        languageImage.tintColor = Constants.LanguageImage.tintColor
         languageImage.clipsToBounds = true
         languageImage.setWidth(Constants.LanguageImage.imageSide)
         languageImage.setHeight(Constants.LanguageImage.imageSide)
@@ -135,6 +137,7 @@ final class AppLanguageCell: UITableViewCell {
     private func configureAppLanguageLabel() {
         wrap.addSubview(appLanguageLabel)
         
+        appLanguageLabel.text = Constants.AppLanguageLabel.text
         appLanguageLabel.textColor = Constants.AppLanguageLabel.textColor
         appLanguageLabel.textAlignment = Constants.AppLanguageLabel.textAlignment
         appLanguageLabel.font = UIFont.systemFont(ofSize: Constants.AppLanguageLabel.fontSize, weight: Constants.AppLanguageLabel.fontWeight)
@@ -144,6 +147,13 @@ final class AppLanguageCell: UITableViewCell {
     }
     
     private func configureCurrentAppLanguageLabel() {
+        wrap.addSubview(currentAppLanguageLabel)
         
+        currentAppLanguageLabel.textColor = Constants.CurrentAppLanguageLabel.textColor
+        currentAppLanguageLabel.textAlignment = Constants.CurrentAppLanguageLabel.textAlignment
+        currentAppLanguageLabel.font = UIFont.systemFont(ofSize: Constants.CurrentAppLanguageLabel.fontSize, weight: Constants.CurrentAppLanguageLabel.fontWeight)
+        
+        currentAppLanguageLabel.pinCenterY(to: wrap.centerYAnchor)
+        currentAppLanguageLabel.pinRight(to: chevron.leadingAnchor, Constants.CurrentAppLanguageLabel.trailingIndent)
     }
 }

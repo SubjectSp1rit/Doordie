@@ -116,6 +116,7 @@ final class SettingsViewController: UIViewController {
         table.separatorStyle = Constants.Table.separatorStyle
         
         table.register(ProfileCell.self, forCellReuseIdentifier: ProfileCell.reuseId)
+        table.register(AppLanguageCell.self, forCellReuseIdentifier: AppLanguageCell.reuseId)
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -155,13 +156,32 @@ extension SettingsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = table.dequeueReusableCell(withIdentifier: ProfileCell.reuseId, for: indexPath)
-        cell.selectionStyle = .none
-        guard let profileCell = cell as? ProfileCell else { return cell }
-        
-        profileCell.configure()
-        
-        return profileCell
+        let section = indexPath.section, row = indexPath.row
+        switch (section, row) {
+            
+        // Profile Cell
+        case (0, 0):
+            let cell = table.dequeueReusableCell(withIdentifier: ProfileCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let profileCell = cell as? ProfileCell else { return cell }
+            
+            profileCell.configure()
+            
+            return profileCell
+            
+        // AppLanguageCell
+        case (1, 0):
+            let cell = table.dequeueReusableCell(withIdentifier: AppLanguageCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let appLanguageCell = cell as? AppLanguageCell else { return cell }
+            
+            appLanguageCell.configure()
+            
+            return appLanguageCell
+            
+        default:
+            return UITableViewCell()
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
