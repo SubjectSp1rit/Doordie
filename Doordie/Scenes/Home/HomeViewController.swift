@@ -25,6 +25,12 @@ final class HomeViewController: UIViewController {
             static let headerCellHeight: CGFloat = 60
             static let horizontalDateCollectionCellHeight: CGFloat = 100
             static let dayPartSelectorCellHeight: CGFloat = 40
+            static let habitCellHeight: CGFloat = 80
+            
+            static let headerCellSectionIndex: Int = 0
+            static let horizontalDateCollectionCellSectionIndex: Int = 1
+            static let dayPartSelectorCellSectionIndex: Int = 2
+            static let habitCellSectionIndex: Int = 3
         }
         
         enum NavigationBar {
@@ -62,12 +68,12 @@ final class HomeViewController: UIViewController {
     private let yourHabitsLabel: UILabel = UILabel()
     
     // MARK: - Variables
-    private var interactor: HomeBusinessLogic
+    private var interactor: (HomeBusinessLogic & HabitsStorage)
     private var blurredNavBarView: UIVisualEffectView?
     private var navBarRendered: Bool = false
     
     // MARK: - Lifecycle
-    init(interactor: HomeBusinessLogic) {
+    init(interactor: (HomeBusinessLogic & HabitsStorage)) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -81,11 +87,21 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureNotificationCenter()
+        
+        // Подписываемя на события AddHabitViewController (добавление привычки)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleHabitAddedNotification),
+                                               name: .habitAdded,
+                                               object: nil)
+
+        interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateNavBarTransparency()
+        
+        interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
     
     override func viewDidLayoutSubviews() {
@@ -99,6 +115,15 @@ final class HomeViewController: UIViewController {
             navBarRendered = true
         }
         updateNavBarTransparency()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Public Methods
+    func displayUpdatedHabits(_ viewModel: HomeModels.LoadHabits.ViewModel) {
+        table.reloadData()
     }
     
     // MARK: - Private Methods
@@ -220,6 +245,7 @@ final class HomeViewController: UIViewController {
         }
     }
     
+    // MARK: - Actions
     @objc
     private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
@@ -230,6 +256,10 @@ final class HomeViewController: UIViewController {
         DispatchQueue.main.async {
             self.scrollViewDidScroll(self.table)
         }
+    }
+    
+    @objc func handleHabitAddedNotification(_ notification: Notification) {
+        interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
 }
 
@@ -255,7 +285,7 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 3 {
-            return 20
+            return interactor.habits.count
         }
         return Constants.Table.numberOfRowsInSection
     }

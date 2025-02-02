@@ -360,14 +360,21 @@ extension AddHabitViewController: UICollectionViewDataSource {
                    let measurement = self.habitMeasurementType,
                    let regularity = self.habitPeriod,
                    let dayPart = self.habitDayPart {
-                    print(title)
-                    print(motivations)
-                    print(color)
-                    print(icon)
-                    print(quantity)
-                    print(measurement)
-                    print(regularity)
-                    print(dayPart)
+                    let currentDate = Date()
+                    let newHabit = HabitModel(creationDate: currentDate,
+                                              title: title,
+                                              motivations: motivations,
+                                              color: color,
+                                              icon: icon,
+                                              quantity: quantity,
+                                              measurement: measurement,
+                                              regularity: regularity,
+                                              dayPart: dayPart)
+                    CoreManager.shared.addNewHabit(newHabit)
+                    
+                    NotificationCenter.default.post(name: .habitAdded, object: nil)
+                    
+                    self.dismiss(animated: true)
                 }
             }
             
