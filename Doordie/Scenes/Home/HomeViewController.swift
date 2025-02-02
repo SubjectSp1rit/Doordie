@@ -267,11 +267,17 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let sectionIndex = indexPath.section
+        
         switch sectionIndex {
-        case 0: return Constants.Table.headerCellHeight
-        case 1: return Constants.Table.horizontalDateCollectionCellHeight
-        case 2: return Constants.Table.dayPartSelectorCellHeight
-        case 3: return 80
+            
+        case Constants.Table.headerCellSectionIndex: return Constants.Table.headerCellHeight
+            
+        case Constants.Table.horizontalDateCollectionCellSectionIndex: return Constants.Table.horizontalDateCollectionCellHeight
+            
+        case Constants.Table.dayPartSelectorCellSectionIndex: return Constants.Table.dayPartSelectorCellHeight
+            
+        case Constants.Table.habitCellSectionIndex: return Constants.Table.habitCellHeight
+            
         default: return UITableView.automaticDimension
         }
     }
@@ -284,7 +290,7 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 3 {
+        if section == Constants.Table.habitCellSectionIndex {
             return interactor.habits.count
         }
         return Constants.Table.numberOfRowsInSection
@@ -294,6 +300,7 @@ extension HomeViewController: UITableViewDataSource {
         return Constants.Table.indentBetweenSections
     }
     
+    // Заглушка для работы метода heightForFooterInSection
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let spacerView: UIView = UIView()
         spacerView.backgroundColor = .clear
@@ -302,7 +309,11 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sectionIndex = indexPath.section
-        if sectionIndex == 0 {          // HeaderCell
+        
+        switch sectionIndex {
+            
+        // HeaderCell
+        case Constants.Table.headerCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: HeaderCell.reuseId, for: indexPath)
             cell.selectionStyle = .none
             guard let headerCell = cell as? HeaderCell else { return cell }
@@ -318,24 +329,34 @@ extension HomeViewController: UITableViewDataSource {
             }
             
             return headerCell
-        } else if sectionIndex == 1 {   // HorizontalDateCollectionCell
+        
+        // HorizontalDateCollectionCell
+        case Constants.Table.horizontalDateCollectionCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: HorizontalDateCollectionCell.reuseId, for: indexPath)
             cell.selectionStyle = .none
             guard let horizontalDateCollectionCell = cell as? HorizontalDateCollectionCell else { return cell }
             
             return horizontalDateCollectionCell
-        } else if sectionIndex == 2 {                        // dayPartSelectorCell
+            
+        // DayPartSelectorCell
+        case Constants.Table.dayPartSelectorCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: DayPartSelectorCell.reuseId, for: indexPath)
             guard let dayPartSelectorCell = cell as? DayPartSelectorCell else { return cell }
             
             return dayPartSelectorCell
-        } else {
+            
+        // HabitCell (many)
+        case Constants.Table.habitCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
             habitCell.selectionStyle = .none
+            
             habitCell.configure()
             
             return habitCell
+        
+        default:
+            return UITableViewCell()
         }
     }
 }
