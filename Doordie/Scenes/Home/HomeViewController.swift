@@ -351,7 +351,8 @@ extension HomeViewController: UITableViewDataSource {
             guard let habitCell = cell as? HabitCell else { return cell }
             habitCell.selectionStyle = .none
             
-            habitCell.configure()
+            let habit = interactor.habits[indexPath.row]
+            habitCell.configure(with: habit)
             
             return habitCell
         

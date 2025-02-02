@@ -93,11 +93,16 @@ final class HabitCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure() {
-        let image = UIImage(systemName: "dumbbell.fill")
-        habitImage.image = image
+    func configure(with habit: Habit) {
+        guard let title = habit.title else { return }
+        guard let color = habit.color else { return }
+        guard let iconName = habit.icon else { return }
         
-        habitTitle.text = "Workout"
+        let image = UIImage(systemName: iconName)
+        
+        habitTitle.text = title
+        habitImage.image = image
+        habitImageWrap.backgroundColor = UIColor(hex: color)
     }
     
     // MARK: - Private Methods
