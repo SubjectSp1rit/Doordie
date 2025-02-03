@@ -60,7 +60,7 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    // UI Components
+    // MARK: - UI Components
     private let background: UIImageView = UIImageView()
     private let table: UITableView = UITableView()
     private let navBarCenteredTitle: UILabel = UILabel()
@@ -87,12 +87,6 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureNotificationCenter()
-        
-        // Подписываемся на события AddHabitViewController (добавление привычки)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleHabitAddedNotification),
-                                               name: .habitAdded,
-                                               object: nil)
 
         interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
@@ -136,6 +130,18 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleAppWillEnterForeground),
                                                name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        
+        // Подписываемся на события AddHabitViewController (добавление привычки)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleHabitAddedNotification),
+                                               name: .habitAdded,
+                                               object: nil)
+        
+        // Подписываемя на события HabitExecutionViewController (удаление привычки)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleHabitDeletedNotification),
+                                               name: .habitDeleted,
                                                object: nil)
     }
     
@@ -258,7 +264,13 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    @objc func handleHabitAddedNotification(_ notification: Notification) {
+    @objc
+    private func handleHabitAddedNotification(_ notification: Notification) {
+        interactor.loadHabits(HomeModels.LoadHabits.Request())
+    }
+    
+    @objc
+    private func handleHabitDeletedNotification(_ notification: Notification) {
         interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
 }
@@ -362,11 +374,11 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let section = indexPath.section
-//        
-//        guard section == Constants.Table.habitCellSectionIndex else { return }
+        let section = indexPath.section
         
-        let habitExecutionVC = HabitExecutionAssembly.build()
+        guard section == Constants.Table.habitCellSectionIndex else { return }
+        
+        let habitExecutionVC = HabitExecutionAssembly.build(habit: interactor.habits[indexPath.row])
         let navController = UINavigationController(rootViewController: habitExecutionVC)
         navController.modalPresentationStyle = .overFullScreen
         

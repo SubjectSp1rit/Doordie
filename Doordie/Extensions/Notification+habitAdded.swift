@@ -9,4 +9,5 @@ import UIKit
 
 extension Notification.Name {
     static let habitAdded = Notification.Name("habitAdded")
+    static let habitDeleted = Notification.Name("habitDeleted")
 }

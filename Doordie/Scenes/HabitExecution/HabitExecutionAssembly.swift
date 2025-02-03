@@ -8,10 +8,10 @@
 import UIKit
 
 enum HabitExecutionAssembly {
-    static func build() -> UIViewController {
+    static func build(habit: Habit) -> UIViewController {
         let presenter = HabitExecutionPresenter()
         let interactor = HabitExecutionInteractor(presenter: presenter)
-        let view = HabitExecutionViewController(interactor: interactor)
+        let view = HabitExecutionViewController(interactor: interactor, habit: habit)
         presenter.view = view
         
         return view
