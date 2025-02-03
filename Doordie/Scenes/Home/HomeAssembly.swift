@@ -11,7 +11,8 @@ import UIKit
 enum HomeAssembly {
     static func build() -> UIViewController {
         let presenter = HomePresenter()
-        let interactor = HomeInteractor(presenter: presenter)
+        let worker = HomeWorker()
+        let interactor = HomeInteractor(presenter: presenter, worker: worker)
         let view = HomeViewController(interactor: interactor)
         presenter.view = view
         

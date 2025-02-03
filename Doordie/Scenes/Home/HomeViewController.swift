@@ -88,7 +88,7 @@ final class HomeViewController: UIViewController {
         configureUI()
         configureNotificationCenter()
         
-        // Подписываемя на события AddHabitViewController (добавление привычки)
+        // Подписываемся на события AddHabitViewController (добавление привычки)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleHabitAddedNotification),
                                                name: .habitAdded,
@@ -359,6 +359,18 @@ extension HomeViewController: UITableViewDataSource {
         default:
             return UITableViewCell()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let section = indexPath.section
+//        
+//        guard section == Constants.Table.habitCellSectionIndex else { return }
+        
+        let habitExecutionVC = HabitExecutionAssembly.build()
+        let navController = UINavigationController(rootViewController: habitExecutionVC)
+        navController.modalPresentationStyle = .overFullScreen
+        
+        present(navController, animated: true, completion: nil)
     }
 }
 

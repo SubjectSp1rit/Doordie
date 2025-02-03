@@ -11,7 +11,7 @@ import UIKit
 final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     // MARK: - Constants
     private let presenter: HomePresentationLogic
-    private let worker = HomeWorker()
+    private let worker: HomeWorker
     
     // MARK: - Properties
     internal var habits: [Habit] = [] {
@@ -21,8 +21,9 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
 
     // MARK: - Lifecycle
-    init(presenter: HomePresentationLogic) {
+    init(presenter: HomePresentationLogic, worker: HomeWorker) {
         self.presenter = presenter
+        self.worker = worker
     }
     
     // MARK: - Public Methods

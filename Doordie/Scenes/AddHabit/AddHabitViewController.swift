@@ -84,6 +84,7 @@ final class AddHabitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureCloseButtonTap()
     }
     
     // MARK: - Private Methods
@@ -104,6 +105,13 @@ final class AddHabitViewController: UIViewController {
         configureNavBar()
         configureNavBarDismissButton()
         configureTable()
+    }
+    
+    private func configureCloseButtonTap() {
+        // 
+        let closeButtonTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        
+        view.addGestureRecognizer(closeButtonTap)
     }
     
     private func configureBackground() {
@@ -200,6 +208,10 @@ final class AddHabitViewController: UIViewController {
     @objc
     private func dismissButtonPressed() {
         dismiss(animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 

@@ -6,14 +6,7 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		AE36DB6C2D4D0EAA007FE5DB /* Habit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36DB6B2D4D0EAA007FE5DB /* Habit+CoreDataProperties.swift */; };
-		AE36DB6D2D4D0EAA007FE5DB /* Habit+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE36DB6A2D4D0EAA007FE5DB /* Habit+CoreDataClass.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		AE36DB6A2D4D0EAA007FE5DB /* Habit+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataClass.swift"; sourceTree = "<group>"; };
-		AE36DB6B2D4D0EAA007FE5DB /* Habit+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		AEA828DC2D1EE7B6002D934D /* Doordie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doordie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,8 +45,6 @@
 		AEA828D32D1EE7B6002D934D = {
 			isa = PBXGroup;
 			children = (
-				AE36DB6A2D4D0EAA007FE5DB /* Habit+CoreDataClass.swift */,
-				AE36DB6B2D4D0EAA007FE5DB /* Habit+CoreDataProperties.swift */,
 				AEA828DE2D1EE7B6002D934D /* Doordie */,
 				AEA828DD2D1EE7B6002D934D /* Products */,
 			);
@@ -142,8 +133,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE36DB6C2D4D0EAA007FE5DB /* Habit+CoreDataProperties.swift in Sources */,
-				AE36DB6D2D4D0EAA007FE5DB /* Habit+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
