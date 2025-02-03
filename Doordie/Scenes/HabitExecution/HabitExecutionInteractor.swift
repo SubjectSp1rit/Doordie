@@ -15,4 +15,9 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     init(presenter: HabitExecutionPresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Public Methods
+    func showDeleteConfirmationMessage(_ request: HabitExecutionModels.ShowDeleteConfirmationMessage.Request) {
+        presenter.presentDeleteConfirmationMessage(HabitExecutionModels.ShowDeleteConfirmationMessage.Response(habit: request.habit))
+    }
 }

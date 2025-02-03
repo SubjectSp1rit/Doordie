@@ -8,5 +8,13 @@
 import UIKit
 
 enum HabitExecutionModels {
-    
+    enum ShowDeleteConfirmationMessage {
+        struct Request {
+            var habit: Habit
+        }
+        struct Response {
+            var habit: Habit
+        }
+        struct ViewModel { }
+    }
 }
