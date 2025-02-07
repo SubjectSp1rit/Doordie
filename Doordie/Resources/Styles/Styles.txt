@@ -1,0 +1,12 @@
+[
+{
+    "name": "mainButton",
+    "backgroundColor": "DC143C",
+    "cornerRadius": 10
+},
+{
+    "name": "secondaryButton",
+    "backgroundColor": "DCDCDC",
+    "cornerRadius": 10
+}
+]

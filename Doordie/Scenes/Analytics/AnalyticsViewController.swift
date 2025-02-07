@@ -58,7 +58,7 @@ final class AnalyticsViewController: UIViewController {
         
         background.image = UIImage(named: Constants.Background.imageName)
         background.pin(to: view)
-                
+        
         // Размытие заднего фона
         let blurEffect = UIBlurEffect(style: .dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
