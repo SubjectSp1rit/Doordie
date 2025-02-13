@@ -71,7 +71,7 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
-    private let checkmarkButton: UIButton = UIButton(type: .custom)
+    private let checkmarkButton: ExtendedHitButton = ExtendedHitButton(type: .custom)
     private let habitImageWrap: UIView = UIView()
     private let habitImage: UIImageView = UIImageView()
     private let habitTitle: UILabel = UILabel()
