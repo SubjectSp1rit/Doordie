@@ -286,7 +286,7 @@ final class HabitExecutionViewController: UIViewController {
     
     @objc
     private func editHabitButtonPressed() {
-        // logic
+        interactor.showEditHabitScreen(HabitExecutionModels.ShowEditHabitScreen.Request(habit: habit))
     }
     
     @objc

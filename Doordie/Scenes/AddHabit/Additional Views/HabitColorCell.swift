@@ -36,7 +36,6 @@ final class HabitColorCell: UICollectionViewCell {
         }
         
         enum ColoredCircle {
-            static let bgColor: UIColor = UIColor(hex: "6475CC")
             static let height: CGFloat = 34
             static let width: CGFloat = 34
             static let cornerRadius: CGFloat = 17
@@ -83,6 +82,11 @@ final class HabitColorCell: UICollectionViewCell {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Public Methods
+    func configure(with color: String) {
+        coloredCircle.backgroundColor = UIColor(hex: color)
     }
     
     // MARK: - Private Methods
@@ -134,7 +138,6 @@ final class HabitColorCell: UICollectionViewCell {
     private func configureColoredCircle() {
         coloredWrap.addSubview(coloredCircle)
         
-        coloredCircle.backgroundColor = Constants.ColoredCircle.bgColor
         coloredCircle.layer.cornerRadius = Constants.ColoredCircle.cornerRadius
         
         coloredCircle.setHeight(Constants.ColoredCircle.height)

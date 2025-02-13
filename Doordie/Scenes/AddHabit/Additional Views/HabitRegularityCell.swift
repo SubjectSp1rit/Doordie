@@ -36,7 +36,6 @@ final class HabitRegularityCell: UICollectionViewCell {
         }
         
         enum CurrentRegularityLabel {
-            static let text: String = "Every day"
             static let textAlignment: NSTextAlignment = .left
             static let textColor: UIColor = .white
             static let leadingIndent: CGFloat = 8
@@ -81,8 +80,8 @@ final class HabitRegularityCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configureQuantityValueLabel(with value: String) {
-        currentRegularityLabel.text = value
+    func configure(with regularity: String) {
+        currentRegularityLabel.text = regularity
     }
     
     // MARK: - Private Methods
@@ -134,7 +133,6 @@ final class HabitRegularityCell: UICollectionViewCell {
     private func configureCurrentRegularityLabel() {
         coloredWrap.addSubview(currentRegularityLabel)
         
-        currentRegularityLabel.text = Constants.CurrentRegularityLabel.text
         currentRegularityLabel.textAlignment = Constants.CurrentRegularityLabel.textAlignment
         currentRegularityLabel.textColor = Constants.CurrentRegularityLabel.textColor
         

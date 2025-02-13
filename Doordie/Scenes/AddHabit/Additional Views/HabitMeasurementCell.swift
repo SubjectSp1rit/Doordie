@@ -36,7 +36,6 @@ final class HabitMeasurementCell: UICollectionViewCell {
         }
         
         enum MeasurementValueLabel {
-            static let text: String = "Mins"
             static let textAlignment: NSTextAlignment = .left
             static let textColor: UIColor = .white
             static let leadingIndent: CGFloat = 8
@@ -82,8 +81,8 @@ final class HabitMeasurementCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configureQuantityValueLabel(with value: String) {
-        measurementValueLabel.text = value
+    func configure(with measurement: String) {
+        measurementValueLabel.text = measurement
     }
     
     // MARK: - Private Methods
@@ -135,7 +134,6 @@ final class HabitMeasurementCell: UICollectionViewCell {
     private func configureMeasurementValueLabel() {
         coloredWrap.addSubview(measurementValueLabel)
         
-        measurementValueLabel.text = Constants.MeasurementValueLabel.text
         measurementValueLabel.textAlignment = Constants.MeasurementValueLabel.textAlignment
         measurementValueLabel.textColor = Constants.MeasurementValueLabel.textColor
         

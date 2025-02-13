@@ -36,7 +36,6 @@ final class HabitQuantityCell: UICollectionViewCell {
         }
         
         enum QuantityValueLabel {
-            static let text: String = "30"
             static let textAlignment: NSTextAlignment = .left
             static let textColor: UIColor = .white
             static let leadingIndent: CGFloat = 8
@@ -77,7 +76,7 @@ final class HabitQuantityCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configureQuantityValueLabel(with value: String) {
+    func configure(with value: String) {
         quantityValueLabel.text = value
     }
     
@@ -129,7 +128,6 @@ final class HabitQuantityCell: UICollectionViewCell {
     private func configureQuantityValueLabel() {
         coloredWrap.addSubview(quantityValueLabel)
         
-        quantityValueLabel.text = Constants.QuantityValueLabel.text
         quantityValueLabel.textAlignment = Constants.QuantityValueLabel.textAlignment
         quantityValueLabel.textColor = Constants.QuantityValueLabel.textColor
         

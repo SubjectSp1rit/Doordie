@@ -40,14 +40,14 @@ final class AddHabitViewController: UIViewController {
         }
         
         enum HabitStandardValues {
-            static let habitTitle: String = ""
-            static let habitMotivations: String = ""
-            static let habitColor: String = "6475CC"
-            static let habitIcon: String = "heart"
-            static let habitQuantity: String = "30"
-            static let habitMeasurementType: String = "Mins"
-            static let habitPeriod: String = "Every day"
-            static let habitDayPart: String = "Any time"
+            static let title: String = ""
+            static let motivations: String = ""
+            static let color: String = "6475CC"
+            static let icon: String = "heart"
+            static let quantity: String = "30"
+            static let measurement: String = "Mins"
+            static let regularity: String = "Every day"
+            static let dayPart: String = "Any time"
         }
     }
     
@@ -60,19 +60,22 @@ final class AddHabitViewController: UIViewController {
     // MARK: - Properties
     private var interactor: AddHabitBusinessLogic
     
-    private var habitTitle: String? = Constants.HabitStandardValues.habitTitle
-    private var habitMotivations: String? = Constants.HabitStandardValues.habitMotivations
-    private var habitColor: String? = Constants.HabitStandardValues.habitColor
-    private var habitIcon: String? = Constants.HabitStandardValues.habitIcon
-    private var habitQuantity: String? = Constants.HabitStandardValues.habitQuantity
-    private var habitMeasurementType: String? = Constants.HabitStandardValues.habitMeasurementType
-    private var habitPeriod: String? = Constants.HabitStandardValues.habitPeriod
-    private var habitDayPart: String? = Constants.HabitStandardValues.habitDayPart
+    private var habit: Habit? = nil
+    private var habitTitle: String? = Constants.HabitStandardValues.title
+    private var habitMotivations: String? = Constants.HabitStandardValues.motivations
+    private var habitColor: String? = Constants.HabitStandardValues.color
+    private var habitIcon: String? = Constants.HabitStandardValues.icon
+    private var habitQuantity: String? = Constants.HabitStandardValues.quantity
+    private var habitMeasurementType: String? = Constants.HabitStandardValues.measurement
+    private var habitPeriod: String? = Constants.HabitStandardValues.regularity
+    private var habitDayPart: String? = Constants.HabitStandardValues.dayPart
     
     // MARK: - Lifecycle
-    init(interactor: AddHabitBusinessLogic) {
+    init(interactor: AddHabitBusinessLogic, habit: Habit? = nil) {
         self.interactor = interactor
         self.table = AddHabitViewController.createCollectionView()
+        self.habit = habit
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -83,6 +86,8 @@ final class AddHabitViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureHabitData()
         configureUI()
         configureCloseButtonTap()
     }
@@ -107,8 +112,21 @@ final class AddHabitViewController: UIViewController {
         configureTable()
     }
     
+    private func configureHabitData() {
+        // Если данные привычки пришли извне - заполняем ячейки этими данными, иначе ставим стандартные значения
+        if let habit = habit {
+            habitTitle = habit.title ?? Constants.HabitStandardValues.title
+            habitMotivations = habit.motivations ?? Constants.HabitStandardValues.motivations
+            habitColor = habit.color ?? Constants.HabitStandardValues.color
+            habitIcon = habit.icon ?? Constants.HabitStandardValues.icon
+            habitQuantity = habit.quantity ?? Constants.HabitStandardValues.quantity
+            habitMeasurementType = habit.measurement ?? Constants.HabitStandardValues.measurement
+            habitPeriod = habit.regularity ?? Constants.HabitStandardValues.regularity
+            habitDayPart = habit.day_part ?? Constants.HabitStandardValues.dayPart
+        }
+    }
+    
     private func configureCloseButtonTap() {
-        // 
         let closeButtonTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         
         view.addGestureRecognizer(closeButtonTap)
@@ -283,6 +301,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
             guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
             
+            habitTitleCell.configure(with: habitTitle ?? "")
+            
             habitTitleCell.onTitleChanged = { [weak self] text in
                 self?.habitTitle = text
             }
@@ -291,6 +311,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
         } else if indexPath.section == 1 {
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMotivationsCell.reuseId, for: indexPath)
             guard let habitMotivationsCell = cell as? HabitMotivationsCell else { return cell }
+            
+            habitMotivationsCell.configure(with: habitMotivations ?? "")
             
             habitMotivationsCell.onMotivationsChanged = { [weak self] text in
                 self?.habitMotivations = text
@@ -302,6 +324,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
                 let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
                 guard let habitColorCell = cell as? HabitColorCell else { return cell }
                 
+                habitColorCell.configure(with: habitColor ?? "")
+                
                 habitColorCell.onColorChanged = { [weak self] hexColor in
                     self?.habitColor = hexColor
                 }
@@ -310,6 +334,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
             } else if indexPath.row == 1 {
                 let cell = table.dequeueReusableCell(withReuseIdentifier: HabitIconCell.reuseId, for: indexPath)
                 guard let habitIconCell = cell as? HabitIconCell else { return cell }
+                
+                habitIconCell.configure(with: habitIcon ?? "")
                 
                 habitIconCell.onIconChanged = { [weak self] iconName in
                     self?.habitIcon = iconName
@@ -326,14 +352,14 @@ extension AddHabitViewController: UICollectionViewDataSource {
                     self.showQuantityInput(for: indexPath)
                 }
                 
-                if let number = habitQuantity {
-                    habitQuantityCell.configureQuantityValueLabel(with: number)
-                }
+                habitQuantityCell.configure(with: habitQuantity ?? "")
                 
                 return habitQuantityCell
             } else if indexPath.row == 1 {
                 let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMeasurementCell.reuseId, for: indexPath)
                 guard let habitMeasurementCell = cell as? HabitMeasurementCell else { return cell }
+                
+                habitMeasurementCell.configure(with: habitMeasurementType ?? "")
                 
                 habitMeasurementCell.onMeasurementChanged = { [weak self] measurement in
                     self?.habitMeasurementType = measurement
@@ -345,6 +371,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitRegularityCell.reuseId, for: indexPath)
             guard let habitRegularityCell = cell as? HabitRegularityCell else { return cell }
             
+            habitRegularityCell.configure(with: habitPeriod ?? "")
+            
             habitRegularityCell.onRegularityChanged = { [weak self] regularity in
                 self?.habitPeriod = regularity
             }
@@ -353,6 +381,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
         } else if indexPath.section == 5 {
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitDayPartCell.reuseId, for: indexPath)
             guard let habitDayPartCell = cell as? HabitDayPartCell else { return cell }
+            
+            habitDayPartCell.configure(with: habitDayPart ?? "")
             
             habitDayPartCell.onDayPartChanged = { [weak self] dayPart in
                 self?.habitDayPart = dayPart
@@ -364,24 +394,17 @@ extension AddHabitViewController: UICollectionViewDataSource {
             guard let habitConfirmHabitCreationCell = cell as? HabitConfirmCreationCell else { return cell }
             
             habitConfirmHabitCreationCell.onCreateHabitButtonPressed = {
-                if let title = self.habitTitle, title != "",
-                   let motivations = self.habitMotivations,
-                   let color = self.habitColor,
-                   let icon = self.habitIcon,
-                   let quantity = self.habitQuantity,
-                   let measurement = self.habitMeasurementType,
-                   let regularity = self.habitPeriod,
-                   let dayPart = self.habitDayPart {
+                if self.habitTitle != "" {
                     let currentDate = Date()
                     let newHabit = HabitModel(creationDate: currentDate,
-                                              title: title,
-                                              motivations: motivations,
-                                              color: color,
-                                              icon: icon,
-                                              quantity: quantity,
-                                              measurement: measurement,
-                                              regularity: regularity,
-                                              dayPart: dayPart)
+                                              title: self.habitTitle,
+                                              motivations: self.habitMotivations,
+                                              color: self.habitColor,
+                                              icon: self.habitIcon,
+                                              quantity: self.habitQuantity,
+                                              measurement: self.habitMeasurementType,
+                                              regularity: self.habitPeriod,
+                                              dayPart: self.habitDayPart)
                     CoreManager.shared.addNewHabit(newHabit)
                     
                     NotificationCenter.default.post(name: .habitAdded, object: nil)

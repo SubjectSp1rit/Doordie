@@ -36,7 +36,6 @@ final class HabitDayPartCell: UICollectionViewCell {
         }
         
         enum CurrentDayPartLabel {
-            static let text: String = "Any time"
             static let textAlignment: NSTextAlignment = .left
             static let textColor: UIColor = .white
             static let leadingIndent: CGFloat = 8
@@ -81,8 +80,8 @@ final class HabitDayPartCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configureQuantityValueLabel(with value: String) {
-        currentDayPartLabel.text = value
+    func configure(with dayPart: String) {
+        currentDayPartLabel.text = dayPart
     }
     
     // MARK: - Private Methods
@@ -134,7 +133,6 @@ final class HabitDayPartCell: UICollectionViewCell {
     private func configureCurrentDayPartLabel() {
         coloredWrap.addSubview(currentDayPartLabel)
         
-        currentDayPartLabel.text = Constants.CurrentDayPartLabel.text
         currentDayPartLabel.textAlignment = Constants.CurrentDayPartLabel.textAlignment
         currentDayPartLabel.textColor = Constants.CurrentDayPartLabel.textColor
         

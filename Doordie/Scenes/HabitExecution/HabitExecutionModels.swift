@@ -17,4 +17,13 @@ enum HabitExecutionModels {
         }
         struct ViewModel { }
     }
+    
+    enum ShowEditHabitScreen {
+        struct Request {
+            var habit: Habit
+        }
+        struct Response {
+            var habit: Habit
+        }
+    }
 }

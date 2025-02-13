@@ -64,6 +64,11 @@ final class HabitTitleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
+    func configure(with title: String) {
+        habitTitleTextField.text = title
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureHabitTitleLabel()

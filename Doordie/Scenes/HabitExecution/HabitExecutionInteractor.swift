@@ -20,4 +20,8 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     func showDeleteConfirmationMessage(_ request: HabitExecutionModels.ShowDeleteConfirmationMessage.Request) {
         presenter.presentDeleteConfirmationMessage(HabitExecutionModels.ShowDeleteConfirmationMessage.Response(habit: request.habit))
     }
+    
+    func showEditHabitScreen(_ request: HabitExecutionModels.ShowEditHabitScreen.Request) {
+        presenter.presentEditHabitScreen(HabitExecutionModels.ShowEditHabitScreen.Response(habit: request.habit))
+    }
 }

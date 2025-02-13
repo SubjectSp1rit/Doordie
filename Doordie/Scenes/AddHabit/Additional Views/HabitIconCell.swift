@@ -36,7 +36,6 @@ final class HabitIconCell: UICollectionViewCell {
         }
         
         enum SelectedIcon {
-            static let standardImageName: String = "heart"
             static let contentMode: UIImageView.ContentMode = .scaleAspectFill
             static let tintColor: UIColor = .white
             static let height: CGFloat = 34
@@ -114,6 +113,11 @@ final class HabitIconCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
+    func configure(with icon: String) {
+        selectedIcon.image = UIImage(systemName: icon)
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureWrap()
@@ -163,7 +167,6 @@ final class HabitIconCell: UICollectionViewCell {
     private func configureSelectedIcon() {
         coloredWrap.addSubview(selectedIcon)
         
-        selectedIcon.image = UIImage(systemName: Constants.SelectedIcon.standardImageName)
         selectedIcon.tintColor = Constants.SelectedIcon.tintColor
         selectedIcon.contentMode = Constants.SelectedIcon.contentMode
         

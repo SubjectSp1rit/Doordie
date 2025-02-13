@@ -25,7 +25,7 @@ final class HabitMotivationsCell: UICollectionViewCell {
             static let textColor: UIColor = .white
         }
         
-        enum HabitTitleTextView {
+        enum HabitMotivationsTextView {
             static let height: CGFloat = 100
             static let topIndent: CGFloat = 5
             static let bgColor: UIColor = UIColor(hex: "5771DB").withAlphaComponent(0.7)
@@ -70,6 +70,11 @@ final class HabitMotivationsCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
+    func configure(with motivations: String) {
+        habitMotivationsTextView.text = motivations
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureWrap()
@@ -103,23 +108,23 @@ final class HabitMotivationsCell: UICollectionViewCell {
     private func configureHabitMotivationsTextView() {
         wrap.addSubview(habitMotivationsTextView)
         
-        habitMotivationsTextView.textColor = Constants.HabitTitleTextView.textColor
-        habitMotivationsTextView.font = UIFont.systemFont(ofSize: Constants.HabitTitleTextView.fontSize)
-        habitMotivationsTextView.backgroundColor = Constants.HabitTitleTextView.bgColor
-        habitMotivationsTextView.layer.cornerRadius = Constants.HabitTitleTextView.cornerRadius
-        habitMotivationsTextView.keyboardType = Constants.HabitTitleTextView.keyboardType
-        habitMotivationsTextView.autocorrectionType = Constants.HabitTitleTextView.autocorrectioType
-        habitMotivationsTextView.autocapitalizationType = Constants.HabitTitleTextView.autocapitalizationType
-        habitMotivationsTextView.textAlignment = Constants.HabitTitleTextView.textAlignment
+        habitMotivationsTextView.textColor = Constants.HabitMotivationsTextView.textColor
+        habitMotivationsTextView.font = UIFont.systemFont(ofSize: Constants.HabitMotivationsTextView.fontSize)
+        habitMotivationsTextView.backgroundColor = Constants.HabitMotivationsTextView.bgColor
+        habitMotivationsTextView.layer.cornerRadius = Constants.HabitMotivationsTextView.cornerRadius
+        habitMotivationsTextView.keyboardType = Constants.HabitMotivationsTextView.keyboardType
+        habitMotivationsTextView.autocorrectionType = Constants.HabitMotivationsTextView.autocorrectioType
+        habitMotivationsTextView.autocapitalizationType = Constants.HabitMotivationsTextView.autocapitalizationType
+        habitMotivationsTextView.textAlignment = Constants.HabitMotivationsTextView.textAlignment
         habitMotivationsTextView.isEditable = true
         habitMotivationsTextView.isSelectable = true
         habitMotivationsTextView.isScrollEnabled = true
-        habitMotivationsTextView.textContainerInset = UIEdgeInsets(top: Constants.HabitTitleTextView.textTopIndent, left: Constants.HabitTitleTextView.textLeadingIndent, bottom: Constants.HabitTitleTextView.textBottomIndent, right: Constants.HabitTitleTextView.textTrailingIndent)
+        habitMotivationsTextView.textContainerInset = UIEdgeInsets(top: Constants.HabitMotivationsTextView.textTopIndent, left: Constants.HabitMotivationsTextView.textLeadingIndent, bottom: Constants.HabitMotivationsTextView.textBottomIndent, right: Constants.HabitMotivationsTextView.textTrailingIndent)
         
         habitMotivationsTextView.delegate = self
         
-        habitMotivationsTextView.setHeight(Constants.HabitTitleTextView.height)
-        habitMotivationsTextView.pinTop(to: habitMotivationsLabel.bottomAnchor, Constants.HabitTitleTextView.topIndent)
+        habitMotivationsTextView.setHeight(Constants.HabitMotivationsTextView.height)
+        habitMotivationsTextView.pinTop(to: habitMotivationsLabel.bottomAnchor, Constants.HabitMotivationsTextView.topIndent)
         habitMotivationsTextView.pinBottom(to: wrap.bottomAnchor)
         habitMotivationsTextView.pinLeft(to: wrap.leadingAnchor)
         habitMotivationsTextView.pinRight(to: wrap.trailingAnchor)

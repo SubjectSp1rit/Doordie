@@ -38,4 +38,12 @@ final class HabitExecutionPresenter: HabitExecutionPresentationLogic {
         
         view?.present(confirmationAlert, animated: true, completion: nil)
     }
+    
+    func presentEditHabitScreen(_ response: HabitExecutionModels.ShowEditHabitScreen.Response) {
+        let habitEditVC = AddHabitAssembly.build(with: response.habit)
+        let navController = UINavigationController(rootViewController: habitEditVC)
+        navController.modalPresentationStyle = .overFullScreen
+        
+        view?.present(navController, animated: true, completion: nil)
+    }
 }
