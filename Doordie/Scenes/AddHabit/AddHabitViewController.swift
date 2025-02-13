@@ -32,11 +32,44 @@ final class AddHabitViewController: UIViewController {
         }
         
         enum Table {
+            static let numberOfSections: Int = 7
             static let bgColor: UIColor = .clear
             static let elementsLeadingIndent: CGFloat = 18
             static let elementsTrailingIndent: CGFloat = 18
             static let elementsTopIndent: CGFloat = 12
             static let elementsBottomIndent: CGFloat = 0
+            
+            // cells indexPath
+            static let titleCellSectionIndex: Int = 0
+            static let titleCellRowIndex: Int = 0
+            
+            static let motivationsCellSectionIndex: Int = 1
+            static let motivationsCellRowIndex: Int = 0
+            
+            static let colorCellSectionIndex: Int = 2
+            static let colorCellRowIndex: Int = 0
+            
+            static let iconCellSectionIndex: Int = 2
+            static let iconCellRowIndex: Int = 1
+            
+            static let quantityCellSectionIndex: Int = 3
+            static let quantityCellRowIndex: Int = 0
+            
+            static let measurementCellSectionIndex: Int = 3
+            static let measurementCellRowIndex: Int = 1
+            
+            static let regularityCellSectionIndex: Int = 4
+            static let regularityCellRowIndex: Int = 0
+            
+            static let dayPartCellSectionIndex: Int = 5
+            static let dayPartCellRowIndex: Int = 0
+            
+            static let confirmButtonSectionIndex: Int = 6
+            static let confirmButtonRowIndex: Int = 0
+            
+            static let oneRowInSection: Int = 1
+            static let twoRowsInSection: Int = 2
+            static let zeroRowsInSection: Int = 0
         }
         
         enum HabitStandardValues {
@@ -241,38 +274,61 @@ extension AddHabitViewController: UICollectionViewDelegate {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: Constants.Table.elementsTopIndent,
-                            left: Constants.Table.elementsLeadingIndent,
+        return UIEdgeInsets(top:    Constants.Table.elementsTopIndent,
+                            left:   Constants.Table.elementsLeadingIndent,
                             bottom: Constants.Table.elementsBottomIndent,
-                            right: Constants.Table.elementsTrailingIndent)
+                            right:  Constants.Table.elementsTrailingIndent)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 0 || indexPath.section == 1 || indexPath.section == 4 || indexPath.section == 5 || indexPath.section == 6 {
-            // Тип 1: Полная ширина
-            let width = collectionView.bounds.width - 36 // 36 - отступы от краев в сумме
+        let section = indexPath.section
+        
+        switch section {
+            
+        // Полная ширина
+        case Constants.Table.titleCellSectionIndex,
+             Constants.Table.motivationsCellSectionIndex,
+             Constants.Table.regularityCellSectionIndex,
+             Constants.Table.dayPartCellSectionIndex,
+             Constants.Table.confirmButtonSectionIndex:
+            let sideIndent: CGFloat = 36
+            let width = collectionView.bounds.width - sideIndent // sideIndent - отступы от краев в сумме
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)
-        } else {
-            // Тип 2: Половина ширины
-            let availableWidth = collectionView.bounds.width - 36 - 18 // 36 - отступы от краев в сумме, 18 - отступ между ячейками
-            let width = availableWidth / 2
+            
+        // Половина ширины
+        case Constants.Table.colorCellSectionIndex,
+             Constants.Table.iconCellSectionIndex,
+             Constants.Table.quantityCellSectionIndex,
+             Constants.Table.measurementCellSectionIndex:
+            let sideIndent: CGFloat = 36
+            let cellsIndent: CGFloat = 18
+            let availableWidth = collectionView.bounds.width - sideIndent - cellsIndent // sideIndent - отступы от краев в сумме, cellsIndent - отступ между ячейками
+            
+            let numberOfCellsInRow: CGFloat = 2
+            let width = availableWidth / numberOfCellsInRow
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)
+            
+        default:
+            return CGSize(width: 0, height: 0)
         }
     }
     
     private func calculateHeightForHabitTitleCell(indexPath: IndexPath) -> CGFloat {
+        // Ячейки-заглушки для подсчета высоты
         var dummyCell: UICollectionViewCell
         switch indexPath.section {
-        case 0: dummyCell = HabitTitleCell()
-        case 1: dummyCell = HabitMotivationsCell()
-        case 2: dummyCell = HabitColorCell()
-        case 3: dummyCell = HabitQuantityCell()
-        case 4: dummyCell = HabitRegularityCell()
-        case 5: dummyCell = HabitDayPartCell()
-        case 6: dummyCell = HabitConfirmCreationCell()
-        default: dummyCell = UICollectionViewCell()
+        case Constants.Table.titleCellSectionIndex:         dummyCell = HabitTitleCell()
+        case Constants.Table.motivationsCellSectionIndex:   dummyCell = HabitMotivationsCell()
+        case Constants.Table.colorCellSectionIndex:         dummyCell = HabitColorCell()
+        case Constants.Table.iconCellSectionIndex:          dummyCell = HabitIconCell()
+        case Constants.Table.quantityCellSectionIndex:      dummyCell = HabitQuantityCell()
+        case Constants.Table.measurementCellSectionIndex:   dummyCell = HabitMeasurementCell()
+        case Constants.Table.regularityCellSectionIndex:    dummyCell = HabitRegularityCell()
+        case Constants.Table.dayPartCellSectionIndex:       dummyCell = HabitDayPartCell()
+        case Constants.Table.confirmButtonSectionIndex:     dummyCell = HabitConfirmCreationCell()
+        default:                                            dummyCell = UICollectionViewCell()
         }
         
         dummyCell.layoutIfNeeded()
@@ -284,20 +340,38 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDataSource
 extension AddHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 || section == 1 || section == 4 || section == 5 || section == 6 {
-            return 1
-        } else if section == 2  || section == 3 {
-            return 2
+        switch section {
+       // 1 ячейка в ряду
+        case Constants.Table.titleCellSectionIndex,
+             Constants.Table.motivationsCellSectionIndex,
+             Constants.Table.regularityCellSectionIndex,
+             Constants.Table.dayPartCellSectionIndex,
+             Constants.Table.confirmButtonSectionIndex:
+            return Constants.Table.oneRowInSection
+        // 2 ячейки в ряду
+        case Constants.Table.colorCellSectionIndex,
+             Constants.Table.iconCellSectionIndex,
+             Constants.Table.quantityCellSectionIndex,
+             Constants.Table.measurementCellSectionIndex:
+            return Constants.Table.twoRowsInSection
+            
+        default:
+            return Constants.Table.zeroRowsInSection
         }
-        return 0
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 7
+        return Constants.Table.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
+        let section: Int = indexPath.section
+        let row: Int = indexPath.row
+        
+        switch (section, row) {
+        
+        // habitTitleCell
+        case (Constants.Table.titleCellSectionIndex, Constants.Table.titleCellRowIndex):
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
             guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
             
@@ -308,7 +382,9 @@ extension AddHabitViewController: UICollectionViewDataSource {
             }
             
             return habitTitleCell
-        } else if indexPath.section == 1 {
+            
+        // habitMotivationsCell
+        case (Constants.Table.motivationsCellSectionIndex, Constants.Table.motivationsCellRowIndex):
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMotivationsCell.reuseId, for: indexPath)
             guard let habitMotivationsCell = cell as? HabitMotivationsCell else { return cell }
             
@@ -319,55 +395,61 @@ extension AddHabitViewController: UICollectionViewDataSource {
             }
             
             return habitMotivationsCell
-        } else if indexPath.section == 2 {
-            if indexPath.row == 0 {
-                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
-                guard let habitColorCell = cell as? HabitColorCell else { return cell }
-                
-                habitColorCell.configure(with: habitColor ?? "")
-                
-                habitColorCell.onColorChanged = { [weak self] hexColor in
-                    self?.habitColor = hexColor
-                }
-                
-                return habitColorCell
-            } else if indexPath.row == 1 {
-                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitIconCell.reuseId, for: indexPath)
-                guard let habitIconCell = cell as? HabitIconCell else { return cell }
-                
-                habitIconCell.configure(with: habitIcon ?? "")
-                
-                habitIconCell.onIconChanged = { [weak self] iconName in
-                    self?.habitIcon = iconName
-                }
-                
-                return habitIconCell
+            
+        // habitColorCell
+        case (Constants.Table.colorCellSectionIndex, Constants.Table.colorCellRowIndex):
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitColorCell.reuseId, for: indexPath)
+            guard let habitColorCell = cell as? HabitColorCell else { return cell }
+            
+            habitColorCell.configure(with: habitColor ?? "")
+            
+            habitColorCell.onColorChanged = { [weak self] hexColor in
+                self?.habitColor = hexColor
             }
-        } else if indexPath.section == 3 {
-            if indexPath.row == 0 {
-                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitQuantityCell.reuseId, for: indexPath)
-                guard let habitQuantityCell = cell as? HabitQuantityCell else { return cell }
-                
-                habitQuantityCell.onEnterQuantityButtonPressed = {
-                    self.showQuantityInput(for: indexPath)
-                }
-                
-                habitQuantityCell.configure(with: habitQuantity ?? "")
-                
-                return habitQuantityCell
-            } else if indexPath.row == 1 {
-                let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMeasurementCell.reuseId, for: indexPath)
-                guard let habitMeasurementCell = cell as? HabitMeasurementCell else { return cell }
-                
-                habitMeasurementCell.configure(with: habitMeasurementType ?? "")
-                
-                habitMeasurementCell.onMeasurementChanged = { [weak self] measurement in
-                    self?.habitMeasurementType = measurement
-                }
-                
-                return habitMeasurementCell
+            
+            return habitColorCell
+            
+        // habitIconCell
+        case (Constants.Table.iconCellSectionIndex, Constants.Table.iconCellRowIndex):
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitIconCell.reuseId, for: indexPath)
+            guard let habitIconCell = cell as? HabitIconCell else { return cell }
+            
+            habitIconCell.configure(with: habitIcon ?? "")
+            
+            habitIconCell.onIconChanged = { [weak self] iconName in
+                self?.habitIcon = iconName
             }
-        } else if indexPath.section == 4 {
+            
+            return habitIconCell
+            
+        // habitQuantityCell
+        case (Constants.Table.quantityCellSectionIndex, Constants.Table.quantityCellRowIndex):
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitQuantityCell.reuseId, for: indexPath)
+            guard let habitQuantityCell = cell as? HabitQuantityCell else { return cell }
+            
+            habitQuantityCell.onEnterQuantityButtonPressed = {
+                self.showQuantityInput(for: indexPath)
+            }
+            
+            habitQuantityCell.configure(with: habitQuantity ?? "")
+            
+            return habitQuantityCell
+            
+        // habitMeasurementCell
+        case (Constants.Table.measurementCellSectionIndex, Constants.Table.measurementCellRowIndex):
+            let cell = table.dequeueReusableCell(withReuseIdentifier: HabitMeasurementCell.reuseId, for: indexPath)
+            guard let habitMeasurementCell = cell as? HabitMeasurementCell else { return cell }
+            
+            habitMeasurementCell.configure(with: habitMeasurementType ?? "")
+            
+            habitMeasurementCell.onMeasurementChanged = { [weak self] measurement in
+                self?.habitMeasurementType = measurement
+            }
+            
+            return habitMeasurementCell
+            
+        // habitRegularityCell
+        case (Constants.Table.regularityCellSectionIndex, Constants.Table.regularityCellRowIndex):
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitRegularityCell.reuseId, for: indexPath)
             guard let habitRegularityCell = cell as? HabitRegularityCell else { return cell }
             
@@ -378,7 +460,9 @@ extension AddHabitViewController: UICollectionViewDataSource {
             }
             
             return habitRegularityCell
-        } else if indexPath.section == 5 {
+            
+        // habitDayPartCell
+        case (Constants.Table.dayPartCellSectionIndex, Constants.Table.dayPartCellRowIndex):
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitDayPartCell.reuseId, for: indexPath)
             guard let habitDayPartCell = cell as? HabitDayPartCell else { return cell }
             
@@ -389,9 +473,18 @@ extension AddHabitViewController: UICollectionViewDataSource {
             }
             
             return habitDayPartCell
-        } else if indexPath.section == 6 {
+            
+        // habitConfirmHabitCreationCell
+        case (Constants.Table.confirmButtonSectionIndex, Constants.Table.confirmButtonRowIndex):
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitConfirmCreationCell.reuseId, for: indexPath)
             guard let habitConfirmHabitCreationCell = cell as? HabitConfirmCreationCell else { return cell }
+            
+            // Изменяем текст кнопки в зависимости от того, меняем или создаем привычку
+            if habit != nil {
+                habitConfirmHabitCreationCell.configure(isNew: false)
+            } else {
+                habitConfirmHabitCreationCell.configure(isNew: true)
+            }
             
             habitConfirmHabitCreationCell.onCreateHabitButtonPressed = {
                 if self.habitTitle != "" {
@@ -405,7 +498,13 @@ extension AddHabitViewController: UICollectionViewDataSource {
                                               measurement: self.habitMeasurementType,
                                               regularity: self.habitPeriod,
                                               dayPart: self.habitDayPart)
-                    CoreManager.shared.addNewHabit(newHabit)
+                    
+                    // Если привычка пришла извне - изменяем ее, иначе создаем новую
+                    if let habit = self.habit {
+                        habit.updateHabit(newHabit: newHabit)
+                    } else {
+                        CoreManager.shared.addNewHabit(newHabit)
+                    }
                     
                     NotificationCenter.default.post(name: .habitAdded, object: nil)
                     
@@ -414,12 +513,16 @@ extension AddHabitViewController: UICollectionViewDataSource {
             }
             
             return habitConfirmHabitCreationCell
+            
+        default:
+            return UICollectionViewCell()
         }
-        return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 3 && indexPath.row == 0 {
+        let section: Int = indexPath.section
+        let row: Int = indexPath.row
+        if section == Constants.Table.quantityCellSectionIndex && row == Constants.Table.quantityCellRowIndex {
             showQuantityInput(for: indexPath)
         }
     }

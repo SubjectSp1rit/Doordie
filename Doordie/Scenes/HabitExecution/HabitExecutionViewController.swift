@@ -16,7 +16,7 @@ final class HabitExecutionViewController: UIViewController {
         
         enum CloseScreenButton {
             static let tintColor: UIColor = .white
-            static let imageName: String = "chevron.left"
+            static let imageName: String = "chevron.down"
         }
         
         enum EditHabitButton {

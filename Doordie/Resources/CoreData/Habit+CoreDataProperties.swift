@@ -30,7 +30,7 @@ extension Habit {
 }
 
 extension Habit : Identifiable {
-    func updateHabit(id: UUID, newHabit: HabitModel) {
+    func updateHabit(newHabit: HabitModel) {
         self.title = newHabit.title
         self.motivations = newHabit.motivations
         self.color = newHabit.color

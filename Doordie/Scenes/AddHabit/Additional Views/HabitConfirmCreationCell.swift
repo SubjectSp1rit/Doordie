@@ -19,7 +19,8 @@ final class HabitConfirmCreationCell: UICollectionViewCell {
         }
         
         enum CreateHabitButton {
-            static let title: String = "Create"
+            static let createTitle: String = "Create"
+            static let saveTitle: String = "Save"
             static let bgColor: UIColor = UIColor(hex: "242765")
             static let cornerRadius: CGFloat = 14
             static let height: CGFloat = 50
@@ -46,6 +47,15 @@ final class HabitConfirmCreationCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
+    func configure(isNew: Bool) {
+        if isNew {
+            createHabitButton.setTitle(Constants.CreateHabitButton.createTitle, for: .normal)
+        } else {
+            createHabitButton.setTitle(Constants.CreateHabitButton.saveTitle, for: .normal)
+        }
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureCreateHabitButton()
@@ -55,7 +65,6 @@ final class HabitConfirmCreationCell: UICollectionViewCell {
         contentView.addSubview(createHabitButton)
         
         createHabitButton.layer.cornerRadius = Constants.CreateHabitButton.cornerRadius
-        createHabitButton.setTitle(Constants.CreateHabitButton.title, for: .normal)
         createHabitButton.tintColor = Constants.CreateHabitButton.tintColor
         createHabitButton.backgroundColor = Constants.CreateHabitButton.bgColor
         
