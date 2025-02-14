@@ -3,11 +3,11 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req async in
-        "It works!"
+        "Doordie works!"
     }
 
     app.get("hello") { req async -> String in
-        "Hello, world!"
+        "Hello, doordie!"
     }
 
     try app.register(collection: TodoController())
