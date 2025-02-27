@@ -8,6 +8,9 @@
 import UIKit
 
 enum WelcomeModels {
-    
+    struct RouteToLoginScreen {
+        struct Request { }
+        struct Response { }
+    }
 }
 

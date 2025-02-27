@@ -15,4 +15,9 @@ final class WelcomeInteractor: WelcomeBusinessLogic {
     init(presenter: WelcomePresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Public Methods
+    func routeToLoginScreen(_ request: WelcomeModels.RouteToLoginScreen.Request) {
+        presenter.routeToLoginScreen(WelcomeModels.RouteToLoginScreen.Response())
+    }
 }

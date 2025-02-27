@@ -8,6 +8,13 @@
 import UIKit
 
 final class WelcomePresenter: WelcomePresentationLogic {
-    // MARK: - Variables
+    // MARK: - Properties
     weak var view: WelcomeViewController?
+    
+    // MARK: - Public Methods
+    func routeToLoginScreen(_ response: WelcomeModels.RouteToLoginScreen.Response) {
+        let loginVC = LoginAssembly.build()
+        loginVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(loginVC, animated: true)
+    }
 }

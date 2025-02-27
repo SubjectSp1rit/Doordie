@@ -144,10 +144,18 @@ final class WelcomeViewController: UIViewController {
         loginButton.backgroundColor = Constants.LoginButton.bgColor
         loginButton.layer.cornerRadius = Constants.LoginButton.cornerRadius
         
+        loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
+        
         loginButton.setHeight(Constants.LoginButton.height)
         loginButton.setWidth(Constants.LoginButton.width)
         loginButton.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.LoginButton.leadingIndent, .grOE)
         loginButton.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         loginButton.pinBottom(to: signupButton.topAnchor, Constants.LoginButton.bottomIndent)
+    }
+    
+    // MARK: - Actions
+    @objc
+    private func loginButtonPressed() {
+        interactor.routeToLoginScreen(WelcomeModels.RouteToLoginScreen.Request())
     }
 }

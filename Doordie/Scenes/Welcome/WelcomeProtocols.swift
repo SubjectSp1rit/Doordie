@@ -8,9 +8,9 @@
 import UIKit
 
 protocol WelcomeBusinessLogic {
-    
+    func routeToLoginScreen(_ request: WelcomeModels.RouteToLoginScreen.Request)
 }
 
 protocol WelcomePresentationLogic {
-    
+    func routeToLoginScreen(_ response: WelcomeModels.RouteToLoginScreen.Response)
 }
