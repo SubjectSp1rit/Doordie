@@ -24,6 +24,7 @@ extension Habit {
     @NSManaged public var measurement: String?
     @NSManaged public var motivations: String?
     @NSManaged public var quantity: String?
+    @NSManaged public var current_quantity: String?
     @NSManaged public var regularity: String?
     @NSManaged public var title: String?
 
@@ -36,6 +37,7 @@ extension Habit : Identifiable {
         self.color = newHabit.color
         self.icon = newHabit.icon
         self.quantity = newHabit.quantity
+        self.current_quantity = newHabit.currentQuantity
         self.measurement = newHabit.measurement
         self.regularity = newHabit.regularity
         self.day_part = newHabit.dayPart

@@ -78,6 +78,7 @@ final class AddHabitViewController: UIViewController {
             static let color: String = "6475CC"
             static let icon: String = "heart"
             static let quantity: String = "30"
+            static let currentQuantity: String = "0"
             static let measurement: String = "Mins"
             static let regularity: String = "Every day"
             static let dayPart: String = "Any time"
@@ -99,6 +100,7 @@ final class AddHabitViewController: UIViewController {
     private var habitColor: String? = Constants.HabitStandardValues.color
     private var habitIcon: String? = Constants.HabitStandardValues.icon
     private var habitQuantity: String? = Constants.HabitStandardValues.quantity
+    private var habitCurrentQuantity: String? = Constants.HabitStandardValues.currentQuantity
     private var habitMeasurementType: String? = Constants.HabitStandardValues.measurement
     private var habitPeriod: String? = Constants.HabitStandardValues.regularity
     private var habitDayPart: String? = Constants.HabitStandardValues.dayPart
@@ -495,6 +497,7 @@ extension AddHabitViewController: UICollectionViewDataSource {
                                               color: self.habitColor,
                                               icon: self.habitIcon,
                                               quantity: self.habitQuantity,
+                                              currentQuantity: self.habitCurrentQuantity,
                                               measurement: self.habitMeasurementType,
                                               regularity: self.habitPeriod,
                                               dayPart: self.habitDayPart)

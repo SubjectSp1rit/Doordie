@@ -23,6 +23,7 @@ struct HabitModel {
     var color: String?
     var icon: String?
     var quantity: String?
+    var currentQuantity: String?
     var measurement: String?
     var regularity: String?
     var dayPart: String?

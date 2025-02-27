@@ -57,6 +57,7 @@ class CoreManager {
         newHabit.color = habitModel.color
         newHabit.icon = habitModel.icon
         newHabit.quantity = habitModel.quantity
+        newHabit.current_quantity = habitModel.currentQuantity
         newHabit.measurement = habitModel.measurement
         newHabit.regularity = habitModel.regularity
         newHabit.day_part = habitModel.dayPart
