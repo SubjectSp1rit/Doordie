@@ -9,8 +9,12 @@ import UIKit
 
 enum LoginModels {
     enum RouteToRestorePasswordScreen {
-        struct Request { }
-        struct Response { }
+        struct Request {
+            var email: String?
+        }
+        struct Response {
+            var email: String?
+        }
     }
 }
 

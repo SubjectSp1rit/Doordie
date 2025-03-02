@@ -13,7 +13,7 @@ final class LoginPresenter: LoginPresentationLogic {
     
     // MARK: - Methods
     func presentRestorePasswordScreen(_ response: LoginModels.RouteToRestorePasswordScreen.Response) {
-        let restorePasswordVC = PasswordResetAssembly.build()
+        let restorePasswordVC = PasswordResetAssembly.build(email: response.email)
         restorePasswordVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(restorePasswordVC, animated: true)
     }

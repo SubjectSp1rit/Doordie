@@ -296,7 +296,8 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func restorePasswordButtonPressed() {
-        interactor.showRestorePasswordScreen(LoginModels.RouteToRestorePasswordScreen.Request())
+        let email: String? = emailTextField.text
+        interactor.showRestorePasswordScreen(LoginModels.RouteToRestorePasswordScreen.Request(email: email))
     }
     
     @objc private func registerButtonPressed() {

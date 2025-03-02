@@ -81,10 +81,12 @@ final class PasswordResetViewController: UIViewController {
     
     // MARK: - Properties
     private var interactor: PasswordResetBusinessLogic
+    private var email: String?
     
     // MARK: - Lifecycle
-    init(interactor: PasswordResetBusinessLogic) {
+    init(interactor: PasswordResetBusinessLogic, email: String?) {
         self.interactor = interactor
+        self.email = email
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -145,6 +147,7 @@ final class PasswordResetViewController: UIViewController {
         view.addSubview(emailTextField)
         
         emailTextField.backgroundColor = Constants.EmailTextField.bgColor
+        emailTextField.text = email
         emailTextField.layer.cornerRadius = Constants.EmailTextField.cornerRadius
         emailTextField.textColor = Constants.EmailTextField.textColor
         emailTextField.font = UIFont.systemFont(ofSize: Constants.EmailTextField.fontSize)
@@ -186,8 +189,7 @@ final class PasswordResetViewController: UIViewController {
         sendButton.setTitle(Constants.SendButton.title, for: .normal)
         sendButton.setTitle(Constants.SendButton.title, for: .disabled)
         sendButton.layer.cornerRadius = Constants.SendButton.cornerRadius
-        sendButton.isEnabled = false
-        sendButton.alpha = Constants.SendButton.transparencyMin
+        emailTextFieldDidChange() // проверяем что почтовый адрес корректный
         sendButton.addTarget(self, action: #selector(sendButtonPressed), for: .touchUpInside)
         
         sendButton.setHeight(Constants.SendButton.height)
