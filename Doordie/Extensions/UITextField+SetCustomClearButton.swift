@@ -13,7 +13,7 @@ extension UITextField {
     /// - Parameters:
     ///   - mode: Режим отображения кнопки очистки (`.never`, `.whileEditing`, `.unlessEditing`, `.always`).
     ///   - color: Цвет кнопки очистки.
-    func setCustomClearButton(mode: UITextField.ViewMode, color: UIColor) {
+    func setCustomClearButton(mode: UITextField.ViewMode, color: UIColor, padding: CGFloat) {
         let clearButton = UIButton(type: .custom)
         let clearImage = UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
         clearButton.setImage(clearImage, for: .normal)
@@ -29,7 +29,6 @@ extension UITextField {
         clearButton.frame = CGRect(x: 0, y: 0, width: buttonSize, height: buttonSize)
 
         // Контейнер для отступа кнопки
-        let padding: CGFloat = 8
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: buttonSize + padding, height: buttonSize))
         clearButton.center = containerView.center
         containerView.addSubview(clearButton)

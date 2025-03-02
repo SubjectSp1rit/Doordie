@@ -36,6 +36,7 @@ final class LoginViewController: UIViewController {
             static let autocorrectionType: UITextAutocorrectionType = .no
             static let autocapitalizationType: UITextAutocapitalizationType = .none
             static let clearButtonMode: UITextField.ViewMode = .whileEditing
+            static let paddingRight: CGFloat = 10
             static let clearButtonColor: UIColor = .systemGray
             static let textAlignment: NSTextAlignment = .left
             static let leftTextPadding: CGFloat = 8
@@ -72,9 +73,11 @@ final class LoginViewController: UIViewController {
             static let keyboardType: UIKeyboardType = .default
             static let autocorrectionType: UITextAutocorrectionType = .no
             static let autocapitalizationType: UITextAutocapitalizationType = .none
-            static let rightViewMode: UITextField.ViewMode = .whileEditing
+            static let secureButtonMode: UITextField.ViewMode = .whileEditing
+            static let secureButtonColor: UIColor = .systemGray
+            static let paddingRightView: CGFloat = 10
             static let textAlignment: NSTextAlignment = .left
-            static let leftTextPadding: CGFloat = 8
+            static let paddingLeft: CGFloat = 8
             static let minimumBorderWidth: CGFloat = 0
             static let maximumBorderWidth: CGFloat = 2
             static let borderColor: CGColor = UIColor.systemRed.cgColor
@@ -122,7 +125,6 @@ final class LoginViewController: UIViewController {
         configureEmailLabel()
         configureEmailTextField()
         configurePasswordLabel()
-        configurePasswordVisibilityButton()
         configurePasswordTextField()
         
         configureDismissKeyboardTap()
@@ -179,7 +181,7 @@ final class LoginViewController: UIViewController {
         emailTextField.keyboardType = Constants.EmailTextField.keyboardType
         emailTextField.autocorrectionType = Constants.EmailTextField.autocorrectionType
         emailTextField.autocapitalizationType = Constants.EmailTextField.autocapitalizationType
-        emailTextField.setCustomClearButton(mode: Constants.EmailTextField.clearButtonMode, color: Constants.EmailTextField.clearButtonColor)
+        emailTextField.setCustomClearButton(mode: Constants.EmailTextField.clearButtonMode, color: Constants.EmailTextField.clearButtonColor, padding: Constants.EmailTextField.paddingRight)
         emailTextField.textAlignment = Constants.EmailTextField.textAlignment
         emailTextField.setLeftPadding(left: Constants.EmailTextField.leftTextPadding)
         
@@ -205,6 +207,8 @@ final class LoginViewController: UIViewController {
     private func configurePasswordTextField() {
         view.addSubview(passwordTextField)
         
+        //configurePasswordVisibilityButton()
+        
         passwordTextField.backgroundColor = Constants.PasswordTextField.bgColor
         passwordTextField.layer.cornerRadius = Constants.PasswordTextField.cornerRadius
         passwordTextField.textColor = Constants.PasswordTextField.textColor
@@ -212,11 +216,12 @@ final class LoginViewController: UIViewController {
         passwordTextField.keyboardType = Constants.PasswordTextField.keyboardType
         passwordTextField.autocorrectionType = Constants.PasswordTextField.autocorrectionType
         passwordTextField.autocapitalizationType = Constants.PasswordTextField.autocapitalizationType
-        passwordTextField.rightViewMode = Constants.PasswordTextField.rightViewMode
-        passwordTextField.rightView = passwordVisibilityButton
+        //passwordTextField.rightViewMode = Constants.PasswordTextField.rightViewMode
+        //passwordTextField.rightView = passwordVisibilityButton
+        passwordTextField.setCustomVisibilityButton(mode: Constants.PasswordTextField.secureButtonMode, color: Constants.PasswordTextField.secureButtonColor, padding: Constants.PasswordTextField.paddingRightView)
         passwordTextField.isSecureTextEntry = Constants.PasswordTextField.isSecureText
         passwordTextField.textAlignment = Constants.PasswordTextField.textAlignment
-        passwordTextField.setLeftPadding(left: Constants.PasswordTextField.leftTextPadding)
+        passwordTextField.setLeftPadding(left: Constants.PasswordTextField.paddingLeft)
         
         passwordTextField.setHeight(Constants.PasswordTextField.height)
         passwordTextField.pinTop(to: passwordLabel.bottomAnchor, Constants.PasswordTextField.topIndent)
