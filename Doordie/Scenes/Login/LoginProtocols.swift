@@ -8,9 +8,9 @@
 import UIKit
 
 protocol LoginBusinessLogic {
-    
+    func showRestorePasswordScreen(_ request: LoginModels.RouteToRestorePasswordScreen.Request)
 }
 
 protocol LoginPresentationLogic {
-    
+    func presentRestorePasswordScreen(_ response: LoginModels.RouteToRestorePasswordScreen.Response)
 }

@@ -15,4 +15,9 @@ final class LoginInteractor: LoginBusinessLogic {
     init(presenter: LoginPresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Methods
+    func showRestorePasswordScreen(_ request: LoginModels.RouteToRestorePasswordScreen.Request) {
+        presenter.presentRestorePasswordScreen(LoginModels.RouteToRestorePasswordScreen.Response())
+    }
 }

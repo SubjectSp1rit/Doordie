@@ -296,7 +296,7 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func restorePasswordButtonPressed() {
-        // restore password logic
+        interactor.showRestorePasswordScreen(LoginModels.RouteToRestorePasswordScreen.Request())
     }
     
     @objc private func registerButtonPressed() {
