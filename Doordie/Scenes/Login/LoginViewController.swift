@@ -35,6 +35,7 @@ final class LoginViewController: UIViewController {
             static let keyboardType: UIKeyboardType = .emailAddress
             static let autocorrectionType: UITextAutocorrectionType = .no
             static let autocapitalizationType: UITextAutocapitalizationType = .none
+            static let placeholder: String = "example@doordie.app"
             static let clearButtonMode: UITextField.ViewMode = .whileEditing
             static let paddingRight: CGFloat = 10
             static let clearButtonColor: UIColor = .systemGray
@@ -57,20 +58,13 @@ final class LoginViewController: UIViewController {
             static let topIndent: CGFloat = 18
         }
         
-        enum PasswordVisibilityButton {
-            static let hiddenImage: String = "eye.fill"
-            static let notHiddenImage: String = "eye.slash.fill"
-            static let size: CGFloat = 14
-            static let tintColor: UIColor = .systemGray
-            static let bgColor: UIColor = .clear
-        }
-        
         enum PasswordTextField {
             static let bgColor: UIColor = .white
             static let cornerRadius: CGFloat = 14
             static let textColor: UIColor = .black
             static let fontSize: CGFloat = 22
             static let keyboardType: UIKeyboardType = .default
+            static let placeholder: String = "••••••••"
             static let autocorrectionType: UITextAutocorrectionType = .no
             static let autocapitalizationType: UITextAutocapitalizationType = .none
             static let secureButtonMode: UITextField.ViewMode = .whileEditing
@@ -86,6 +80,32 @@ final class LoginViewController: UIViewController {
             static let topIndent: CGFloat = 4
             static let leadingIndent: CGFloat = 18
         }
+        
+        enum LoginButton {
+            static let bgColor: UIColor = UIColor(hex: "3A50C2")
+            static let title: String = "Log in"
+            static let tintColor: UIColor = .white
+            static let height: CGFloat = 50
+            static let cornerRadius: CGFloat = 14
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 18
+        }
+        
+        enum RestorePasswordButton {
+            static let bgColor: UIColor = .clear
+            static let title: String = "Forgot password?"
+            static let tintColor: UIColor = .white
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 8
+        }
+        
+        enum RegisterButton {
+            static let bgColor: UIColor = .clear
+            static let title: String = "Don't have an account?"
+            static let tintColor: UIColor = .white
+            static let trailingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 8
+        }
     }
     
     // MARK: - UI Components
@@ -93,7 +113,6 @@ final class LoginViewController: UIViewController {
     let emailLabel: UILabel = UILabel()
     let emailTextField: UITextField = UITextField()
     let passwordLabel: UILabel = UILabel()
-    let passwordVisibilityButton: UIButton = UIButton(type: .custom)
     let passwordTextField: UIPasswordTextField = UIPasswordTextField()
     let loginButton: UIButton = UIButton(type: .system)
     let restorePasswordButton: UIButton = UIButton(type: .system)
@@ -126,6 +145,9 @@ final class LoginViewController: UIViewController {
         configureEmailTextField()
         configurePasswordLabel()
         configurePasswordTextField()
+        configureLoginButton()
+        configureRestorePasswordButton()
+        configureRegisterButton()
         
         configureDismissKeyboardTap()
     }
@@ -161,16 +183,6 @@ final class LoginViewController: UIViewController {
         emailLabel.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.EmailLabel.topIndent)
     }
     
-    private func configurePasswordVisibilityButton() {
-        passwordVisibilityButton.setImage(UIImage(systemName: Constants.PasswordVisibilityButton.hiddenImage), for: .normal)
-        passwordVisibilityButton.setImage(UIImage(systemName: Constants.PasswordVisibilityButton.notHiddenImage), for: .selected)
-        passwordVisibilityButton.tintColor = Constants.PasswordVisibilityButton.tintColor
-        passwordVisibilityButton.backgroundColor = Constants.PasswordVisibilityButton.bgColor
-        passwordVisibilityButton.frame = CGRect(x: 0, y: 0, width: Constants.PasswordVisibilityButton.size, height: Constants.PasswordVisibilityButton.size)
-        
-        passwordVisibilityButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
-    }
-    
     private func configureEmailTextField() {
         view.addSubview(emailTextField)
         
@@ -181,6 +193,8 @@ final class LoginViewController: UIViewController {
         emailTextField.keyboardType = Constants.EmailTextField.keyboardType
         emailTextField.autocorrectionType = Constants.EmailTextField.autocorrectionType
         emailTextField.autocapitalizationType = Constants.EmailTextField.autocapitalizationType
+        emailTextField.attributedPlaceholder =
+        NSAttributedString(string: Constants.EmailTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         emailTextField.setCustomClearButton(mode: Constants.EmailTextField.clearButtonMode, color: Constants.EmailTextField.clearButtonColor, padding: Constants.EmailTextField.paddingRight)
         emailTextField.textAlignment = Constants.EmailTextField.textAlignment
         emailTextField.setLeftPadding(left: Constants.EmailTextField.leftTextPadding)
@@ -207,8 +221,6 @@ final class LoginViewController: UIViewController {
     private func configurePasswordTextField() {
         view.addSubview(passwordTextField)
         
-        //configurePasswordVisibilityButton()
-        
         passwordTextField.backgroundColor = Constants.PasswordTextField.bgColor
         passwordTextField.layer.cornerRadius = Constants.PasswordTextField.cornerRadius
         passwordTextField.textColor = Constants.PasswordTextField.textColor
@@ -216,8 +228,8 @@ final class LoginViewController: UIViewController {
         passwordTextField.keyboardType = Constants.PasswordTextField.keyboardType
         passwordTextField.autocorrectionType = Constants.PasswordTextField.autocorrectionType
         passwordTextField.autocapitalizationType = Constants.PasswordTextField.autocapitalizationType
-        //passwordTextField.rightViewMode = Constants.PasswordTextField.rightViewMode
-        //passwordTextField.rightView = passwordVisibilityButton
+        passwordTextField.attributedPlaceholder =
+        NSAttributedString(string: Constants.PasswordTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         passwordTextField.setCustomVisibilityButton(mode: Constants.PasswordTextField.secureButtonMode, color: Constants.PasswordTextField.secureButtonColor, padding: Constants.PasswordTextField.paddingRightView)
         passwordTextField.isSecureTextEntry = Constants.PasswordTextField.isSecureText
         passwordTextField.textAlignment = Constants.PasswordTextField.textAlignment
@@ -230,15 +242,42 @@ final class LoginViewController: UIViewController {
     }
     
     private func configureLoginButton() {
+        view.addSubview(loginButton)
         
+        loginButton.backgroundColor = Constants.LoginButton.bgColor
+        loginButton.tintColor = Constants.LoginButton.tintColor
+        loginButton.setTitle(Constants.LoginButton.title, for: .normal)
+        loginButton.layer.cornerRadius = Constants.LoginButton.cornerRadius
+        loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
+        
+        loginButton.setHeight(Constants.LoginButton.height)
+        loginButton.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        loginButton.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.LoginButton.leadingIndent)
+        loginButton.pinTop(to: passwordTextField.bottomAnchor, Constants.LoginButton.topIndent)
     }
     
     private func configureRestorePasswordButton() {
+        view.addSubview(restorePasswordButton)
         
+        restorePasswordButton.backgroundColor = Constants.RestorePasswordButton.bgColor
+        restorePasswordButton.setTitle(Constants.RestorePasswordButton.title, for: .normal)
+        restorePasswordButton.tintColor = Constants.RestorePasswordButton.tintColor
+        restorePasswordButton.addTarget(self, action: #selector(restorePasswordButtonPressed), for: .touchUpInside)
+        
+        restorePasswordButton.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.RestorePasswordButton.leadingIndent)
+        restorePasswordButton.pinTop(to: loginButton.bottomAnchor, Constants.RestorePasswordButton.topIndent)
     }
     
     private func configureRegisterButton() {
+        view.addSubview(registerButton)
         
+        registerButton.backgroundColor = Constants.RegisterButton.bgColor
+        registerButton.setTitle(Constants.RegisterButton.title, for: .normal)
+        registerButton.tintColor = Constants.RegisterButton.tintColor
+        registerButton.addTarget(self, action: #selector(registerButtonPressed), for: .touchUpInside)
+        
+        registerButton.pinRight(to: view.safeAreaLayoutGuide.trailingAnchor, Constants.RegisterButton.trailingIndent)
+        registerButton.pinTop(to: loginButton.bottomAnchor, Constants.RegisterButton.topIndent)
     }
     
     private func configureDismissKeyboardTap() {
@@ -248,15 +287,19 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc func dismissKeyboard() {
+    @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
     
-    // Обработчик переключения режима видимости пароля
-    @objc func togglePasswordVisibility() {
-        passwordVisibilityButton.isSelected.toggle()
-        
-        // Переключаем режим безопасного ввода
-        passwordTextField.isSecureTextEntry = !passwordVisibilityButton.isSelected
+    @objc private func loginButtonPressed() {
+        // login logic
+    }
+    
+    @objc private func restorePasswordButtonPressed() {
+        // restore password logic
+    }
+    
+    @objc private func registerButtonPressed() {
+        // register logic
     }
 }
