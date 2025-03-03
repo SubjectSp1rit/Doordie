@@ -15,4 +15,9 @@ final class RegistrationNameInteractor: RegistrationNameBusinessLogic {
     init(presenter: RegistrationNamePresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Public Methods
+    func routeToRegistrationPassword(_ request: RegistrationNameModels.RouteToRegistrationPasswordScreen.Request) {
+        presenter.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Response())
+    }
 }

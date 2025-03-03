@@ -1,5 +1,5 @@
 //
-//  RegistrationEmailViewController.swift
+//  RegistrationPasswordViewController.swift
 //  Doordie
 //
 //  Created by Arseniy on 03.03.2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RegistrationEmailViewController: UIViewController {
+final class RegistrationPasswordViewController: UIViewController {
     // MARK: - Constants
     private enum Constants {
         enum Background {
@@ -15,11 +15,11 @@ final class RegistrationEmailViewController: UIViewController {
         }
         
         enum NavBar {
-            static let title: String = "Email"
+            static let title: String = "Password"
         }
         
-        enum EmailLabel {
-            static let text: String = "What is your email?"
+        enum PasswordLabel {
+            static let text: String = "Create a password"
             static let textColor: UIColor = .white
             static let fontSize: CGFloat = 36
             static let fontWeight: UIFont.Weight = .bold
@@ -29,7 +29,7 @@ final class RegistrationEmailViewController: UIViewController {
             static let topIndent: CGFloat = 8
         }
         
-        enum EmailTextField {
+        enum PasswordTextField {
             static let bgColor: UIColor = .white
             static let cornerRadius: CGFloat = 14
             static let textColor: UIColor = .black
@@ -37,7 +37,7 @@ final class RegistrationEmailViewController: UIViewController {
             static let keyboardType: UIKeyboardType = .emailAddress
             static let autocorrectionType: UITextAutocorrectionType = .no
             static let autocapitalizationType: UITextAutocapitalizationType = .none
-            static let placeholder: String = "example@doordie.app"
+            static let placeholder: String = "••••••••"
             static let clearButtonMode: UITextField.ViewMode = .whileEditing
             static let paddingRight: CGFloat = 10
             static let clearButtonColor: UIColor = .systemGray
@@ -52,7 +52,7 @@ final class RegistrationEmailViewController: UIViewController {
         }
         
         enum InstructionLabel {
-            static let text: String = "You will receive a 4-digit code"
+            static let text: String = "Use at least 8 characters"
             static let textColor: UIColor = .white
             static let fontSize: CGFloat = 14
             static let textAlignment: NSTextAlignment = .left
@@ -76,16 +76,16 @@ final class RegistrationEmailViewController: UIViewController {
     
     // MARK: - UI Components
     let background: UIImageView = UIImageView()
-    let emailLabel: UILabel = UILabel()
-    let emailTextField: UITextField = UITextField()
+    let passwordLabel: UILabel = UILabel()
+    let passwordTextField: UITextField = UITextField()
     let instructionLabel: UILabel = UILabel()
     let nextButton: UIButton = UIButton(type: .system)
     
     // MARK: - Properties
-    private var interactor: RegistrationEmailBusinessLogic
+    private var interactor: RegistrationPasswordBusinessLogic
     
     // MARK: - Lifecycle
-    init(interactor: RegistrationEmailBusinessLogic) {
+    init(interactor: RegistrationPasswordBusinessLogic) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -104,8 +104,8 @@ final class RegistrationEmailViewController: UIViewController {
     private func configureUI() {
         configureBackground()
         configureNavBar()
-        configureEmailLabel()
-        configureEmailTextField()
+        configurePasswordLabel()
+        configurePasswordTextField()
         configureInstructionLabel()
         configureNextButton()
     }
@@ -128,40 +128,40 @@ final class RegistrationEmailViewController: UIViewController {
         navigationItem.title = Constants.NavBar.title
     }
     
-    private func configureEmailLabel() {
-        view.addSubview(emailLabel)
+    private func configurePasswordLabel() {
+        view.addSubview(passwordLabel)
         
-        emailLabel.text = Constants.EmailLabel.text
-        emailLabel.textColor = Constants.EmailLabel.textColor
-        emailLabel.textAlignment = Constants.EmailLabel.textAlignment
-        emailLabel.font = UIFont.systemFont(ofSize: Constants.EmailLabel.fontSize, weight: Constants.EmailLabel.fontWeight)
-        emailLabel.numberOfLines = Constants.EmailLabel.numberOfLines
+        passwordLabel.text = Constants.PasswordLabel.text
+        passwordLabel.textColor = Constants.PasswordLabel.textColor
+        passwordLabel.textAlignment = Constants.PasswordLabel.textAlignment
+        passwordLabel.font = UIFont.systemFont(ofSize: Constants.PasswordLabel.fontSize, weight: Constants.PasswordLabel.fontWeight)
+        passwordLabel.numberOfLines = Constants.PasswordLabel.numberOfLines
         
-        emailLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
-        emailLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.EmailLabel.leadingIndent)
-        emailLabel.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.EmailLabel.topIndent)
+        passwordLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        passwordLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.PasswordLabel.leadingIndent)
+        passwordLabel.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.PasswordLabel.topIndent)
     }
     
-    private func configureEmailTextField() {
-        view.addSubview(emailTextField)
+    private func configurePasswordTextField() {
+        view.addSubview(passwordTextField)
         
-        emailTextField.backgroundColor = Constants.EmailTextField.bgColor
-        emailTextField.layer.cornerRadius = Constants.EmailTextField.cornerRadius
-        emailTextField.textColor = Constants.EmailTextField.textColor
-        emailTextField.font = UIFont.systemFont(ofSize: Constants.EmailTextField.fontSize)
-        emailTextField.keyboardType = Constants.EmailTextField.keyboardType
-        emailTextField.autocorrectionType = Constants.EmailTextField.autocorrectionType
-        emailTextField.autocapitalizationType = Constants.EmailTextField.autocapitalizationType
-        emailTextField.attributedPlaceholder = NSAttributedString(string: Constants.EmailTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
-        emailTextField.setCustomClearButton(mode: Constants.EmailTextField.clearButtonMode, color: Constants.EmailTextField.clearButtonColor, padding: Constants.EmailTextField.paddingRight)
-        emailTextField.textAlignment = Constants.EmailTextField.textAlignment
-        emailTextField.setLeftPadding(left: Constants.EmailTextField.leftTextPadding)
-        emailTextField.addTarget(self, action: #selector(emailTextFieldDidChange), for: .editingChanged)
+        passwordTextField.backgroundColor = Constants.PasswordTextField.bgColor
+        passwordTextField.layer.cornerRadius = Constants.PasswordTextField.cornerRadius
+        passwordTextField.textColor = Constants.PasswordTextField.textColor
+        passwordTextField.font = UIFont.systemFont(ofSize: Constants.PasswordTextField.fontSize)
+        passwordTextField.keyboardType = Constants.PasswordTextField.keyboardType
+        passwordTextField.autocorrectionType = Constants.PasswordTextField.autocorrectionType
+        passwordTextField.autocapitalizationType = Constants.PasswordTextField.autocapitalizationType
+        passwordTextField.setCustomClearButton(mode: Constants.PasswordTextField.clearButtonMode, color: Constants.PasswordTextField.clearButtonColor, padding: Constants.PasswordTextField.paddingRight)
+        passwordTextField.textAlignment = Constants.PasswordTextField.textAlignment
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: Constants.PasswordTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
+        passwordTextField.setLeftPadding(left: Constants.PasswordTextField.leftTextPadding)
+        passwordTextField.addTarget(self, action: #selector(emailTextFieldDidChange), for: .editingChanged)
         
-        emailTextField.setHeight(Constants.EmailTextField.height)
-        emailTextField.pinTop(to: emailLabel.bottomAnchor, Constants.EmailTextField.topIndent)
-        emailTextField.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
-        emailTextField.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.EmailTextField.leadingIndent)
+        passwordTextField.setHeight(Constants.PasswordTextField.height)
+        passwordTextField.pinTop(to: passwordLabel.bottomAnchor, Constants.PasswordTextField.topIndent)
+        passwordTextField.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        passwordTextField.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.PasswordTextField.leadingIndent)
     }
     
     private func configureInstructionLabel() {
@@ -175,7 +175,7 @@ final class RegistrationEmailViewController: UIViewController {
         
         instructionLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         instructionLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.InstructionLabel.leadingIndent)
-        instructionLabel.pinTop(to: emailTextField.bottomAnchor, Constants.InstructionLabel.topIndent)
+        instructionLabel.pinTop(to: passwordTextField.bottomAnchor, Constants.InstructionLabel.topIndent)
     }
     
     private func configureNextButton() {
@@ -197,19 +197,20 @@ final class RegistrationEmailViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func nextButtonPressed() {
-        interactor.routeToRegistrationNameScreen(RegistrationEmailModels.RouteToRegistrationNameScreen.Request())
+        // logic
     }
     
     @objc private func emailTextFieldDidChange() {
-        guard let email = emailTextField.text else { return }
+        guard let name = passwordTextField.text else { return }
+        let minNameLength = 8
         
-        switch email.isValidEmail() {
+        switch name.isEmpty || name.count < minNameLength {
         case true:
-            nextButton.isEnabled = true
-            nextButton.alpha = Constants.NextButton.transparencyMax
-        case false:
             nextButton.isEnabled = false
             nextButton.alpha = Constants.NextButton.transparencyMin
+        case false:
+            nextButton.isEnabled = true
+            nextButton.alpha = Constants.NextButton.transparencyMax
         }
     }
 }

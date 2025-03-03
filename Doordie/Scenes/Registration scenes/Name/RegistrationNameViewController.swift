@@ -169,7 +169,7 @@ final class RegistrationNameViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func nextButtonPressed() {
-        // logic
+        interactor.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Request())
     }
     
     @objc private func emailTextFieldDidChange() {

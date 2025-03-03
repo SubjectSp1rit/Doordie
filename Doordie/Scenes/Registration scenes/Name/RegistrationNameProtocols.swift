@@ -8,9 +8,9 @@
 import UIKit
 
 protocol RegistrationNameBusinessLogic {
-    
+    func routeToRegistrationPassword(_ request: RegistrationNameModels.RouteToRegistrationPasswordScreen.Request)
 }
 
 protocol RegistrationNamePresentationLogic {
-    
+    func routeToRegistrationPassword(_ response: RegistrationNameModels.RouteToRegistrationPasswordScreen.Response)
 }

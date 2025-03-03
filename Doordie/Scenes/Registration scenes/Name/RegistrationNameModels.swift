@@ -8,6 +8,9 @@
 import UIKit
 
 enum RegistrationNameModels {
-    
+    enum RouteToRegistrationPasswordScreen {
+        struct Request { }
+        struct Response { }
+    }
 }
 

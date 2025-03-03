@@ -10,4 +10,11 @@ import UIKit
 final class RegistrationNamePresenter: RegistrationNamePresentationLogic {
     // MARK: - Properties
     weak var view: RegistrationNameViewController?
+    
+    // MARK: - Public Methods
+    func routeToRegistrationPassword(_ response: RegistrationNameModels.RouteToRegistrationPasswordScreen.Response) {
+        let registrationPasswordVC = RegistrationPasswordAssembly.build()
+        registrationPasswordVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(registrationPasswordVC, animated: true)
+    }
 }
