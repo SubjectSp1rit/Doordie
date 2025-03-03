@@ -20,4 +20,8 @@ final class WelcomeInteractor: WelcomeBusinessLogic {
     func routeToLoginScreen(_ request: WelcomeModels.RouteToLoginScreen.Request) {
         presenter.routeToLoginScreen(WelcomeModels.RouteToLoginScreen.Response())
     }
+    
+    func routeToRegistrationScreen(_ request: WelcomeModels.RouteToRegistrationScreen.Request) {
+        presenter.routeToRegistrationScreen(WelcomeModels.RouteToRegistrationScreen.Response())
+    }
 }

@@ -131,6 +131,8 @@ final class WelcomeViewController: UIViewController {
         signupButton.tintColor = Constants.SignupButton.titleColor
         signupButton.backgroundColor = Constants.SignupButton.bgColor
         
+        signupButton.addTarget(self, action: #selector(signupButtonPressed), for: .touchUpInside)
+        
         signupButton.setHeight(Constants.SignupButton.height)
         signupButton.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         signupButton.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor, Constants.SignupButton.bottomIndent)
@@ -154,8 +156,11 @@ final class WelcomeViewController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc
-    private func loginButtonPressed() {
+    @objc private func loginButtonPressed() {
         interactor.routeToLoginScreen(WelcomeModels.RouteToLoginScreen.Request())
+    }
+    
+    @objc private func signupButtonPressed() {
+        interactor.routeToRegistrationScreen(WelcomeModels.RouteToRegistrationScreen.Request())
     }
 }

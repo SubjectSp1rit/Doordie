@@ -12,5 +12,10 @@ enum WelcomeModels {
         struct Request { }
         struct Response { }
     }
+    
+    enum RouteToRegistrationScreen {
+        struct Request { }
+        struct Response { }
+    }
 }
 

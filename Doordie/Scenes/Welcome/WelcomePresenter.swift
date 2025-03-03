@@ -17,4 +17,10 @@ final class WelcomePresenter: WelcomePresentationLogic {
         loginVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(loginVC, animated: true)
     }
+    
+    func routeToRegistrationScreen(_ response: WelcomeModels.RouteToRegistrationScreen.Response) {
+        let registrationVC = RegistrationEmailAssembly.build()
+        registrationVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(registrationVC, animated: true)
+    }
 }
