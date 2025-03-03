@@ -228,8 +228,7 @@ final class LoginViewController: UIViewController {
         passwordTextField.keyboardType = Constants.PasswordTextField.keyboardType
         passwordTextField.autocorrectionType = Constants.PasswordTextField.autocorrectionType
         passwordTextField.autocapitalizationType = Constants.PasswordTextField.autocapitalizationType
-        passwordTextField.attributedPlaceholder =
-        NSAttributedString(string: Constants.PasswordTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: Constants.PasswordTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         passwordTextField.setCustomVisibilityButton(mode: Constants.PasswordTextField.secureButtonMode, color: Constants.PasswordTextField.secureButtonColor, padding: Constants.PasswordTextField.paddingRightView)
         passwordTextField.isSecureTextEntry = Constants.PasswordTextField.isSecureText
         passwordTextField.textAlignment = Constants.PasswordTextField.textAlignment
@@ -301,6 +300,6 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func registerButtonPressed() {
-        // register logic
+        interactor.showRegistrationScreen(LoginModels.RouteToRegistrationScreen.Request())
     }
 }

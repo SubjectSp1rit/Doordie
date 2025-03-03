@@ -17,4 +17,10 @@ final class LoginPresenter: LoginPresentationLogic {
         restorePasswordVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(restorePasswordVC, animated: true)
     }
+    
+    func presentRegistrationScreen(_ response: LoginModels.RouteToRegistrationScreen.Response) {
+        let registrationVC = RegistrationEmailAssembly.build()
+        registrationVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(registrationVC, animated: true)
+    }
 }

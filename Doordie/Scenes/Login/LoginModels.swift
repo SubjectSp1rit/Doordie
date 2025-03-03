@@ -16,5 +16,10 @@ enum LoginModels {
             var email: String?
         }
     }
+    
+    enum RouteToRegistrationScreen {
+        struct Request { }
+        struct Response { }
+    }
 }
 

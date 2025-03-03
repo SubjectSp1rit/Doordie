@@ -20,4 +20,8 @@ final class LoginInteractor: LoginBusinessLogic {
     func showRestorePasswordScreen(_ request: LoginModels.RouteToRestorePasswordScreen.Request) {
         presenter.presentRestorePasswordScreen(LoginModels.RouteToRestorePasswordScreen.Response(email: request.email))
     }
+    
+    func showRegistrationScreen(_ request: LoginModels.RouteToRegistrationScreen.Request) {
+        presenter.presentRegistrationScreen(LoginModels.RouteToRegistrationScreen.Response())
+    }
 }
