@@ -357,7 +357,7 @@ extension HomeViewController: UITableViewDataSource {
             
             return dayPartSelectorCell
             
-        // HabitCell (many)
+        // HabitCell
         case Constants.Table.habitCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }

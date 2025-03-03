@@ -8,9 +8,9 @@
 import UIKit
 
 protocol RegistrationEmailBusinessLogic {
-    
+    func routeToRegistrationNameScreen(_ request: RegistrationEmailModels.RouteToRegistrationNameScreen.Request)
 }
 
 protocol RegistrationEmailPresentationLogic {
-    
+    func routeToRegistrationNameScreen(_ response: RegistrationEmailModels.RouteToRegistrationNameScreen.Response)
 }

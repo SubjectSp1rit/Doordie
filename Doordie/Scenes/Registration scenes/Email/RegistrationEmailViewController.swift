@@ -15,7 +15,7 @@ final class RegistrationEmailViewController: UIViewController {
         }
         
         enum NavBar {
-            static let title: String = "Create account"
+            static let title: String = "Email"
         }
         
         enum EmailLabel {
@@ -198,7 +198,7 @@ final class RegistrationEmailViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func nextButtonPressed() {
-        // logic
+        interactor.routeToRegistrationNameScreen(RegistrationEmailModels.RouteToRegistrationNameScreen.Request())
     }
     
     @objc private func emailTextFieldDidChange() {
