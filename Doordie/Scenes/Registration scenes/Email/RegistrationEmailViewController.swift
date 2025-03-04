@@ -72,6 +72,24 @@ final class RegistrationEmailViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 18
         }
+        
+        enum StagesStack {
+            static let numberOfStages: Int = 3
+            static let numberOfCompletedStages: Int = 1
+            static let axis: NSLayoutConstraint.Axis = .horizontal
+            static let distribution: UIStackView.Distribution = .fillEqually
+            static let alignment: UIStackView.Alignment = .center
+            static let spacing: CGFloat = 12
+            static let topIndent: CGFloat = 18
+        }
+        
+        enum CurrentStage {
+            static let bgColorCompletedStage: UIColor = UIColor(hex: "3A50C2")
+            static let bgColorUncompletedStage: UIColor = .white
+            static let height: CGFloat = 4
+            static let width: CGFloat = 30
+            static let cornerRadius: CGFloat = 2
+        }
     }
     
     // MARK: - UI Components
@@ -80,6 +98,7 @@ final class RegistrationEmailViewController: UIViewController {
     let emailTextField: UITextField = UITextField()
     let instructionLabel: UILabel = UILabel()
     let nextButton: UIButton = UIButton(type: .system)
+    let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
     private var interactor: RegistrationEmailBusinessLogic
@@ -108,6 +127,7 @@ final class RegistrationEmailViewController: UIViewController {
         configureEmailTextField()
         configureInstructionLabel()
         configureNextButton()
+        configureStagesStack()
     }
     
     private func configureBackground() {
@@ -193,6 +213,34 @@ final class RegistrationEmailViewController: UIViewController {
         nextButton.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         nextButton.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.NextButton.leadingIndent)
         nextButton.pinTop(to: instructionLabel.bottomAnchor, Constants.NextButton.topIndent)
+    }
+    
+    private func configureStagesStack() {
+        view.addSubview(stagesStack)
+        
+        for i in 0..<Constants.StagesStack.numberOfStages {
+            let stage: UIView = UIView()
+            
+            if i < Constants.StagesStack.numberOfCompletedStages {
+                stage.backgroundColor = Constants.CurrentStage.bgColorCompletedStage
+            } else {
+                stage.backgroundColor = Constants.CurrentStage.bgColorUncompletedStage
+            }
+            
+            stage.setHeight(Constants.CurrentStage.height)
+            stage.setWidth(Constants.CurrentStage.width)
+            stage.layer.cornerRadius = Constants.CurrentStage.cornerRadius
+            
+            stagesStack.addArrangedSubview(stage)
+        }
+        
+        stagesStack.axis = Constants.StagesStack.axis
+        stagesStack.spacing = Constants.StagesStack.spacing
+        stagesStack.alignment = Constants.StagesStack.alignment
+        stagesStack.distribution = Constants.StagesStack.distribution
+        
+        stagesStack.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        stagesStack.pinTop(to: nextButton.bottomAnchor, Constants.StagesStack.topIndent)
     }
     
     // MARK: - Actions

@@ -72,6 +72,24 @@ final class RegistrationPasswordViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 18
         }
+        
+        enum StagesStack {
+            static let numberOfStages: Int = 3
+            static let numberOfCompletedStages: Int = 3
+            static let axis: NSLayoutConstraint.Axis = .horizontal
+            static let distribution: UIStackView.Distribution = .fillEqually
+            static let alignment: UIStackView.Alignment = .center
+            static let spacing: CGFloat = 12
+            static let topIndent: CGFloat = 18
+        }
+        
+        enum CurrentStage {
+            static let bgColorCompletedStage: UIColor = UIColor(hex: "3A50C2")
+            static let bgColorUncompletedStage: UIColor = .white
+            static let height: CGFloat = 4
+            static let width: CGFloat = 30
+            static let cornerRadius: CGFloat = 2
+        }
     }
     
     // MARK: - UI Components
@@ -80,6 +98,7 @@ final class RegistrationPasswordViewController: UIViewController {
     let passwordTextField: UITextField = UITextField()
     let instructionLabel: UILabel = UILabel()
     let nextButton: UIButton = UIButton(type: .system)
+    let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
     private var interactor: RegistrationPasswordBusinessLogic
@@ -108,6 +127,7 @@ final class RegistrationPasswordViewController: UIViewController {
         configurePasswordTextField()
         configureInstructionLabel()
         configureNextButton()
+        configureStagesStack()
     }
     
     private func configureBackground() {
@@ -156,7 +176,7 @@ final class RegistrationPasswordViewController: UIViewController {
         passwordTextField.textAlignment = Constants.PasswordTextField.textAlignment
         passwordTextField.attributedPlaceholder = NSAttributedString(string: Constants.PasswordTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
         passwordTextField.setLeftPadding(left: Constants.PasswordTextField.leftTextPadding)
-        passwordTextField.addTarget(self, action: #selector(emailTextFieldDidChange), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(passwordTextFieldDidChange), for: .editingChanged)
         
         passwordTextField.setHeight(Constants.PasswordTextField.height)
         passwordTextField.pinTop(to: passwordLabel.bottomAnchor, Constants.PasswordTextField.topIndent)
@@ -186,7 +206,7 @@ final class RegistrationPasswordViewController: UIViewController {
         nextButton.setTitle(Constants.NextButton.title, for: .normal)
         nextButton.setTitle(Constants.NextButton.title, for: .disabled)
         nextButton.layer.cornerRadius = Constants.NextButton.cornerRadius
-        emailTextFieldDidChange() // проверяем что почтовый адрес корректный
+        passwordTextFieldDidChange()
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         
         nextButton.setHeight(Constants.NextButton.height)
@@ -195,12 +215,40 @@ final class RegistrationPasswordViewController: UIViewController {
         nextButton.pinTop(to: instructionLabel.bottomAnchor, Constants.NextButton.topIndent)
     }
     
+    private func configureStagesStack() {
+        view.addSubview(stagesStack)
+        
+        for i in 0..<Constants.StagesStack.numberOfStages {
+            let stage: UIView = UIView()
+            
+            if i < Constants.StagesStack.numberOfCompletedStages {
+                stage.backgroundColor = Constants.CurrentStage.bgColorCompletedStage
+            } else {
+                stage.backgroundColor = Constants.CurrentStage.bgColorUncompletedStage
+            }
+            
+            stage.setHeight(Constants.CurrentStage.height)
+            stage.setWidth(Constants.CurrentStage.width)
+            stage.layer.cornerRadius = Constants.CurrentStage.cornerRadius
+            
+            stagesStack.addArrangedSubview(stage)
+        }
+        
+        stagesStack.axis = Constants.StagesStack.axis
+        stagesStack.spacing = Constants.StagesStack.spacing
+        stagesStack.alignment = Constants.StagesStack.alignment
+        stagesStack.distribution = Constants.StagesStack.distribution
+        
+        stagesStack.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        stagesStack.pinTop(to: nextButton.bottomAnchor, Constants.StagesStack.topIndent)
+    }
+    
     // MARK: - Actions
     @objc private func nextButtonPressed() {
         // logic
     }
     
-    @objc private func emailTextFieldDidChange() {
+    @objc private func passwordTextFieldDidChange() {
         guard let name = passwordTextField.text else { return }
         let minNameLength = 8
         

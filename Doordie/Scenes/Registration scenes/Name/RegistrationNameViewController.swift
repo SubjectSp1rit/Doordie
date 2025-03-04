@@ -61,6 +61,24 @@ final class RegistrationNameViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 18
         }
+        
+        enum StagesStack {
+            static let numberOfStages: Int = 3
+            static let numberOfCompletedStages: Int = 2
+            static let axis: NSLayoutConstraint.Axis = .horizontal
+            static let distribution: UIStackView.Distribution = .fillEqually
+            static let alignment: UIStackView.Alignment = .center
+            static let spacing: CGFloat = 12
+            static let topIndent: CGFloat = 18
+        }
+        
+        enum CurrentStage {
+            static let bgColorCompletedStage: UIColor = UIColor(hex: "3A50C2")
+            static let bgColorUncompletedStage: UIColor = .white
+            static let height: CGFloat = 4
+            static let width: CGFloat = 30
+            static let cornerRadius: CGFloat = 2
+        }
     }
     
     // MARK: - UI Components
@@ -68,6 +86,7 @@ final class RegistrationNameViewController: UIViewController {
     let nameLabel: UILabel = UILabel()
     let nameTextField: UITextField = UITextField()
     let nextButton: UIButton = UIButton(type: .system)
+    let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
     private var interactor: RegistrationNameBusinessLogic
@@ -95,6 +114,7 @@ final class RegistrationNameViewController: UIViewController {
         configureNameLabel()
         configureNameTextField()
         configureNextButton()
+        configureStagesStack()
     }
     
     private func configureBackground() {
@@ -142,7 +162,7 @@ final class RegistrationNameViewController: UIViewController {
         nameTextField.setCustomClearButton(mode: Constants.NameTextField.clearButtonMode, color: Constants.NameTextField.clearButtonColor, padding: Constants.NameTextField.paddingRight)
         nameTextField.textAlignment = Constants.NameTextField.textAlignment
         nameTextField.setLeftPadding(left: Constants.NameTextField.leftTextPadding)
-        nameTextField.addTarget(self, action: #selector(emailTextFieldDidChange), for: .editingChanged)
+        nameTextField.addTarget(self, action: #selector(nameTextFieldDidChange), for: .editingChanged)
         
         nameTextField.setHeight(Constants.NameTextField.height)
         nameTextField.pinTop(to: nameLabel.bottomAnchor, Constants.NameTextField.topIndent)
@@ -158,7 +178,7 @@ final class RegistrationNameViewController: UIViewController {
         nextButton.setTitle(Constants.NextButton.title, for: .normal)
         nextButton.setTitle(Constants.NextButton.title, for: .disabled)
         nextButton.layer.cornerRadius = Constants.NextButton.cornerRadius
-        emailTextFieldDidChange() // проверяем что почтовый адрес корректный
+        nameTextFieldDidChange()
         nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
         
         nextButton.setHeight(Constants.NextButton.height)
@@ -167,12 +187,40 @@ final class RegistrationNameViewController: UIViewController {
         nextButton.pinTop(to: nameTextField.bottomAnchor, Constants.NextButton.topIndent)
     }
     
+    private func configureStagesStack() {
+        view.addSubview(stagesStack)
+        
+        for i in 0..<Constants.StagesStack.numberOfStages {
+            let stage: UIView = UIView()
+            
+            if i < Constants.StagesStack.numberOfCompletedStages {
+                stage.backgroundColor = Constants.CurrentStage.bgColorCompletedStage
+            } else {
+                stage.backgroundColor = Constants.CurrentStage.bgColorUncompletedStage
+            }
+            
+            stage.setHeight(Constants.CurrentStage.height)
+            stage.setWidth(Constants.CurrentStage.width)
+            stage.layer.cornerRadius = Constants.CurrentStage.cornerRadius
+            
+            stagesStack.addArrangedSubview(stage)
+        }
+        
+        stagesStack.axis = Constants.StagesStack.axis
+        stagesStack.spacing = Constants.StagesStack.spacing
+        stagesStack.alignment = Constants.StagesStack.alignment
+        stagesStack.distribution = Constants.StagesStack.distribution
+        
+        stagesStack.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        stagesStack.pinTop(to: nextButton.bottomAnchor, Constants.StagesStack.topIndent)
+    }
+    
     // MARK: - Actions
     @objc private func nextButtonPressed() {
         interactor.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Request())
     }
     
-    @objc private func emailTextFieldDidChange() {
+    @objc private func nameTextFieldDidChange() {
         guard let name = nameTextField.text else { return }
         let minNameLength = 2
         
