@@ -18,7 +18,10 @@ extension UITextField {
         let clearImage = UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
         clearButton.setImage(clearImage, for: .normal)
         clearButton.tintColor = color
-        clearButton.addTarget(self, action: #selector(clearText), for: .touchUpInside)
+        clearButton.addAction(UIAction(handler: { [weak self] _ in
+            self?.text = ""
+            self?.sendActions(for: .editingChanged)
+        }), for: .touchUpInside)
 
         clearButton.imageView?.contentMode = .scaleAspectFit
         clearButton.contentHorizontalAlignment = .center
@@ -32,14 +35,10 @@ extension UITextField {
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: buttonSize + padding, height: buttonSize))
         clearButton.center = containerView.center
         containerView.addSubview(clearButton)
-
-        rightView = containerView
-        rightViewMode = mode
-    }
-
-    @objc private func clearText() {
-        self.text = ""
-        sendActions(for: .editingChanged)
+        
+        clearButtonMode = .never
+        rightViewMode = .always
+        rightView = clearButton
     }
 }
 

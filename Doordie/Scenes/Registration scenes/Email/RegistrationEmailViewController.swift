@@ -173,6 +173,7 @@ final class RegistrationEmailViewController: UIViewController {
         emailTextField.autocorrectionType = Constants.EmailTextField.autocorrectionType
         emailTextField.autocapitalizationType = Constants.EmailTextField.autocapitalizationType
         emailTextField.attributedPlaceholder = NSAttributedString(string: Constants.EmailTextField.placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray])
+        emailTextField.clearButtonMode = .never
         emailTextField.setCustomClearButton(mode: Constants.EmailTextField.clearButtonMode, color: Constants.EmailTextField.clearButtonColor, padding: Constants.EmailTextField.paddingRight)
         emailTextField.textAlignment = Constants.EmailTextField.textAlignment
         emailTextField.setLeftPadding(left: Constants.EmailTextField.leftTextPadding)
