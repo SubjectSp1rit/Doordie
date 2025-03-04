@@ -25,6 +25,8 @@ final class HabitConfirmCreationCell: UICollectionViewCell {
             static let cornerRadius: CGFloat = 14
             static let height: CGFloat = 50
             static let tintColor: UIColor = .white
+            static let minTransparentAlpha: CGFloat = 0.5
+            static let maxTransparentAlpha: CGFloat = 1
         }
     }
     
@@ -53,6 +55,20 @@ final class HabitConfirmCreationCell: UICollectionViewCell {
             createHabitButton.setTitle(Constants.CreateHabitButton.createTitle, for: .normal)
         } else {
             createHabitButton.setTitle(Constants.CreateHabitButton.saveTitle, for: .normal)
+        }
+    }
+    
+    func configureButton(isEnabled: Bool) {
+        // Меняем состояние кнопки только в том случае, если кнопка находится в противоположном состоянии
+        switch (isEnabled, createHabitButton.isEnabled) {
+        case (true, false):
+            createHabitButton.isEnabled = true
+            createHabitButton.alpha = Constants.CreateHabitButton.maxTransparentAlpha
+        case (false, true):
+            createHabitButton.isEnabled = false
+            createHabitButton.alpha = Constants.CreateHabitButton.minTransparentAlpha
+        default:
+            return
         }
     }
     

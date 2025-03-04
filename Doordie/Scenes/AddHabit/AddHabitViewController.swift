@@ -95,7 +95,7 @@ final class AddHabitViewController: UIViewController {
     private var interactor: AddHabitBusinessLogic
     
     private var habit: Habit? = nil
-    private var habitTitle: String? = Constants.HabitStandardValues.title
+    private var habitTitle: String = Constants.HabitStandardValues.title
     private var habitMotivations: String? = Constants.HabitStandardValues.motivations
     private var habitColor: String? = Constants.HabitStandardValues.color
     private var habitIcon: String? = Constants.HabitStandardValues.icon
@@ -377,10 +377,19 @@ extension AddHabitViewController: UICollectionViewDataSource {
             let cell = table.dequeueReusableCell(withReuseIdentifier: HabitTitleCell.reuseId, for: indexPath)
             guard let habitTitleCell = cell as? HabitTitleCell else { return cell }
             
-            habitTitleCell.configure(with: habitTitle ?? "")
+            habitTitleCell.configure(with: habitTitle)
             
             habitTitleCell.onTitleChanged = { [weak self] text in
                 self?.habitTitle = text
+                
+                // Меняем состояние кнопки в двух случаях:
+                // 1) Поле для ввода пусто (блокируем)
+                // 2) Поле для ввода содержит один символ (разблокируем)
+                // В остальных случаях кнопка всегда будет активна, чтобы избежать мерцание ячейки
+                if self?.habitTitle.count == 0 || self?.habitTitle.count == 1 {
+                    let buttonIndexPath = IndexPath(row: Constants.Table.confirmButtonRowIndex, section: Constants.Table.confirmButtonSectionIndex)
+                    self?.table.reloadItems(at: [buttonIndexPath])
+                }
             }
             
             return habitTitleCell
@@ -514,6 +523,8 @@ extension AddHabitViewController: UICollectionViewDataSource {
                     self.dismiss(animated: true)
                 }
             }
+            
+            habitConfirmHabitCreationCell.configureButton(isEnabled: !habitTitle.isEmpty)
             
             return habitConfirmHabitCreationCell
             
