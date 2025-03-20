@@ -93,12 +93,12 @@ final class RegistrationEmailViewController: UIViewController {
     }
     
     // MARK: - UI Components
-    let background: UIImageView = UIImageView()
-    let emailLabel: UILabel = UILabel()
-    let emailTextField: UITextField = UITextField()
-    let instructionLabel: UILabel = UILabel()
-    let nextButton: UIButton = UIButton(type: .system)
-    let stagesStack: UIStackView = UIStackView()
+    private let background: UIImageView = UIImageView()
+    private let emailLabel: UILabel = UILabel()
+    private let emailTextField: UITextField = UITextField()
+    private let instructionLabel: UILabel = UILabel()
+    private let nextButton: UIButton = UIButton(type: .system)
+    private let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
     private var interactor: RegistrationEmailBusinessLogic

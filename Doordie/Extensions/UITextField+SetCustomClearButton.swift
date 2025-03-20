@@ -38,7 +38,7 @@ extension UITextField {
         
         clearButtonMode = .never
         rightViewMode = .always
-        rightView = clearButton
+        rightView = containerView
     }
 }
 
