@@ -107,6 +107,7 @@ final class RegistrationNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureCloseKeyboardGesture()
     }
     
     // MARK: - Private Methods
@@ -117,6 +118,12 @@ final class RegistrationNameViewController: UIViewController {
         configureNameTextField()
         configureNextButton()
         configureStagesStack()
+    }
+    
+    private func configureCloseKeyboardGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func configureBackground() {
@@ -235,5 +242,10 @@ final class RegistrationNameViewController: UIViewController {
             nextButton.isEnabled = true
             nextButton.alpha = Constants.NextButton.transparencyMax
         }
+    }
+    
+    // Метод для скрытия клавиатуры при нажатии на экран
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
