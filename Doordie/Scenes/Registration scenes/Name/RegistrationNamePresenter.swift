@@ -13,7 +13,7 @@ final class RegistrationNamePresenter: RegistrationNamePresentationLogic {
     
     // MARK: - Public Methods
     func routeToRegistrationPassword(_ response: RegistrationNameModels.RouteToRegistrationPasswordScreen.Response) {
-        let registrationPasswordVC = RegistrationPasswordAssembly.build()
+        let registrationPasswordVC = RegistrationPasswordAssembly.build(email: response.email, name: response.name)
         registrationPasswordVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(registrationPasswordVC, animated: true)
     }

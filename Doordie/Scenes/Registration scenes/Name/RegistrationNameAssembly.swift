@@ -8,10 +8,10 @@
 import UIKit
 
 enum RegistrationNameAssembly {
-    static func build() -> UIViewController {
+    static func build(email: String) -> UIViewController {
         let presenter = RegistrationNamePresenter()
         let interactor = RegistrationNameInteractor(presenter: presenter)
-        let view = RegistrationNameViewController(interactor: interactor)
+        let view = RegistrationNameViewController(interactor: interactor, email: email)
         presenter.view = view
         
         return view

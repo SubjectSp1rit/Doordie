@@ -8,10 +8,10 @@
 import UIKit
 
 enum RegistrationPasswordAssembly {
-    static func build() -> UIViewController {
+    static func build(email: String, name: String) -> UIViewController {
         let presenter = RegistrationPasswordPresenter()
         let interactor = RegistrationPasswordInteractor(presenter: presenter)
-        let view = RegistrationPasswordViewController(interactor: interactor)
+        let view = RegistrationPasswordViewController(interactor: interactor, email: email, name: name)
         presenter.view = view
         
         return view

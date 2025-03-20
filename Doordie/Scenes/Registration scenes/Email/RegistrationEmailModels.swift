@@ -8,9 +8,13 @@
 import UIKit
 
 enum RegistrationEmailModels {
-    enum RouteToRegistrationNameScreen {
-        struct Request { }
-        struct Response { }
+    enum RouteToRegistrationEmailCodeScreen {
+        struct Request {
+            var email: String
+        }
+        struct Response {
+            var email: String
+        }
     }
 }
 

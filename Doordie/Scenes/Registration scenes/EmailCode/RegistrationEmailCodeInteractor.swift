@@ -15,4 +15,9 @@ final class RegistrationEmailCodeInteractor: RegistrationEmailCodeBusinessLogic 
     init(presenter: RegistrationEmailCodePresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Methods
+    func routeToRegistrationNameScreen(_ request: RegistrationEmailCodeModels.RouteToRegistrationNameScreen.Request) {
+        presenter.routeToRegistrationNameScreen(RegistrationEmailCodeModels.RouteToRegistrationNameScreen.Response(email: request.email))
+    }
 }

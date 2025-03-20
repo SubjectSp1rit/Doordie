@@ -74,7 +74,7 @@ final class RegistrationEmailViewController: UIViewController {
         }
         
         enum StagesStack {
-            static let numberOfStages: Int = 3
+            static let numberOfStages: Int = 4
             static let numberOfCompletedStages: Int = 1
             static let axis: NSLayoutConstraint.Axis = .horizontal
             static let distribution: UIStackView.Distribution = .fillEqually
@@ -246,7 +246,8 @@ final class RegistrationEmailViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func nextButtonPressed() {
-        interactor.routeToRegistrationNameScreen(RegistrationEmailModels.RouteToRegistrationNameScreen.Request())
+        guard let email = emailTextField.text else { return }
+        interactor.routeToRegistrationEmailCodeScreen(RegistrationEmailModels.RouteToRegistrationEmailCodeScreen.Request(email: email))
     }
     
     @objc private func emailTextFieldDidChange() {

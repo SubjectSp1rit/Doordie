@@ -63,8 +63,8 @@ final class RegistrationNameViewController: UIViewController {
         }
         
         enum StagesStack {
-            static let numberOfStages: Int = 3
-            static let numberOfCompletedStages: Int = 2
+            static let numberOfStages: Int = 4
+            static let numberOfCompletedStages: Int = 3
             static let axis: NSLayoutConstraint.Axis = .horizontal
             static let distribution: UIStackView.Distribution = .fillEqually
             static let alignment: UIStackView.Alignment = .center
@@ -90,10 +90,12 @@ final class RegistrationNameViewController: UIViewController {
     
     // MARK: - Properties
     private var interactor: RegistrationNameBusinessLogic
+    private var email: String
     
     // MARK: - Lifecycle
-    init(interactor: RegistrationNameBusinessLogic) {
+    init(interactor: RegistrationNameBusinessLogic, email: String) {
         self.interactor = interactor
+        self.email = email
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -217,7 +219,8 @@ final class RegistrationNameViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func nextButtonPressed() {
-        interactor.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Request())
+        guard let name = nameTextField.text else { return }
+        interactor.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Request(email: email, name: name))
     }
     
     @objc private func nameTextFieldDidChange() {

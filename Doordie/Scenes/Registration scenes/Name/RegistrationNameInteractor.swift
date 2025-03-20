@@ -18,6 +18,6 @@ final class RegistrationNameInteractor: RegistrationNameBusinessLogic {
     
     // MARK: - Public Methods
     func routeToRegistrationPassword(_ request: RegistrationNameModels.RouteToRegistrationPasswordScreen.Request) {
-        presenter.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Response())
+        presenter.routeToRegistrationPassword(RegistrationNameModels.RouteToRegistrationPasswordScreen.Response(email: request.email, name: request.name))
     }
 }

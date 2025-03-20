@@ -12,9 +12,9 @@ final class RegistrationEmailPresenter: RegistrationEmailPresentationLogic {
     weak var view: RegistrationEmailViewController?
     
     // MARK: - Public Methods
-    func routeToRegistrationNameScreen(_ response: RegistrationEmailModels.RouteToRegistrationNameScreen.Response) {
-        let registrationNameVC = RegistrationNameAssembly.build()
-        registrationNameVC.modalPresentationStyle = .fullScreen
-        view?.navigationController?.pushViewController(registrationNameVC, animated: true)
+    func routeToRegistrationEmailCodeScreen(_ response: RegistrationEmailModels.RouteToRegistrationEmailCodeScreen.Response) {
+        let registrationEmailCodeVC = RegistrationEmailCodeAssembly.build(email: response.email)
+        registrationEmailCodeVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(registrationEmailCodeVC, animated: true)
     }
 }

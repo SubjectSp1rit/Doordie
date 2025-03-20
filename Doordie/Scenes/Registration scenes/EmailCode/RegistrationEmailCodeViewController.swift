@@ -117,14 +117,15 @@ final class RegistrationEmailCodeViewController: UIViewController {
     // MARK: - Properties
     private var interactor: RegistrationEmailCodeBusinessLogic
     private var correctCode: String = "5252"
-    private var email: String = "example@doordie.app"
+    private var email: String
     private var isErrorState: Bool = false // сигнализирует об ошибке ввода
     private var resendTimer: Timer?
     private var countdownValue: Double = Constants.Timer.resendInterval
     
     // MARK: - Lifecycle
-    init(interactor: RegistrationEmailCodeBusinessLogic) {
+    init(interactor: RegistrationEmailCodeBusinessLogic, email: String) {
         self.interactor = interactor
+        self.email = email
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -367,7 +368,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
                 codeTextFields.forEach { textField in
                     textField.layer.borderColor = Constants.CodeTextField.successBorderColor
                 }
-                // логика ввода корректного кода
+                interactor.routeToRegistrationNameScreen(RegistrationEmailCodeModels.RouteToRegistrationNameScreen.Request(email: email))
             } else {
                 animateShakeAndShowError()
             }
