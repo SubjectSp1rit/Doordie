@@ -90,15 +90,39 @@ final class RegistrationPasswordViewController: UIViewController {
             static let width: CGFloat = 30
             static let cornerRadius: CGFloat = 2
         }
+        
+        enum AuthOverlay {
+            enum Overlay {
+                static let bgColor: UIColor = .clear
+            }
+            
+            enum BlurEffectView {
+                static let style: UIBlurEffect.Style = .dark
+            }
+            
+            enum ActivityIndicator {
+                static let style: UIActivityIndicatorView.Style = .large
+                static let color: UIColor = .white
+                static let YCenterIndent: CGFloat = -20
+            }
+            
+            enum AuthLabel {
+                static let text: String = "Authorization..."
+                static let fontSize: CGFloat = 14
+                static let textColor: UIColor = .white
+                static let topIndent: CGFloat = 8
+            }
+        }
     }
     
     // MARK: - UI Components
-    let background: UIImageView = UIImageView()
-    let passwordLabel: UILabel = UILabel()
-    let passwordTextField: UITextField = UITextField()
-    let instructionLabel: UILabel = UILabel()
-    let nextButton: UIButton = UIButton(type: .system)
-    let stagesStack: UIStackView = UIStackView()
+    private let background: UIImageView = UIImageView()
+    private let passwordLabel: UILabel = UILabel()
+    private let passwordTextField: UITextField = UITextField()
+    private let instructionLabel: UILabel = UILabel()
+    private let nextButton: UIButton = UIButton(type: .system)
+    private let stagesStack: UIStackView = UIStackView()
+    private var authOverlay: UIView?
     
     // MARK: - Properties
     private var interactor: RegistrationPasswordBusinessLogic
@@ -254,8 +278,42 @@ final class RegistrationPasswordViewController: UIViewController {
         stagesStack.pinTop(to: nextButton.bottomAnchor, Constants.StagesStack.topIndent)
     }
     
+    private func showAuthorizationOverlay() {
+        navigationController?.setNavigationBarHidden(true, animated: true) // Скрываем навигейшн бар
+        
+        let overlay = UIView()
+        overlay.backgroundColor = Constants.AuthOverlay.Overlay.bgColor
+        view.addSubview(overlay)
+        overlay.pin(to: view)
+        
+        let blurEffect = UIBlurEffect(style: Constants.AuthOverlay.BlurEffectView.style)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        overlay.addSubview(blurEffectView)
+        blurEffectView.pin(to: overlay)
+        
+        // Индикатор загрузки
+        let activityIndicator = UIActivityIndicatorView(style: Constants.AuthOverlay.ActivityIndicator.style)
+        activityIndicator.color = Constants.AuthOverlay.ActivityIndicator.color
+        activityIndicator.startAnimating()
+        overlay.addSubview(activityIndicator)
+        activityIndicator.pinCenterX(to: overlay.safeAreaLayoutGuide.centerXAnchor)
+        activityIndicator.pinCenterY(to: overlay.safeAreaLayoutGuide.centerYAnchor, Constants.AuthOverlay.ActivityIndicator.YCenterIndent)
+        
+        let authLabel = UILabel()
+        authLabel.text = Constants.AuthOverlay.AuthLabel.text
+        authLabel.font = UIFont.systemFont(ofSize: Constants.AuthOverlay.AuthLabel.fontSize)
+        authLabel.textColor = Constants.AuthOverlay.AuthLabel.textColor
+        overlay.addSubview(authLabel)
+        authLabel.pinTop(to: activityIndicator.bottomAnchor, Constants.AuthOverlay.AuthLabel.topIndent)
+        authLabel.pinCenterX(to: overlay.safeAreaLayoutGuide.centerXAnchor)
+        
+        authOverlay = overlay
+    }
+    
     // MARK: - Actions
     @objc private func nextButtonPressed() {
+        showAuthorizationOverlay()
+        
         guard let password = passwordTextField.text else { return }
         print(email)
         print(name)
