@@ -31,7 +31,7 @@ final class HabitMotivationsCell: UICollectionViewCell {
             static let bgColor: UIColor = UIColor(hex: "5771DB").withAlphaComponent(0.7)
             static let cornerRadius: CGFloat = 14
             static let textColor: UIColor = .white
-            static let fontSize: CGFloat = 17
+            static let fontSize: CGFloat = 22
             static let keyboardType: UIKeyboardType = .default
             static let autocorrectioType: UITextAutocorrectionType = .default
             static let autocapitalizationType: UITextAutocapitalizationType = .sentences
