@@ -76,6 +76,8 @@ final class HomeViewController: UIViewController {
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
+        
+        fetchAllHabits()
     }
     
     @available(*, unavailable)
@@ -87,15 +89,11 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureNotificationCenter()
-
-        interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateNavBarTransparency()
-        
-        interactor.loadHabits(HomeModels.LoadHabits.Request())
     }
     
     override func viewDidLayoutSubviews() {
@@ -116,11 +114,15 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Public Methods
-    func displayUpdatedHabits(_ viewModel: HomeModels.LoadHabits.ViewModel) {
+    func displayUpdatedHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
         table.reloadData()
     }
     
     // MARK: - Private Methods
+    private func fetchAllHabits() {
+        interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
+    }
+    
     private func configureUI() {
         configureBackground()
         configureTable()
@@ -266,12 +268,12 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func handleHabitAddedNotification(_ notification: Notification) {
-        interactor.loadHabits(HomeModels.LoadHabits.Request())
+        interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
     
     @objc
     private func handleHabitDeletedNotification(_ notification: Notification) {
-        interactor.loadHabits(HomeModels.LoadHabits.Request())
+        interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
 }
 

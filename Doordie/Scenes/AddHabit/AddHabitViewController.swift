@@ -94,7 +94,7 @@ final class AddHabitViewController: UIViewController {
     // MARK: - Properties
     private var interactor: AddHabitBusinessLogic
     
-    private var habit: Habit? = nil
+    private var habit: HabitModel? = nil
     private var habitTitle: String = Constants.HabitStandardValues.title
     private var habitMotivations: String? = Constants.HabitStandardValues.motivations
     private var habitColor: String? = Constants.HabitStandardValues.color
@@ -106,7 +106,7 @@ final class AddHabitViewController: UIViewController {
     private var habitDayPart: String? = Constants.HabitStandardValues.dayPart
     
     // MARK: - Lifecycle
-    init(interactor: AddHabitBusinessLogic, habit: Habit? = nil) {
+    init(interactor: AddHabitBusinessLogic, habit: HabitModel? = nil) {
         self.interactor = interactor
         self.table = AddHabitViewController.createCollectionView()
         self.habit = habit
@@ -512,16 +512,17 @@ extension AddHabitViewController: UICollectionViewDataSource {
                                               dayPart: self.habitDayPart)
                     
                     // Если привычка пришла извне - изменяем ее, иначе создаем новую
-                    if let habit = self.habit {
-                        habit.updateHabit(newHabit: newHabit)
-                    } else {
-                        CoreManager.shared.addNewHabit(newHabit)
-                    }
+//                    if let habit = self.habit {
+//                        habit.updateHabit(newHabit: newHabit)
+//                    } else {
+//                        CoreManager.shared.addNewHabit(newHabit)
+//                    }
                     
                     NotificationCenter.default.post(name: .habitAdded, object: nil)
                     
                     self.dismiss(animated: true)
                 }
+                print("Типо добавлена привычка")
             }
             
             habitConfirmHabitCreationCell.configureButton(isEnabled: !habitTitle.isEmpty)

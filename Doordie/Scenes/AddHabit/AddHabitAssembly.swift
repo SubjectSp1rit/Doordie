@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 enum AddHabitAssembly {
-    static func build(with habit: Habit? = nil) -> UIViewController {
+    static func build(with habit: HabitModel? = nil) -> UIViewController {
         let presenter = AddHabitPresenter()
         let interactor = AddHabitInteractor(presenter: presenter)
         let view = AddHabitViewController(interactor: interactor, habit: habit)

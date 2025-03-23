@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 
 final class HomePresenter: HomePresentationLogic {
-    // MARK: - Variables
+    // MARK: - Properties
     weak var view: HomeViewController?
     
     // MARK: - Public Methods
-    func presentHabits(_ response: HomeModels.LoadHabits.Response) {
-        view?.displayUpdatedHabits(HomeModels.LoadHabits.ViewModel())
+    func presentHabits(_ response: HomeModels.FetchAllHabits.Response) {
+        view?.displayUpdatedHabits(HomeModels.FetchAllHabits.ViewModel())
     }
 }

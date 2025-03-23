@@ -93,7 +93,7 @@ final class HabitCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with habit: Habit) {
+    func configure(with habit: HabitModel) {
         guard let title = habit.title else { return }
         guard let color = habit.color else { return }
         guard let iconName = habit.icon else { return }

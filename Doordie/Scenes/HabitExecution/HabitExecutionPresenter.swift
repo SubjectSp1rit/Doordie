@@ -28,8 +28,9 @@ final class HabitExecutionPresenter: HabitExecutionPresentationLogic {
         let confirmationAlert: UIAlertController = UIAlertController(title: Constants.ConfirmationAlert.title, message: message, preferredStyle: .alert)
         
         let cancelAction: UIAlertAction = UIAlertAction(title: Constants.ConfirmationAlert.cancelTitle, style: .cancel)
-        let deleteAction: UIAlertAction = UIAlertAction(title: Constants.ConfirmationAlert.deleteTitle, style: .default) { _ in 
-            response.habit.deleteHabit()
+        let deleteAction: UIAlertAction = UIAlertAction(title: Constants.ConfirmationAlert.deleteTitle, style: .default) { _ in
+            
+            // добавить логику удаления привычки
             self.view?.displayHabitsAfterDeleting(HabitExecutionModels.ShowDeleteConfirmationMessage.ViewModel())
         }
         

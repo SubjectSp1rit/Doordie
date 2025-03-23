@@ -315,9 +315,8 @@ final class RegistrationPasswordViewController: UIViewController {
         showAuthorizationOverlay()
         
         guard let password = passwordTextField.text else { return }
-        print(email)
-        print(name)
-        print(password)
+        
+        let user = User(email: email, name: name, password: password)
     }
     
     @objc private func passwordTextFieldDidChange() {

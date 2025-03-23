@@ -90,7 +90,7 @@ final class HabitExecutionViewController: UIViewController {
         }
     }
     
-    let habit: Habit
+    let habit: HabitModel
     
     // MARK: - UI Components
     private let background: UIImageView = UIImageView()
@@ -109,7 +109,7 @@ final class HabitExecutionViewController: UIViewController {
     private var interactor: HabitExecutionBusinessLogic
     
     // MARK: - Lifecycle
-    init(interactor: HabitExecutionBusinessLogic, habit: Habit) {
+    init(interactor: HabitExecutionBusinessLogic, habit: HabitModel) {
         self.interactor = interactor
         self.habit = habit
         super.init(nibName: nil, bundle: nil)

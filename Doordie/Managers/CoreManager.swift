@@ -51,16 +51,16 @@ class CoreManager {
         let newHabit = Habit(context: persistentContainer.viewContext)
         
         newHabit.id = UUID()
-        newHabit.creation_date = habitModel.creationDate
+        newHabit.creation_date = habitModel.creation_date
         newHabit.title = habitModel.title
         newHabit.motivations = habitModel.motivations
         newHabit.color = habitModel.color
         newHabit.icon = habitModel.icon
         newHabit.quantity = habitModel.quantity
-        newHabit.current_quantity = habitModel.currentQuantity
+        newHabit.current_quantity = habitModel.current_quantity
         newHabit.measurement = habitModel.measurement
         newHabit.regularity = habitModel.regularity
-        newHabit.day_part = habitModel.dayPart
+        newHabit.day_part = habitModel.day_part
         
         saveContext()
     }

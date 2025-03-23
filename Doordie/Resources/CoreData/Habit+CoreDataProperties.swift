@@ -17,7 +17,7 @@ extension Habit {
     }
 
     @NSManaged public var color: String?
-    @NSManaged public var creation_date: Date?
+    @NSManaged public var creation_date: String?
     @NSManaged public var day_part: String?
     @NSManaged public var icon: String?
     @NSManaged public var id: UUID?
@@ -37,10 +37,10 @@ extension Habit : Identifiable {
         self.color = newHabit.color
         self.icon = newHabit.icon
         self.quantity = newHabit.quantity
-        self.current_quantity = newHabit.currentQuantity
+        self.current_quantity = newHabit.current_quantity
         self.measurement = newHabit.measurement
         self.regularity = newHabit.regularity
-        self.day_part = newHabit.dayPart
+        self.day_part = newHabit.day_part
         
         try? managedObjectContext?.save()
     }

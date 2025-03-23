@@ -10,20 +10,20 @@ import UIKit
 enum HabitExecutionModels {
     enum ShowDeleteConfirmationMessage {
         struct Request {
-            var habit: Habit
+            var habit: HabitModel
         }
         struct Response {
-            var habit: Habit
+            var habit: HabitModel
         }
         struct ViewModel { }
     }
     
     enum ShowEditHabitScreen {
         struct Request {
-            var habit: Habit
+            var habit: HabitModel
         }
         struct Response {
-            var habit: Habit
+            var habit: HabitModel
         }
     }
 }

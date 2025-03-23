@@ -14,9 +14,9 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     private let worker: HomeWorker
     
     // MARK: - Properties
-    internal var habits: [Habit] = [] {
+    internal var habits: [HabitModel] = [] {
         didSet {
-            presenter.presentHabits(HomeModels.LoadHabits.Response())
+            presenter.presentHabits(HomeModels.FetchAllHabits.Response())
         }
     }
 
@@ -27,7 +27,19 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
     
     // MARK: - Public Methods
-    func loadHabits(_ request: HomeModels.LoadHabits.Request) {
-        habits = CoreManager.shared.fetchAllHabits()
+    func fetchAllHabits(_ request: HomeModels.FetchAllHabits.Request) {
+        DispatchQueue.global().async {
+            self.worker.fetchHabits { isSuccess, habits, message in
+                DispatchQueue.main.async {
+                    if isSuccess {
+                        print("Привычки успешно получены")
+                        guard let habits = habits else { return }
+                        self.habits = habits
+                    } else {
+                        print("Ошибка получения привычек: \(message)")
+                    }
+                }
+            }
+        }
     }
 }

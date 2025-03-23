@@ -9,22 +9,9 @@ import Foundation
 import UIKit
 
 enum HomeModels {
-    enum LoadHabits {
+    enum FetchAllHabits {
         struct Request { }
         struct Response { }
         struct ViewModel { }
     }
-}
-
-struct HabitModel {
-    var creationDate: Date?
-    var title: String?
-    var motivations: String?
-    var color: String?
-    var icon: String?
-    var quantity: String?
-    var currentQuantity: String?
-    var measurement: String?
-    var regularity: String?
-    var dayPart: String?
 }
