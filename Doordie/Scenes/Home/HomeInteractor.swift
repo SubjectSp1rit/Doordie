@@ -29,12 +29,15 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     // MARK: - Public Methods
     func fetchAllHabits(_ request: HomeModels.FetchAllHabits.Request) {
         DispatchQueue.global().async {
-            self.worker.fetchHabits { isSuccess, habits, message in
+            self.worker.fetchHabits { [weak self] isSuccess, habits, message in
                 DispatchQueue.main.async {
                     if isSuccess {
                         print("Привычки успешно получены")
                         guard let habits = habits else { return }
-                        self.habits = habits
+                        for habit in habits {
+                            print(habit)
+                        }
+                        self?.habits = habits
                     } else {
                         print("Ошибка получения привычек: \(message)")
                     }

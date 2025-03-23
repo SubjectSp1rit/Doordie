@@ -11,9 +11,27 @@ import UIKit
 final class AddHabitInteractor: AddHabitBusinessLogic {
     // MARK: - Constants
     private let presenter: AddHabitPresentationLogic
+    private let worker: AddHabitWorker
     
     // MARK: - Lifecycle
-    init(presenter: AddHabitPresentationLogic) {
+    init(presenter: AddHabitPresentationLogic, worker: AddHabitWorker) {
         self.presenter = presenter
+        self.worker = worker
+    }
+    
+    // MARK: - Methods
+    func updateHabit(_ request: AddHabitModels.UpdateHabit.Request) {
+        DispatchQueue.global().async {
+            self.worker.updateHabit(request.habit) { [weak self] isSuccess, message in
+                DispatchQueue.main.async {
+                    if isSuccess {
+                        print("Привычки успешно обновлена")
+                        self?.presenter.presentUpdatedHabit(AddHabitModels.UpdateHabit.Response())
+                    } else {
+                        print("Ошибка получения привычек: \(message)")
+                    }
+                }
+            }
+        }
     }
 }

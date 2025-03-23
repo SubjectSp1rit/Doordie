@@ -30,8 +30,7 @@ final class HabitExecutionPresenter: HabitExecutionPresentationLogic {
         let cancelAction: UIAlertAction = UIAlertAction(title: Constants.ConfirmationAlert.cancelTitle, style: .cancel)
         let deleteAction: UIAlertAction = UIAlertAction(title: Constants.ConfirmationAlert.deleteTitle, style: .default) { _ in
             
-            // добавить логику удаления привычки
-            self.view?.displayHabitsAfterDeleting(HabitExecutionModels.ShowDeleteConfirmationMessage.ViewModel())
+            self.view?.deleteHabit(HabitExecutionModels.ShowDeleteConfirmationMessage.ViewModel())
         }
         
         confirmationAlert.addAction(cancelAction)
@@ -46,5 +45,9 @@ final class HabitExecutionPresenter: HabitExecutionPresentationLogic {
         navController.modalPresentationStyle = .overFullScreen
         
         view?.present(navController, animated: true, completion: nil)
+    }
+    
+    func presentHabitsAfterDeleting(_ response: HabitExecutionModels.DeleteHabit.Response) {
+        view?.displayHabitsAfterDeleting(HabitExecutionModels.DeleteHabit.ViewModel())
     }
 }

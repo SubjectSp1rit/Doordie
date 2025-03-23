@@ -126,10 +126,14 @@ final class HabitExecutionViewController: UIViewController {
     }
     
     // MARK: - Public Methods
-    func displayHabitsAfterDeleting(_ viewModel: HabitExecutionModels.ShowDeleteConfirmationMessage.ViewModel) {
+    func displayHabitsAfterDeleting(_ viewModel: HabitExecutionModels.DeleteHabit.ViewModel) {
         NotificationCenter.default.post(name: .habitDeleted, object: nil)
         
         dismiss(animated: true)
+    }
+    
+    func deleteHabit(_ viewModel: HabitExecutionModels.ShowDeleteConfirmationMessage.ViewModel) {
+        interactor.deleteHabit(HabitExecutionModels.DeleteHabit.Request(habit: habit))
     }
     
     // MARK: - Private Methods

@@ -25,5 +25,16 @@ enum HabitExecutionModels {
         struct Response {
             var habit: HabitModel
         }
+        struct ViewModel { }
+    }
+    
+    enum DeleteHabit {
+        struct Request {
+            var habit: HabitModel
+        }
+        struct Response {
+            
+        }
+        struct ViewModel { }
     }
 }

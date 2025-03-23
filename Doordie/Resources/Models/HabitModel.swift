@@ -8,6 +8,7 @@
 import Foundation
 
 struct HabitModel: Codable {
+    var id: Int? = nil
     let creation_date: String?
     let title: String?
     let motivations: String?
@@ -20,16 +21,20 @@ struct HabitModel: Codable {
     let day_part: String?
     
     // Инициализатор, который принимает дату типа Date
-    init(creationDate: Date,
-         title: String?,
-         motivations: String?,
-         color: String?,
-         icon: String?,
-         quantity: String?,
-         currentQuantity: String?,
-         measurement: String?,
-         regularity: String?,
-         dayPart: String?) {
+    init(
+        id: Int? = nil,
+        creationDate: Date,
+        title: String?,
+        motivations: String?,
+        color: String?,
+        icon: String?,
+        quantity: String?,
+        currentQuantity: String?,
+        measurement: String?,
+        regularity: String?,
+        dayPart: String?
+    ) {
+        self.id = id
         self.creation_date = HabitModel.dateFormatter.string(from: creationDate)
         self.title = title
         self.motivations = motivations

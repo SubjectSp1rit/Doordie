@@ -95,6 +95,7 @@ final class AddHabitViewController: UIViewController {
     private var interactor: AddHabitBusinessLogic
     
     private var habit: HabitModel? = nil
+    private var id: Int?
     private var habitTitle: String = Constants.HabitStandardValues.title
     private var habitMotivations: String? = Constants.HabitStandardValues.motivations
     private var habitColor: String? = Constants.HabitStandardValues.color
@@ -111,6 +112,10 @@ final class AddHabitViewController: UIViewController {
         self.table = AddHabitViewController.createCollectionView()
         self.habit = habit
         
+        if let id = habit?.id {
+            self.id = id
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -125,6 +130,11 @@ final class AddHabitViewController: UIViewController {
         configureHabitData()
         configureUI()
         configureCloseButtonTap()
+    }
+    
+    // MARK: - Methods
+    func displayUpdatedHabit(_ viewModel: AddHabitModels.UpdateHabit.ViewModel) {
+        NotificationCenter.default.post(name: .habitAdded, object: nil) // после этого таблица привычек в HomeVC обновится
     }
     
     // MARK: - Private Methods
@@ -500,29 +510,28 @@ extension AddHabitViewController: UICollectionViewDataSource {
             habitConfirmHabitCreationCell.onCreateHabitButtonPressed = {
                 if self.habitTitle != "" {
                     let currentDate = Date()
-                    let newHabit = HabitModel(creationDate: currentDate,
-                                              title: self.habitTitle,
-                                              motivations: self.habitMotivations,
-                                              color: self.habitColor,
-                                              icon: self.habitIcon,
-                                              quantity: self.habitQuantity,
-                                              currentQuantity: self.habitCurrentQuantity,
-                                              measurement: self.habitMeasurementType,
-                                              regularity: self.habitPeriod,
-                                              dayPart: self.habitDayPart)
+                    let newHabit = HabitModel(
+                        id: self.id,
+                        creationDate: currentDate,
+                        title: self.habitTitle,
+                        motivations: self.habitMotivations,
+                        color: self.habitColor,
+                        icon: self.habitIcon,
+                        quantity: self.habitQuantity,
+                        currentQuantity: self.habitCurrentQuantity,
+                        measurement: self.habitMeasurementType,
+                        regularity: self.habitPeriod,
+                        dayPart: self.habitDayPart)
                     
-                    // Если привычка пришла извне - изменяем ее, иначе создаем новую
-//                    if let habit = self.habit {
-//                        habit.updateHabit(newHabit: newHabit)
-//                    } else {
-//                        CoreManager.shared.addNewHabit(newHabit)
-//                    }
-                    
-                    NotificationCenter.default.post(name: .habitAdded, object: nil)
-                    
-                    self.dismiss(animated: true)
+                // Если привычка пришла извне - изменяем ее, иначе создаем новую
+                if let habit = self.habit {
+                    self.interactor.updateHabit(AddHabitModels.UpdateHabit.Request(habit: newHabit))
+                } else {
+                    print("NEW")
                 }
-                print("Типо добавлена привычка")
+                
+                self.dismiss(animated: true)
+                }
             }
             
             habitConfirmHabitCreationCell.configureButton(isEnabled: !habitTitle.isEmpty)
