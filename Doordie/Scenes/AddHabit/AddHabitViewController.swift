@@ -137,6 +137,10 @@ final class AddHabitViewController: UIViewController {
         NotificationCenter.default.post(name: .habitAdded, object: nil) // после этого таблица привычек в HomeVC обновится
     }
     
+    func displayHabitsAfterCreating(_ viewModel: AddHabitModels.CreateHabit.ViewModel) {
+        NotificationCenter.default.post(name: .habitAdded, object: nil) // после этого таблица привычек в HomeVC обновится
+    }
+    
     // MARK: - Private Methods
     private static func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
@@ -527,7 +531,7 @@ extension AddHabitViewController: UICollectionViewDataSource {
                 if let habit = self.habit {
                     self.interactor.updateHabit(AddHabitModels.UpdateHabit.Request(habit: newHabit))
                 } else {
-                    print("NEW")
+                    self.interactor.createHabit(AddHabitModels.CreateHabit.Request(habit: newHabit))
                 }
                 
                 self.dismiss(animated: true)

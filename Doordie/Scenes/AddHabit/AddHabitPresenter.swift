@@ -16,4 +16,8 @@ final class AddHabitPresenter: AddHabitPresentationLogic {
     func presentUpdatedHabit(_ response: AddHabitModels.UpdateHabit.Response) {
         view?.displayUpdatedHabit(AddHabitModels.UpdateHabit.ViewModel())
     }
+    
+    func presentHabitsAfterCreating(_ response: AddHabitModels.CreateHabit.Response) {
+        view?.displayHabitsAfterCreating(AddHabitModels.CreateHabit.ViewModel())
+    }
 }

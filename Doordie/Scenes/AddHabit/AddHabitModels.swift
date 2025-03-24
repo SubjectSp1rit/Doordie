@@ -16,5 +16,13 @@ enum AddHabitModels {
         struct Response { }
         struct ViewModel { }
     }
+    
+    enum CreateHabit {
+        struct Request {
+            var habit: HabitModel
+        }
+        struct Response { }
+        struct ViewModel { }
+    }
 }
 

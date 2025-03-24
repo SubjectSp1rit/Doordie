@@ -28,7 +28,22 @@ final class AddHabitInteractor: AddHabitBusinessLogic {
                         print("Привычки успешно обновлена")
                         self?.presenter.presentUpdatedHabit(AddHabitModels.UpdateHabit.Response())
                     } else {
-                        print("Ошибка получения привычек: \(message)")
+                        print("Ошибка обновления привычки: \(message)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func createHabit(_ request: AddHabitModels.CreateHabit.Request) {
+        DispatchQueue.global().async {
+            self.worker.createHabit(request.habit) { [weak self] isSuccess, message in
+                DispatchQueue.main.async {
+                    if isSuccess {
+                        print("Привычка успешно добавлена")
+                        self?.presenter.presentHabitsAfterCreating(AddHabitModels.CreateHabit.Response())
+                    } else {
+                        print("Ошибка добавления привычки: \(message)")
                     }
                 }
             }

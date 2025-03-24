@@ -54,6 +54,35 @@ final class AddHabitWorker {
         task.resume()
     }
     
+    func createHabit(_ habit: HabitModel, completion: @escaping (Bool, String) -> Void) {
+        guard let url = getUrl(of: .habits) else {
+            completion(false, "Неверный URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(habit)
+            request.httpBody = jsonData
+        } catch {
+            completion(false, "Ошибка кодирования данных: \(error.localizedDescription)")
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: request) { _, response, error in
+            if let error = error {
+                completion(false, "Ошибка запроса: \(error.localizedDescription)")
+                return
+            }
+            
+            completion(true, "Привычка успешно добавлена")
+        }
+        task.resume()
+    }
+    
     // MARK: - Private Methods
     private func getUrl(of type: APIRequestType) -> URL? {
         let url: String = "http://localhost:8000/habits"
