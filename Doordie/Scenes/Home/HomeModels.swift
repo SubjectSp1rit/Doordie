@@ -14,4 +14,20 @@ enum HomeModels {
         struct Response { }
         struct ViewModel { }
     }
+    
+    enum RouteToHabitExecutionScreen {
+        struct Request {
+            var habit: HabitModel
+        }
+        struct Response {
+            var habit: HabitModel
+        }
+        struct ViewModel { }
+    }
+    
+    enum RouteToAddHabitScreen {
+        struct Request { }
+        struct Response { }
+        struct ViewModel { }
+    }
 }

@@ -22,6 +22,7 @@ final class HomeViewController: UIViewController {
             static let numberOfRowsInSection: Int = 1
             static let indentBetweenSections: CGFloat = 20
             static let numberOfShimmerCells: Int = 10
+            static let numberOfAddHabitCells: Int = 1
             
             static let headerCellHeight: CGFloat = 60
             static let horizontalDateCollectionCellHeight: CGFloat = 100
@@ -100,6 +101,7 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateNavBarTransparency()
+        table.reloadData() // Обновляем таблицу, чтобы мерцающие ячейки снова запустили анимацию
     }
     
     override func viewDidLayoutSubviews() {
@@ -247,6 +249,7 @@ final class HomeViewController: UIViewController {
         table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
         table.register(HabitCell.self, forCellReuseIdentifier: HabitCell.reuseId)
         table.register(ShimmerHabitCell.self, forCellReuseIdentifier: ShimmerHabitCell.reuseId)
+        table.register(AddHabitCell.self, forCellReuseIdentifier: AddHabitCell.reuseId)
         table.layer.masksToBounds = false
         table.alwaysBounceVertical = true
         table.refreshControl = refreshControl
@@ -277,6 +280,8 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func refreshData() {
+        isHabitsLoaded = false
+        table.reloadData()
         refreshControl.endRefreshing()
         fetchAllHabits()
     }
@@ -326,6 +331,8 @@ extension HomeViewController: UITableViewDataSource {
         if section == Constants.Table.habitCellSectionIndex {
             if isHabitsLoaded == false {
                 return Constants.Table.numberOfShimmerCells
+            } else if interactor.habits.isEmpty {
+                return Constants.Table.numberOfAddHabitCells
             } else {
                 return interactor.habits.count
             }
@@ -395,7 +402,11 @@ extension HomeViewController: UITableViewDataSource {
                 return shimmerHabitCell
             }
             if interactor.habits.isEmpty { // Если привычек нет - показываем ячейку для добавления привычек
+                let cell = table.dequeueReusableCell(withIdentifier: AddHabitCell.reuseId, for: indexPath)
+                guard let addHabitCell = cell as? AddHabitCell else { return cell }
+                addHabitCell.selectionStyle = .none
                 
+                return addHabitCell
             }
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
@@ -414,13 +425,22 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         
-        guard section == Constants.Table.habitCellSectionIndex else { return }
-        
-        let habitExecutionVC = HabitExecutionAssembly.build(habit: interactor.habits[indexPath.row])
-        let navController = UINavigationController(rootViewController: habitExecutionVC)
-        navController.modalPresentationStyle = .overFullScreen
-        
-        present(navController, animated: true, completion: nil)
+        switch section {
+        // habitCellSectionIndex
+        case Constants.Table.habitCellSectionIndex:
+            guard isHabitsLoaded == true else { return } // Если привычки не загружены - ничего не делаем
+            
+            if interactor.habits.isEmpty { // Если привычки загружены и их нет - направляем на экран добавления привычки
+                interactor.routeToAddHabitScreen(HomeModels.RouteToAddHabitScreen.Request())
+                return
+            }
+            
+            // В остальных случаях направляем на экран выполнения привычки
+            let habit = interactor.habits[indexPath.row]
+            interactor.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Request(habit: habit))
+        default:
+            return
+        }
     }
 }
 

@@ -49,4 +49,12 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
             }
         }
     }
+    
+    func routeToHabitExecutionScreen(_ request: HomeModels.RouteToHabitExecutionScreen.Request) {
+        presenter.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Response(habit: request.habit))
+    }
+    
+    func routeToAddHabitScreen(_ request: HomeModels.RouteToAddHabitScreen.Request) {
+        presenter.routeToAddHabitScreen(HomeModels.RouteToAddHabitScreen.Response())
+    }
 }
