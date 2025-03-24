@@ -1,7 +1,23 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-
+    "today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня"
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }

@@ -528,7 +528,7 @@ extension AddHabitViewController: UICollectionViewDataSource {
                         dayPart: self.habitDayPart)
                     
                 // Если привычка пришла извне - изменяем ее, иначе создаем новую
-                if let habit = self.habit {
+                if self.habit != nil {
                     self.interactor.updateHabit(AddHabitModels.UpdateHabit.Request(habit: newHabit))
                 } else {
                     self.interactor.createHabit(AddHabitModels.CreateHabit.Request(habit: newHabit))

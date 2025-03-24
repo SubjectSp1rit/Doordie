@@ -20,7 +20,7 @@ final class HeaderCell: UITableViewCell {
         }
         
         enum TodayLabel {
-            static let text: String = "Today"
+            static let text: String = "today".localized
             static let textAlignment: NSTextAlignment = .left
             static let fontWeight: UIFont.Weight = .semibold
             static let standardTextColor: UIColor = .white

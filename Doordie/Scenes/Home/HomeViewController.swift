@@ -21,6 +21,7 @@ final class HomeViewController: UIViewController {
             static let numberOfSections: Int = 4
             static let numberOfRowsInSection: Int = 1
             static let indentBetweenSections: CGFloat = 20
+            static let numberOfShimmerCells: Int = 10
             
             static let headerCellHeight: CGFloat = 60
             static let horizontalDateCollectionCellHeight: CGFloat = 100
@@ -71,10 +72,11 @@ final class HomeViewController: UIViewController {
     private let navBarNotificationBtn: UIButton = UIButton(type: .system)
     private let refreshControl: UIRefreshControl = UIRefreshControl()
     
-    // MARK: - Variables
+    // MARK: - Properties
     private var interactor: (HomeBusinessLogic & HabitsStorage)
     private var blurredNavBarView: UIVisualEffectView?
     private var navBarRendered: Bool = false
+    private var isHabitsLoaded: Bool = false
     
     // MARK: - Lifecycle
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
@@ -120,6 +122,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Public Methods
     func displayUpdatedHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
         refreshControl.endRefreshing()
+        isHabitsLoaded = true
         table.reloadData()
     }
     
@@ -168,7 +171,7 @@ final class HomeViewController: UIViewController {
     }
     
     private func configureNavBarCenteredTitle() {
-        navBarCenteredTitle.text = "December 31"
+        navBarCenteredTitle.text = DateManager.shared.getLocalizedMonthAndDay()
         navBarCenteredTitle.textAlignment = Constants.NavBarCenteredTitle.alignment
         navBarCenteredTitle.font = UIFont.systemFont(ofSize: Constants.NavBarCenteredTitle.fontSize, weight: Constants.NavBarCenteredTitle.fontWeight)
         navBarCenteredTitle.textColor = Constants.NavBarCenteredTitle.color
@@ -243,6 +246,7 @@ final class HomeViewController: UIViewController {
         table.register(HorizontalDateCollectionCell.self, forCellReuseIdentifier: HorizontalDateCollectionCell.reuseId)
         table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
         table.register(HabitCell.self, forCellReuseIdentifier: HabitCell.reuseId)
+        table.register(ShimmerHabitCell.self, forCellReuseIdentifier: ShimmerHabitCell.reuseId)
         table.layer.masksToBounds = false
         table.alwaysBounceVertical = true
         table.refreshControl = refreshControl
@@ -320,7 +324,11 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == Constants.Table.habitCellSectionIndex {
-            return interactor.habits.count
+            if isHabitsLoaded == false {
+                return Constants.Table.numberOfShimmerCells
+            } else {
+                return interactor.habits.count
+            }
         }
         return Constants.Table.numberOfRowsInSection
     }
@@ -377,6 +385,18 @@ extension HomeViewController: UITableViewDataSource {
             
         // HabitCell
         case Constants.Table.habitCellSectionIndex:
+            if isHabitsLoaded == false { // Пока привычки не загружены - показываем мерцающие ячейки
+                let cell = table.dequeueReusableCell(withIdentifier: ShimmerHabitCell.reuseId, for: indexPath)
+                guard let shimmerHabitCell = cell as? ShimmerHabitCell else { return cell }
+                shimmerHabitCell.selectionStyle = .none
+                
+                shimmerHabitCell.startShimmer()
+                
+                return shimmerHabitCell
+            }
+            if interactor.habits.isEmpty { // Если привычек нет - показываем ячейку для добавления привычек
+                
+            }
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
             habitCell.selectionStyle = .none
