@@ -33,6 +33,10 @@ final class HomeViewController: UIViewController {
             static let habitCellSectionIndex: Int = 3
         }
         
+        enum RefreshControl {
+            static let tintColor: UIColor = .systemGray
+        }
+        
         enum NavigationBar {
             static let maxBlurAlpha: CGFloat = 1.0
             static let minBlurAlpha: CGFloat = 0.0
@@ -65,7 +69,7 @@ final class HomeViewController: UIViewController {
     private let table: UITableView = UITableView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let navBarNotificationBtn: UIButton = UIButton(type: .system)
-    private let yourHabitsLabel: UILabel = UILabel()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Variables
     private var interactor: (HomeBusinessLogic & HabitsStorage)
@@ -115,6 +119,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Public Methods
     func displayUpdatedHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
+        refreshControl.endRefreshing()
         table.reloadData()
     }
     
@@ -125,6 +130,7 @@ final class HomeViewController: UIViewController {
     
     private func configureUI() {
         configureBackground()
+        configureRefreshControl()
         configureTable()
     }
     
@@ -238,6 +244,8 @@ final class HomeViewController: UIViewController {
         table.register(DayPartSelectorCell.self, forCellReuseIdentifier: DayPartSelectorCell.reuseId)
         table.register(HabitCell.self, forCellReuseIdentifier: HabitCell.reuseId)
         table.layer.masksToBounds = false
+        table.alwaysBounceVertical = true
+        table.refreshControl = refreshControl
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -247,6 +255,11 @@ final class HomeViewController: UIViewController {
         table.backgroundColor = Constants.Table.bgColor
     }
     
+    private func configureRefreshControl() {
+        refreshControl.tintColor = Constants.RefreshControl.tintColor
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
     private func updateNavBarTransparency() {
         DispatchQueue.main.async {
             self.scrollViewDidScroll(self.table)
@@ -254,25 +267,27 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc
-    private func notificationButtonPressed() {
+    @objc private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
+        
     }
     
-    @objc
-    private func handleAppWillEnterForeground() {
+    @objc private func refreshData() {
+        refreshControl.endRefreshing()
+        fetchAllHabits()
+    }
+    
+    @objc private func handleAppWillEnterForeground() {
         DispatchQueue.main.async {
             self.scrollViewDidScroll(self.table)
         }
     }
     
-    @objc
-    private func handleHabitAddedNotification(_ notification: Notification) {
+    @objc private func handleHabitAddedNotification(_ notification: Notification) {
         interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
     
-    @objc
-    private func handleHabitDeletedNotification(_ notification: Notification) {
+    @objc private func handleHabitDeletedNotification(_ notification: Notification) {
         interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
 }
