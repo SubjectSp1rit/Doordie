@@ -347,7 +347,8 @@ extension HomeViewController: UITableViewDataSource {
             cell.selectionStyle = .none
             guard let headerCell = cell as? HeaderCell else { return cell }
             
-            headerCell.configure()
+            let currentDate = DateManager.shared.getLocalizedMonthAndDay()
+            headerCell.configure(with: currentDate)
             
             headerCell.onProfileImageTapped = {
                 print(1)

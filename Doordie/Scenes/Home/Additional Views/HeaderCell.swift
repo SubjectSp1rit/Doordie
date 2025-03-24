@@ -109,8 +109,8 @@ final class HeaderCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure() {
-        currentDateLabel.text = "December 31"
+    func configure(with date: String) {
+        currentDateLabel.text = date
         profileImage.image = UIImage(named: "profileImage")
     }
     

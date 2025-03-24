@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class CoreManager {
+final class CoreManager {
     // MARK: - Constants
     static let shared = CoreManager()
     
