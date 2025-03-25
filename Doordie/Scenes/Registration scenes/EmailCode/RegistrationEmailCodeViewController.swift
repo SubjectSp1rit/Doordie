@@ -80,6 +80,18 @@ final class RegistrationEmailCodeViewController: UIViewController {
             static let timeIsUpText: String = "Resend code"
         }
         
+        enum NextButton {
+            static let bgColor: UIColor = UIColor(hex: "3A50C2")
+            static let title: String = "Next"
+            static let tintColor: UIColor = .white
+            static let height: CGFloat = 50
+            static let transparencyMin: CGFloat = 0.5
+            static let transparencyMax: CGFloat = 1
+            static let cornerRadius: CGFloat = 14
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 18
+        }
+        
         enum Timer {
             static let resendInterval: Double = 59.0
             static let resendIntervalStep: Double = 1.0
@@ -112,6 +124,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
     private var codeTextFields: [UITextField] = []
     private let codeSentLabel: UILabel = UILabel()
     private let resendLabel: UILabel = UILabel()
+    private let nextButton: UIButton = UIButton(type: .system)
     private let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
@@ -150,6 +163,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
         configreCodeSentLabel()
         configureStackCodeTextFields()
         configureResendLabel()
+        configureNextButton()
         configureStagesStack()
     }
     
@@ -215,6 +229,24 @@ final class RegistrationEmailCodeViewController: UIViewController {
         codeSentLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         codeSentLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.CodeSentLabel.leadingIndent)
         codeSentLabel.pinTop(to: enterCodeLabel.bottomAnchor, Constants.CodeSentLabel.topIndent)
+    }
+    
+    private func configureNextButton() {
+        view.addSubview(nextButton)
+        
+        nextButton.backgroundColor = Constants.NextButton.bgColor
+        nextButton.tintColor = Constants.NextButton.tintColor
+        nextButton.setTitle(Constants.NextButton.title, for: .normal)
+        nextButton.setTitle(Constants.NextButton.title, for: .disabled)
+        nextButton.layer.cornerRadius = Constants.NextButton.cornerRadius
+        nextButton.isEnabled = false
+        nextButton.alpha = Constants.NextButton.transparencyMin
+        nextButton.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        
+        nextButton.setHeight(Constants.NextButton.height)
+        nextButton.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        nextButton.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.NextButton.leadingIndent)
+        nextButton.pinTop(to: resendLabel.bottomAnchor, Constants.NextButton.topIndent)
     }
     
     private func configureStackCodeTextFields() {
@@ -291,7 +323,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
         
         view.addSubview(stagesStack)
         stagesStack.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
-        stagesStack.pinTop(to: resendLabel.bottomAnchor, Constants.StagesStack.topIndent)
+        stagesStack.pinTop(to: nextButton.bottomAnchor, Constants.StagesStack.topIndent)
     }
     
     // Метод для обновления текста resendLabel согласно текущему значению countdownValue
@@ -368,10 +400,17 @@ final class RegistrationEmailCodeViewController: UIViewController {
                 codeTextFields.forEach { textField in
                     textField.layer.borderColor = Constants.CodeTextField.successBorderColor
                 }
+                nextButton.isEnabled = true
+                nextButton.alpha = Constants.NextButton.transparencyMax
                 interactor.routeToRegistrationNameScreen(RegistrationEmailCodeModels.RouteToRegistrationNameScreen.Request(email: email))
             } else {
+                nextButton.isEnabled = false
+                nextButton.alpha = Constants.NextButton.transparencyMin
                 animateShakeAndShowError()
             }
+        } else {
+            nextButton.isEnabled = false
+            nextButton.alpha = Constants.NextButton.transparencyMin
         }
     }
     
@@ -432,6 +471,10 @@ final class RegistrationEmailCodeViewController: UIViewController {
             print("code was sent")
             startResendTimer()
         }
+    }
+    
+    @objc private func nextButtonPressed() {
+        checkForCompletion()
     }
 }
 
