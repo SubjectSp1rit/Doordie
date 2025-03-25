@@ -13,6 +13,11 @@ final class RegistrationPasswordPresenter: RegistrationPasswordPresentationLogic
     
     // MARK: - Methods
     func presentCreateAccount(_ response: RegistrationPasswordModels.CreateAccount.Response) {
-        return
+        if let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate {
+
+            let customTabBarController = CustomTabBarController()
+            sceneDelegate.changeRootViewController(customTabBarController)
+        }
     }
 }
