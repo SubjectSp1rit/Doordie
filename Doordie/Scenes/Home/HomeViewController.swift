@@ -319,6 +319,18 @@ extension HomeViewController: UITableViewDelegate {
         default: return UITableView.automaticDimension
         }
     }
+    
+    // Popup-экран при удерживании ячейки
+    func tableView(_ tableView: UITableView,
+                   contextMenuConfigurationForRowAt indexPath: IndexPath,
+                   point: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil,
+                                          previewProvider: {
+            let popupVC = PopupHabitViewController()
+            popupVC.configure(with: self.interactor.habits[indexPath.row])
+            return popupVC
+        })
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -429,12 +441,10 @@ extension HomeViewController: UITableViewDataSource {
         // habitCellSectionIndex
         case Constants.Table.habitCellSectionIndex:
             guard isHabitsLoaded == true else { return } // Если привычки не загружены - ничего не делаем
-            
             if interactor.habits.isEmpty { // Если привычки загружены и их нет - направляем на экран добавления привычки
                 interactor.routeToAddHabitScreen(HomeModels.RouteToAddHabitScreen.Request())
                 return
             }
-            
             // В остальных случаях направляем на экран выполнения привычки
             let habit = interactor.habits[indexPath.row]
             interactor.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Request(habit: habit))

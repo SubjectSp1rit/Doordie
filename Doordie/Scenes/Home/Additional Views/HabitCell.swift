@@ -76,13 +76,12 @@ final class HabitCell: UITableViewCell {
     private let habitTitle: UILabel = UILabel()
     private let chevronRight: UIImageView = UIImageView()
     
-    // MARK: - Variables
+    // MARK: - Properties
     private var isCheckmarkVisible: Bool = false
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         configureUI()
     }
     
