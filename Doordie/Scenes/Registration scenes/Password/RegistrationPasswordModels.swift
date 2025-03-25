@@ -8,6 +8,12 @@
 import UIKit
 
 enum RegistrationPasswordModels {
-    
+    enum CreateAccount {
+        struct Request {
+            var user: User
+        }
+        struct Response { }
+        struct ViewModel { }
+    }
 }
 

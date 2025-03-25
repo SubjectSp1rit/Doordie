@@ -1,14 +1,13 @@
 //
-//  HomeWorker.swift
+//  RegistrationPasswordWorker.swift
 //  Doordie
 //
-//  Created by Arseniy on 27.12.2024.
+//  Created by Arseniy on 25.03.2025.
 //
 
 import Foundation
-import UIKit
 
-final class HomeWorker {
+final class RegistrationPasswordWorker {
     // MARK: - Constants
     private enum RequestType: String {
         case GET = "GET"
@@ -26,31 +25,40 @@ final class HomeWorker {
     private var encoder: JSONEncoder = JSONEncoder()
     
     // MARK: - Methods
-    func fetchHabits(completion: @escaping (Bool, [HabitModel]?, String) -> Void) {
+    func createAccount(_ user: User, completion: @escaping (Bool, String, Token?) -> Void) {
         guard let url = getUrl(of: .habits) else {
-            completion(false, nil, "Неверный URL")
+            completion(false, "Неверный URL", nil)
             return
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(user)
+            request.httpBody = jsonData
+        } catch {
+            completion(false, "Ошибка кодирования данных: \(error.localizedDescription)", nil)
+            return
+        }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                completion(false, nil, "Ошибка запроса: \(error.localizedDescription)")
+                completion(false, "Ошибка запроса: \(error.localizedDescription)", nil)
                 return
             }
+            
             guard let data = data else {
-                completion(false, nil, "Нет данных")
+                completion(false, "Ошибка: нет токена", nil)
                 return
             }
             
             do {
-                let habits = try JSONDecoder().decode([HabitModel].self, from: data)
-                completion(true, habits, "Данные получены")
+                let token = try JSONDecoder().decode(Token.self, from: data)
+                completion(true, "Пользователь успешно создан", token)
             } catch {
-                completion(false, nil, "Ошибка декодирования данных: \(error.localizedDescription)")
+                completion(false, "Ошибка декодирования данных: \(error.localizedDescription)", nil)
             }
         }
         task.resume()
@@ -58,7 +66,8 @@ final class HomeWorker {
     
     // MARK: - Private Methods
     private func getUrl(of type: APIRequestType) -> URL? {
-        let url: String = "http://localhost:8000/habits"
+        let url: String = "http://localhost:8000/users"
         return URL(string: url)
     }
 }
+

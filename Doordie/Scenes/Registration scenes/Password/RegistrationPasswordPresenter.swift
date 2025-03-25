@@ -10,4 +10,9 @@ import UIKit
 final class RegistrationPasswordPresenter: RegistrationPasswordPresentationLogic {
     // MARK: - Properties
     weak var view: RegistrationPasswordViewController?
+    
+    // MARK: - Methods
+    func presentCreateAccount(_ response: RegistrationPasswordModels.CreateAccount.Response) {
+        return
+    }
 }
