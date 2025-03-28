@@ -1,13 +1,13 @@
 //
-//  HomeWorker.swift
+//  RegistrationEmailWorker.swift
 //  Doordie
 //
-//  Created by Arseniy on 27.12.2024.
+//  Created by Arseniy on 26.03.2025.
 //
 
 import UIKit
 
-final class HomeWorker {
+final class RegistrationEmailWorker {
     // MARK: - Constants
     private enum RequestType: String {
         case GET = "GET"
@@ -17,7 +17,7 @@ final class HomeWorker {
     }
     
     private enum APIRequestType: String {
-        case habits = "habits"
+        case email = "emails"
     }
     
     // MARK: - Properties
@@ -25,29 +25,38 @@ final class HomeWorker {
     private var encoder: JSONEncoder = JSONEncoder()
     
     // MARK: - Methods
-    func fetchHabits(completion: @escaping (Bool, [HabitModel]?, String) -> Void) {
-        guard let url = getUrl(of: .habits) else {
+    func checkEmailExists(email: String, completion: @escaping (Bool, RegistrationEmailModels.IsEmailExists?, String) -> Void) {
+        guard let url = getUrl(of: .email) else {
             completion(false, nil, "Неверный URL")
             return
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(RegistrationEmailModels.Email(email: email))
+            request.httpBody = jsonData
+        } catch {
+            completion(false, nil, "Ошибка кодирования данных: \(error.localizedDescription)")
+            return
+        }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(false, nil, "Ошибка запроса: \(error.localizedDescription)")
                 return
             }
+            
             guard let data = data else {
                 completion(false, nil, "Нет данных")
                 return
             }
             
             do {
-                let habits = try JSONDecoder().decode([HabitModel].self, from: data)
-                completion(true, habits, "Данные получены")
+                let isExists = try JSONDecoder().decode(RegistrationEmailModels.IsEmailExists?.self, from: data)
+                completion(true, isExists, "Данные получены")
             } catch {
                 completion(false, nil, "Ошибка декодирования данных: \(error.localizedDescription)")
             }
@@ -57,7 +66,8 @@ final class HomeWorker {
     
     // MARK: - Private Methods
     private func getUrl(of type: APIRequestType) -> URL? {
-        let url: String = "http://localhost:8000/habits"
+        let url: String = "http://localhost:8000/emails"
         return URL(string: url)
     }
 }
+

@@ -71,7 +71,7 @@ final class ProfileCell: UITableViewCell {
     // MARK: - Public Methods
     func configure() {
         profileImage.image = UIImage(named: "profileImage")
-        nameLabel.text = "Dinarikk <3"
+        nameLabel.text = "User"
     }
     
     // MARK: - Private Methods

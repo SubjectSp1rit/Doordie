@@ -120,9 +120,11 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     private var interactor: LoginBusinessLogic
+    private var email: String?
     
     // MARK: - Lifecycle
-    init(interactor: LoginBusinessLogic) {
+    init(interactor: LoginBusinessLogic, email: String?) {
+        self.email = email
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -186,6 +188,7 @@ final class LoginViewController: UIViewController {
     private func configureEmailTextField() {
         view.addSubview(emailTextField)
         
+        emailTextField.text = email
         emailTextField.backgroundColor = Constants.EmailTextField.bgColor
         emailTextField.layer.cornerRadius = Constants.EmailTextField.cornerRadius
         emailTextField.textColor = Constants.EmailTextField.textColor

@@ -16,5 +16,36 @@ enum RegistrationEmailModels {
             var email: String
         }
     }
+    
+    enum RouteToLoginScreen {
+        struct Request {
+            var email: String
+        }
+        struct Response {
+            var email: String
+        }
+    }
+    
+    enum CheckEmailExists {
+        struct Request {
+            var email: String
+        }
+        struct Response {
+            var isExists: Bool
+            var email: String
+        }
+        struct ViewModel {
+            var isExists: Bool
+            var email: String
+        }
+    }
+    
+    struct IsEmailExists: Codable {
+        var is_exists: Bool
+    }
+    
+    struct Email: Codable {
+        var email: String
+    }
 }
 

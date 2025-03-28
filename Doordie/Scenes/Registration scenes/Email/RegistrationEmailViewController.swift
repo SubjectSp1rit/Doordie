@@ -16,6 +16,7 @@ final class RegistrationEmailViewController: UIViewController {
         
         enum NavBar {
             static let title: String = "Email"
+            static let tintColor: UIColor = .white
         }
         
         enum EmailLabel {
@@ -43,12 +44,23 @@ final class RegistrationEmailViewController: UIViewController {
             static let clearButtonColor: UIColor = .systemGray
             static let textAlignment: NSTextAlignment = .left
             static let leftTextPadding: CGFloat = 8
-            static let minimumBorderWidth: CGFloat = 0
-            static let maximumBorderWidth: CGFloat = 2
-            static let borderColor: CGColor = UIColor.systemRed.cgColor
+            static let borderWidth: CGFloat = 2
+            static let standardBorderColor: CGColor = UIColor.clear.cgColor
+            static let errorBorderColor: CGColor = UIColor.systemRed.cgColor
             static let height: CGFloat = 50
             static let topIndent: CGFloat = 8
             static let leadingIndent: CGFloat = 18
+        }
+        
+        enum EmailExistsLabel {
+            static let textPrimary: String = "This email is already registered:  "
+            static let textSecondary: String = "Sign in"
+            static let textColorPrimary: UIColor = .systemRed
+            static let textColorSecondary: UIColor = .white
+            static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
+            static let textAlignment: NSTextAlignment = .left
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 8
         }
         
         enum InstructionLabel {
@@ -96,12 +108,15 @@ final class RegistrationEmailViewController: UIViewController {
     private let background: UIImageView = UIImageView()
     private let emailLabel: UILabel = UILabel()
     private let emailTextField: UITextField = UITextField()
+    private let emailExistsLabel: UILabel = UILabel()
     private let instructionLabel: UILabel = UILabel()
     private let nextButton: UIButton = UIButton(type: .system)
     private let stagesStack: UIStackView = UIStackView()
     
     // MARK: - Properties
     private var interactor: RegistrationEmailBusinessLogic
+    private var emailExistsLabelConstraint: NSLayoutConstraint?
+    private var emailValidationWorkItem: DispatchWorkItem?
     
     // MARK: - Lifecycle
     init(interactor: RegistrationEmailBusinessLogic) {
@@ -120,12 +135,29 @@ final class RegistrationEmailViewController: UIViewController {
         configureCloseKeyboardGesture()
     }
     
+    // MARK: - Methods
+    func displayIfEmailExists(_ viewModel: RegistrationEmailModels.CheckEmailExists.ViewModel) {
+        if viewModel.isExists {
+            emailExistsLabelConstraint?.isActive = false
+            emailExistsLabelConstraint = emailExistsLabel.pinTop(to: emailTextField.bottomAnchor, Constants.EmailExistsLabel.topIndent)
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+                self.emailTextField.layer.borderColor = Constants.EmailTextField.errorBorderColor
+                self.emailExistsLabel.alpha = 1
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            nextButton.isEnabled = true
+            nextButton.alpha = Constants.NextButton.transparencyMax
+        }
+    }
+    
     // MARK: - Private Methods
     private func configureUI() {
         configureBackground()
         configureNavBar()
         configureEmailLabel()
         configureEmailTextField()
+        configureEmailExistsLabel()
         configureInstructionLabel()
         configureNextButton()
         configureStagesStack()
@@ -153,6 +185,7 @@ final class RegistrationEmailViewController: UIViewController {
     
     private func configureNavBar() {
         navigationItem.title = Constants.NavBar.title
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Constants.NavBar.tintColor]
     }
     
     private func configureEmailLabel() {
@@ -176,6 +209,7 @@ final class RegistrationEmailViewController: UIViewController {
         emailTextField.layer.cornerRadius = Constants.EmailTextField.cornerRadius
         emailTextField.textColor = Constants.EmailTextField.textColor
         emailTextField.font = UIFont.systemFont(ofSize: Constants.EmailTextField.fontSize)
+        emailTextField.layer.borderWidth = Constants.EmailTextField.borderWidth
         emailTextField.keyboardType = Constants.EmailTextField.keyboardType
         emailTextField.autocorrectionType = Constants.EmailTextField.autocorrectionType
         emailTextField.autocapitalizationType = Constants.EmailTextField.autocapitalizationType
@@ -192,6 +226,40 @@ final class RegistrationEmailViewController: UIViewController {
         emailTextField.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.EmailTextField.leadingIndent)
     }
     
+    private func configureEmailExistsLabel() {
+        view.addSubview(emailExistsLabel)
+        view.bringSubviewToFront(emailTextField)
+        
+        let fullText = NSMutableAttributedString(
+            string: Constants.EmailExistsLabel.textPrimary,
+            attributes: [
+                .foregroundColor: Constants.EmailExistsLabel.textColorPrimary,
+                .font: Constants.EmailExistsLabel.font
+            ]
+        )
+        
+        let emailText = NSAttributedString(
+            string: Constants.EmailExistsLabel.textSecondary,
+            attributes: [
+                .foregroundColor: Constants.EmailExistsLabel.textColorSecondary,
+                .font: Constants.EmailExistsLabel.font,
+                .underlineStyle: NSUnderlineStyle.single.rawValue
+            ]
+        )
+        fullText.append(emailText)
+        emailExistsLabel.attributedText = fullText
+        emailExistsLabel.textAlignment = Constants.EmailExistsLabel.textAlignment
+        emailExistsLabel.alpha = 0
+        emailExistsLabel.isUserInteractionEnabled = true
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(signInTapped(_:)))
+        emailExistsLabel.addGestureRecognizer(tapGesture)
+        
+        emailExistsLabelConstraint = emailExistsLabel.pinBottom(to: emailTextField.bottomAnchor)
+        emailExistsLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.EmailExistsLabel.leadingIndent)
+        emailExistsLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+    }
+    
     private func configureInstructionLabel() {
         view.addSubview(instructionLabel)
         
@@ -203,7 +271,7 @@ final class RegistrationEmailViewController: UIViewController {
         
         instructionLabel.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         instructionLabel.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.InstructionLabel.leadingIndent)
-        instructionLabel.pinTop(to: emailTextField.bottomAnchor, Constants.InstructionLabel.topIndent)
+        instructionLabel.pinTop(to: emailExistsLabel.bottomAnchor, Constants.InstructionLabel.topIndent)
     }
     
     private func configureNextButton() {
@@ -254,20 +322,44 @@ final class RegistrationEmailViewController: UIViewController {
     // MARK: - Actions
     @objc private func nextButtonPressed() {
         guard let email = emailTextField.text else { return }
+        
         interactor.routeToRegistrationEmailCodeScreen(RegistrationEmailModels.RouteToRegistrationEmailCodeScreen.Request(email: email))
     }
     
+    @objc private func signInTapped(_ sender: UITapGestureRecognizer) {
+        guard let email = emailTextField.text else { return }
+        interactor.routeToLoginScreen(RegistrationEmailModels.RouteToLoginScreen.Request(email: email))
+    }
+    
     @objc private func emailTextFieldDidChange() {
+        // Убираем сообщения об ошибке после изменения текста в поле
+        emailExistsLabelConstraint?.isActive = false
+        emailExistsLabelConstraint = emailExistsLabel.pinBottom(to: emailTextField.bottomAnchor)
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+            self.emailTextField.layer.borderColor = Constants.EmailTextField.standardBorderColor
+            self.emailExistsLabel.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+        // Отключаем кнопку "Далее" (пока не придет ответ от сервера)
+        nextButton.isEnabled = false
+        nextButton.alpha = Constants.NextButton.transparencyMin
+        
         guard let email = emailTextField.text else { return }
         
-        switch email.isValidEmail() {
-        case true:
-            nextButton.isEnabled = true
-            nextButton.alpha = Constants.NextButton.transparencyMax
-        case false:
-            nextButton.isEnabled = false
-            nextButton.alpha = Constants.NextButton.transparencyMin
+        // Отменяем предыдущую проверку валидности email, если она была
+        emailValidationWorkItem?.cancel()
+        
+        // Создаём новую проверку валидности email (если текст в поле корректный)
+        guard email.isValidEmail() else { return }
+        
+        emailValidationWorkItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            
+            self.interactor.checkEmailExists(RegistrationEmailModels.CheckEmailExists.Request(email: email))
         }
+        
+        // Отправляем задачу на выполнение с задержкой
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: emailValidationWorkItem!)
     }
     
     // Метод для скрытия клавиатуры при нажатии на экран

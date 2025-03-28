@@ -17,4 +17,14 @@ final class RegistrationEmailPresenter: RegistrationEmailPresentationLogic {
         registrationEmailCodeVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(registrationEmailCodeVC, animated: true)
     }
+    
+    func routeToLoginScreen(_ response: RegistrationEmailModels.RouteToLoginScreen.Response) {
+        let loginVC = LoginAssembly.build(email: response.email)
+        loginVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(loginVC, animated: true)
+    }
+    
+    func presentIfEmailExists(_ response: RegistrationEmailModels.CheckEmailExists.Response) {
+        view?.displayIfEmailExists(RegistrationEmailModels.CheckEmailExists.ViewModel(isExists: response.isExists, email: response.email))
+    }
 }

@@ -308,7 +308,8 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
              Constants.Table.dayPartCellSectionIndex,
              Constants.Table.confirmButtonSectionIndex:
             let sideIndent: CGFloat = 36
-            let width = collectionView.bounds.width - sideIndent // sideIndent - отступы от краев в сумме
+            // sideIndent - отступы от краев в сумме
+            let width = collectionView.bounds.width - sideIndent
             let height = calculateHeightForHabitTitleCell(indexPath: indexPath)
             return CGSize(width: width, height: height)
             
@@ -319,7 +320,8 @@ extension AddHabitViewController: UICollectionViewDelegateFlowLayout {
              Constants.Table.measurementCellSectionIndex:
             let sideIndent: CGFloat = 36
             let cellsIndent: CGFloat = 18
-            let availableWidth = collectionView.bounds.width - sideIndent - cellsIndent // sideIndent - отступы от краев в сумме, cellsIndent - отступ между ячейками
+            // sideIndent - отступы от краев в сумме, cellsIndent - отступ между ячейками
+            let availableWidth = collectionView.bounds.width - sideIndent - cellsIndent
             
             let numberOfCellsInRow: CGFloat = 2
             let width = availableWidth / numberOfCellsInRow
@@ -380,7 +382,10 @@ extension AddHabitViewController: UICollectionViewDataSource {
         return Constants.Table.numberOfSections
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         let section: Int = indexPath.section
         let row: Int = indexPath.row
         

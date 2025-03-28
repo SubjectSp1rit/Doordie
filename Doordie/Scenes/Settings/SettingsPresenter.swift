@@ -38,8 +38,8 @@ final class SettingsPresenter: SettingsPresentationLogic {
     }
     
     private func openTelegramChannel(channel: String) {
-        let appURL = URL(string: "tg://resolve?domain=\(channel)")!
-        let webURL = URL(string: "https://t.me/\(channel)")!
+        guard let appURL = URL(string: "tg://resolve?domain=\(channel)") else { return }
+        guard let webURL = URL(string: "https://t.me/\(channel)") else { return }
     
         // Открывает приложение, если оно скачано, иначе браузер
         if UIApplication.shared.canOpenURL(appURL) {
