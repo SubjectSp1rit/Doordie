@@ -33,4 +33,14 @@ final class PasswordResetPresenter: PasswordResetPresentationLogic {
         
         view?.present(confirmationAlert, animated: true, completion: nil)
     }
+    
+    func presentIfEmailExists(_ response: PasswordResetModels.CheckEmailExists.Response) {
+        view?.displayIfEmailExists(PasswordResetModels.CheckEmailExists.ViewModel(isExists: response.isExists, email: response.email))
+    }
+    
+    func routeToRegistrationEmailScreen(_ response: PasswordResetModels.RouteToRegistrationEmailScreen.Response) {
+        let registrationEmailVC = RegistrationEmailAssembly.build(email: response.email)
+        registrationEmailVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(registrationEmailVC, animated: true)
+    }
 }

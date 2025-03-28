@@ -59,6 +59,8 @@ final class RegistrationEmailViewController: UIViewController {
             static let textColorSecondary: UIColor = .white
             static let font: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
             static let textAlignment: NSTextAlignment = .left
+            static let transparencyMin: CGFloat = 0
+            static let transparencyMax: CGFloat = 1
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 8
         }
@@ -117,10 +119,12 @@ final class RegistrationEmailViewController: UIViewController {
     private var interactor: RegistrationEmailBusinessLogic
     private var emailExistsLabelConstraint: NSLayoutConstraint?
     private var emailValidationWorkItem: DispatchWorkItem?
+    private var email: String?
     
     // MARK: - Lifecycle
-    init(interactor: RegistrationEmailBusinessLogic) {
+    init(interactor: RegistrationEmailBusinessLogic, email: String?) {
         self.interactor = interactor
+        self.email = email
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -142,7 +146,7 @@ final class RegistrationEmailViewController: UIViewController {
             emailExistsLabelConstraint = emailExistsLabel.pinTop(to: emailTextField.bottomAnchor, Constants.EmailExistsLabel.topIndent)
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
                 self.emailTextField.layer.borderColor = Constants.EmailTextField.errorBorderColor
-                self.emailExistsLabel.alpha = 1
+                self.emailExistsLabel.alpha = Constants.EmailExistsLabel.transparencyMax
                 self.view.layoutIfNeeded()
             }
         } else {
@@ -205,6 +209,7 @@ final class RegistrationEmailViewController: UIViewController {
     private func configureEmailTextField() {
         view.addSubview(emailTextField)
         
+        emailTextField.text = email
         emailTextField.backgroundColor = Constants.EmailTextField.bgColor
         emailTextField.layer.cornerRadius = Constants.EmailTextField.cornerRadius
         emailTextField.textColor = Constants.EmailTextField.textColor
@@ -249,7 +254,7 @@ final class RegistrationEmailViewController: UIViewController {
         fullText.append(emailText)
         emailExistsLabel.attributedText = fullText
         emailExistsLabel.textAlignment = Constants.EmailExistsLabel.textAlignment
-        emailExistsLabel.alpha = 0
+        emailExistsLabel.alpha = Constants.EmailExistsLabel.transparencyMin
         emailExistsLabel.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(signInTapped(_:)))
@@ -337,7 +342,7 @@ final class RegistrationEmailViewController: UIViewController {
         emailExistsLabelConstraint = emailExistsLabel.pinBottom(to: emailTextField.bottomAnchor)
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
             self.emailTextField.layer.borderColor = Constants.EmailTextField.standardBorderColor
-            self.emailExistsLabel.alpha = 0
+            self.emailExistsLabel.alpha = Constants.EmailExistsLabel.transparencyMin
             self.view.layoutIfNeeded()
         }
         // Отключаем кнопку "Далее" (пока не придет ответ от сервера)
@@ -352,14 +357,15 @@ final class RegistrationEmailViewController: UIViewController {
         // Создаём новую проверку валидности email (если текст в поле корректный)
         guard email.isValidEmail() else { return }
         
-        emailValidationWorkItem = DispatchWorkItem { [weak self] in
+        let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             
             self.interactor.checkEmailExists(RegistrationEmailModels.CheckEmailExists.Request(email: email))
         }
+        emailValidationWorkItem = workItem
         
-        // Отправляем задачу на выполнение с задержкой
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: emailValidationWorkItem!)
+        // Отправляем задачу на выполнение с задержкой (чтобы не спамить сервер)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: workItem)
     }
     
     // Метод для скрытия клавиатуры при нажатии на экран
