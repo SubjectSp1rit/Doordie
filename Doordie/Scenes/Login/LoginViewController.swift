@@ -16,6 +16,7 @@ final class LoginViewController: UIViewController {
         
         enum NavBar {
             static let title: String = "Log in"
+            static let tintColor: UIColor = .white
         }
         
         enum EmailLabel {
@@ -170,6 +171,7 @@ final class LoginViewController: UIViewController {
     
     private func configureNavBar() {
         navigationItem.title = Constants.NavBar.title
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: Constants.NavBar.tintColor]
     }
     
     private func configureEmailLabel() {
