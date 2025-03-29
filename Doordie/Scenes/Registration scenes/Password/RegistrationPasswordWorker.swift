@@ -66,7 +66,7 @@ final class RegistrationPasswordWorker {
     
     // MARK: - Private Methods
     private func getUrl(of type: APIRequestType) -> URL? {
-        let url: String = "http://localhost:8000/users"
+        let url: String = "http://localhost:8000/register"
         return URL(string: url)
     }
 }
