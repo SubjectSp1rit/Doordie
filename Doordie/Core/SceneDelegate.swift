@@ -13,11 +13,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let window = UIWindow(windowScene: windowScene)
-        //window.rootViewController = CustomTabBarController()
-        window.rootViewController = UINavigationController(rootViewController: WelcomeAssembly.build())
-        self.window = window
-        window.makeKeyAndVisible()
+        // Если пользователь уже авторизован - показываем главный экран
+        if UserDefaultsManager.shared.authToken != nil {
+            let window = UIWindow(windowScene: windowScene)
+            window.rootViewController = CustomTabBarController()
+            self.window = window
+            window.makeKeyAndVisible()
+        } else { // Иначе - экран авторизации
+            let window = UIWindow(windowScene: windowScene)
+            window.rootViewController = UINavigationController(rootViewController: WelcomeAssembly.build())
+            self.window = window
+            window.makeKeyAndVisible()
+        }
     }
     
     func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
