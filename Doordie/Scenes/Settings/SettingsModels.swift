@@ -17,4 +17,9 @@ enum SettingsModels {
             let link: String
         }
     }
+    
+    enum ShowLogoutAlert {
+        struct Request { }
+        struct Response { }
+    }
 }

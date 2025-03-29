@@ -9,12 +9,42 @@ import Foundation
 import UIKit
 
 final class SettingsPresenter: SettingsPresentationLogic {
+    // MARK: - Constants
+    private enum Constants {
+        enum LogoutAlert {
+            static let title: String = "Are you sure you want to log out?"
+            static let message: String = ""
+            static let okTitle: String = "Logout"
+            static let cancelTitle: String = "Cancel"
+        }
+    }
+    
     // MARK: - Variables
     weak var view: SettingsViewController?
     
     // MARK: - Public Methods
     func presentTelegram(_ response: SettingsModels.OpenTelegram.Response) {
         showTelegramAlert(channel: response.link)
+    }
+    
+    func presentLogoutAlert(_ response: SettingsModels.ShowLogoutAlert.Response) {
+        let confirmationAlert: UIAlertController = UIAlertController(title: Constants.LogoutAlert.title, message: Constants.LogoutAlert.message, preferredStyle: .alert)
+        
+        let okAction: UIAlertAction = UIAlertAction(title: Constants.LogoutAlert.okTitle, style: .default) { _ in
+            UserDefaultsManager.shared.clearAuthToken()
+            if let sceneDelegate = UIApplication.shared.connectedScenes
+                .first?.delegate as? SceneDelegate {
+
+                let welcomeVC = WelcomeAssembly.build()
+                sceneDelegate.changeRootViewController(welcomeVC)
+            }
+        }
+        let cancelAction: UIAlertAction = UIAlertAction(title: Constants.LogoutAlert.cancelTitle, style: .cancel, handler: nil)
+        
+        confirmationAlert.addAction(okAction)
+        confirmationAlert.addAction(cancelAction)
+        
+        view?.present(confirmationAlert, animated: true, completion: nil)
     }
     
     // MARK: - Private Methods

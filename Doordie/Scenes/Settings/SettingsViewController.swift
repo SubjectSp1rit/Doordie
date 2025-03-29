@@ -31,10 +31,11 @@ final class SettingsViewController: UIViewController {
         enum Table {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
-            static let numberOfSections: Int = 3
+            static let numberOfSections: Int = 4
             static let numberOfRowsInSection0: Int = 1
             static let numberOfRowsInSection1: Int = 2
             static let numberOfRowsInSection2: Int = 4
+            static let numberOfRowsInSection3: Int = 1
             static let indentBetweenSections: CGFloat = 20
         }
         
@@ -122,6 +123,7 @@ final class SettingsViewController: UIViewController {
         table.register(TermsOfUseCell.self, forCellReuseIdentifier: TermsOfUseCell.reuseId)
         table.register(AppInfoCell.self, forCellReuseIdentifier: AppInfoCell.reuseId)
         table.register(TelegramLinkCell.self, forCellReuseIdentifier: TelegramLinkCell.reuseId)
+        table.register(LogoutCell.self, forCellReuseIdentifier: LogoutCell.reuseId)
         
         table.pinTop(to: view.topAnchor)
         table.pinBottom(to: view.bottomAnchor)
@@ -155,6 +157,8 @@ extension SettingsViewController: UITableViewDataSource {
         case 1: return Constants.Table.numberOfRowsInSection1
             
         case 2: return Constants.Table.numberOfRowsInSection2
+            
+        case 3: return Constants.Table.numberOfRowsInSection3
             
         default: return 0
         }
@@ -226,6 +230,14 @@ extension SettingsViewController: UITableViewDataSource {
             
             return telegramLinkCell
             
+        // LogoutCell
+        case (3, 0):
+            let cell = table.dequeueReusableCell(withIdentifier: LogoutCell.reuseId, for: indexPath)
+            cell.selectionStyle = .none
+            guard let logoutCell = cell as? LogoutCell else { return cell }
+            
+            return logoutCell
+            
         default:
             return UITableViewCell()
         }
@@ -249,6 +261,9 @@ extension SettingsViewController: UITableViewDataSource {
             
         case (2, 3):
             interactor.openTelegram(SettingsModels.OpenTelegram.Request(link: Constants.Utilities.telegramChannelLink))
+            
+        case (3, 0):
+            interactor.showLogoutAlert(SettingsModels.ShowLogoutAlert.Request())
             
         default:
             return

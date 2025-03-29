@@ -21,4 +21,8 @@ final class SettingsInteractor: SettingsBusinessLogic {
     func openTelegram(_ request: SettingsModels.OpenTelegram.Request) {
         presenter.presentTelegram(SettingsModels.OpenTelegram.Response(link: request.link))
     }
+    
+    func showLogoutAlert(_ request: SettingsModels.ShowLogoutAlert.Request) {
+        presenter.presentLogoutAlert(SettingsModels.ShowLogoutAlert.Response())
+    }
 }
