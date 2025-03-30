@@ -35,7 +35,7 @@ final class SettingsPresenter: SettingsPresentationLogic {
             if let sceneDelegate = UIApplication.shared.connectedScenes
                 .first?.delegate as? SceneDelegate {
 
-                let welcomeVC = WelcomeAssembly.build()
+                let welcomeVC = UINavigationController(rootViewController: WelcomeAssembly.build())
                 sceneDelegate.changeRootViewController(welcomeVC)
             }
         }

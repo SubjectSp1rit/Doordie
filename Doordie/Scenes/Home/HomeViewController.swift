@@ -324,12 +324,20 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    contextMenuConfigurationForRowAt indexPath: IndexPath,
                    point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil,
-                                          previewProvider: {
-            let popupVC = PopupHabitViewController()
-            popupVC.configure(with: self.interactor.habits[indexPath.row])
-            return popupVC
-        })
+        let section = indexPath.section
+        
+        guard isHabitsLoaded == true else { return nil } // Если привычки не загружены - ничего не делаем
+        guard interactor.habits.isEmpty == false else { return nil } // Если привычек нет - ничего не делаем
+        
+        if section == Constants.Table.habitCellSectionIndex {
+            return UIContextMenuConfiguration(identifier: nil,
+                                              previewProvider: {
+                let popupVC = PopupHabitViewController()
+                popupVC.configure(with: self.interactor.habits[indexPath.row])
+                return popupVC
+            })
+        }
+        return nil
     }
 }
 
