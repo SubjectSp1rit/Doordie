@@ -12,5 +12,6 @@ internal extension String {
         static let habits = "/habits"
         static let login = "/login"
         static let emails = "/emails"
+        static let register = "/register"
     }
 }

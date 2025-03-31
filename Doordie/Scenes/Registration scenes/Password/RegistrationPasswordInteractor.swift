@@ -10,26 +10,33 @@ import UIKit
 final class RegistrationPasswordInteractor: RegistrationPasswordBusinessLogic {
     // MARK: - Constants
     private let presenter: RegistrationPasswordPresentationLogic
-    private let worker: RegistrationPasswordWorker
     
     // MARK: - Lifecycle
-    init(presenter: RegistrationPasswordPresentationLogic, worker: RegistrationPasswordWorker) {
+    init(presenter: RegistrationPasswordPresentationLogic) {
         self.presenter = presenter
-        self.worker = worker
     }
     
     // MARK: - Methods
     func createAccount(_ request: RegistrationPasswordModels.CreateAccount.Request) {
-        DispatchQueue.global().async {
-            self.worker.createAccount(request.user) { [weak self] isSuccess, message, token in
+        DispatchQueue.global().async { [weak self] in
+            let registerEndpoint = APIEndpoint(path: .API.register, method: .POST)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            let body = User(email: request.email, name: request.name, password: request.password)
+            
+            apiService.send(endpoint: registerEndpoint, body: body, responseType: Token.self) { result in
                 DispatchQueue.main.async {
-                    if isSuccess {
-                        guard let token = token else { return }
-                        UserDefaultsManager.shared.authToken = token.token
-                        print("Успешный вход по токену: \(token)")
+                    switch result {
+                        
+                    case .success(let response):
+                        guard let token = response.token else { return }
+                        UserDefaultsManager.shared.authToken = token
+                        print("Успешная регистрация и вход по токену: \(token)")
                         self?.presenter.presentCreateAccount(RegistrationPasswordModels.CreateAccount.Response())
-                    } else {
-                        print("Вход не выполнен: \(message)")
+                        
+                    case .failure(let error):
+                        print("Ошибка регистрации аккаунта: \(error)")
                     }
                 }
             }
