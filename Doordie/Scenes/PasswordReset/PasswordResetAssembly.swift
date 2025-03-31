@@ -10,8 +10,7 @@ import UIKit
 enum PasswordResetAssembly {
     static func build(email: String? = nil) -> UIViewController {
         let presenter = PasswordResetPresenter()
-        let worker = PasswordResetWorker()
-        let interactor = PasswordResetInteractor(presenter: presenter, worker: worker)
+        let interactor = PasswordResetInteractor(presenter: presenter)
         let view = PasswordResetViewController(interactor: interactor, email: email)
         presenter.view = view
         
