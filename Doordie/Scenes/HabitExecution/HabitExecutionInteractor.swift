@@ -27,7 +27,11 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     
     func deleteHabit(_ request: HabitExecutionModels.DeleteHabit.Request) {
         DispatchQueue.global().async { [weak self] in
-            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .DELETE)
+            let headers = [
+                "Content-Type": "application/json"
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .DELETE, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             

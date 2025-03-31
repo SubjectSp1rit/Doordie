@@ -19,7 +19,11 @@ final class RegistrationPasswordInteractor: RegistrationPasswordBusinessLogic {
     // MARK: - Methods
     func createAccount(_ request: RegistrationPasswordModels.CreateAccount.Request) {
         DispatchQueue.global().async { [weak self] in
-            let registerEndpoint = APIEndpoint(path: .API.register, method: .POST)
+            let headers = [
+                "Content-Type": "application/json"
+            ]
+            
+            let registerEndpoint = APIEndpoint(path: .API.register, method: .POST, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             

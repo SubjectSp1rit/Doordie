@@ -32,11 +32,17 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
         isLoading = true
         
         DispatchQueue.global().async { [weak self] in
-            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .GET)
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .GET, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             
-            apiService.get(endpoint: habitsEndpoint, responseType: [HabitModel].self) { result in
+            apiService.get(endpoint: habitsEndpoint,responseType: [HabitModel].self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

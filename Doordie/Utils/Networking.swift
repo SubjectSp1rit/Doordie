@@ -25,7 +25,7 @@ enum NetworkError: Error {
 struct APIEndpoint {
     let path: String
     let method: HTTPMethod
-    let headers: [String: String]? = ["Content-Type": "application/json"]
+    let headers: [String: String]
     let queryParameters: [String: String]? = nil
 }
 

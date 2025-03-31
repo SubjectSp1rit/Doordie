@@ -31,7 +31,11 @@ final class LoginInteractor: LoginBusinessLogic {
     
     func loginUser(_ request: LoginModels.LoginUser.Request) {
         DispatchQueue.global().async { [weak self] in
-            let loginEndpoint = APIEndpoint(path: .API.login, method: .POST)
+            let headers = [
+                "Content-Type": "application/json"
+            ]
+            
+            let loginEndpoint = APIEndpoint(path: .API.login, method: .POST, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             
@@ -63,7 +67,11 @@ final class LoginInteractor: LoginBusinessLogic {
     
     func checkEmailExists(_ request: LoginModels.CheckEmailExists.Request) {
         DispatchQueue.global().async { [weak self] in
-            let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST)
+            let headers = [
+                "Content-Type": "application/json"
+            ]
+            
+            let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             

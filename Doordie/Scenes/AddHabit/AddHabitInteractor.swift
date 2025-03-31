@@ -20,7 +20,13 @@ final class AddHabitInteractor: AddHabitBusinessLogic {
     // MARK: - Methods
     func updateHabit(_ request: AddHabitModels.UpdateHabit.Request) {
         DispatchQueue.global().async { [weak self] in
-            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .PUT)
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .PUT, headers: headers)
             
             let apiService = APIService(baseURL: .API.baseURL)
             
@@ -43,7 +49,13 @@ final class AddHabitInteractor: AddHabitBusinessLogic {
     
     func createHabit(_ request: AddHabitModels.CreateHabit.Request) {
         DispatchQueue.global().async { [weak self] in
-            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .POST)
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .POST, headers: headers)
             
             let apiService = APIService(baseURL: .API.baseURL)
             

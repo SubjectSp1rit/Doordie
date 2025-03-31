@@ -9,6 +9,7 @@ import Foundation
 
 struct HabitModel: Codable {
     var id: Int? = nil
+    var user_id: Int? = nil
     let creation_date: String?
     let title: String?
     let motivations: String?

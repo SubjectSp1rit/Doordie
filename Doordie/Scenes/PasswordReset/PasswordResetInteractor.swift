@@ -27,7 +27,11 @@ final class PasswordResetInteractor: PasswordResetBusinessLogic {
     
     func checkEmailExists(_ request: PasswordResetModels.CheckEmailExists.Request) {
         DispatchQueue.global().async { [weak self] in
-            let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST)
+            let headers = [
+                "Content-Type": "application/json"
+            ]
+            
+            let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             
