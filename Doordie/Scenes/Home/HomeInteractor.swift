@@ -43,6 +43,7 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
                     case .success(let habits):
                         print("Привычки успешно получены")
                         self?.habits = habits
+                        
                     case .failure(let error):
                         print("Ошибка получения привычек: \(error)")
                     }

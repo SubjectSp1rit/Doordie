@@ -47,7 +47,8 @@ enum LoginModels {
     
     struct LoginUser {
         struct Request {
-            var user: User
+            var email: String
+            var password: String
         }
         struct Response {
             var isSuccess: Bool
@@ -66,7 +67,7 @@ extension LoginModels {
     }
     
     struct IsEmailExists: Codable {
-        var is_exists: Bool
+        var is_exists: Bool?
     }
     
     struct Email: Codable {

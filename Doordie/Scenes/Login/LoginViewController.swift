@@ -202,8 +202,7 @@ final class LoginViewController: UIViewController {
             // Если почта существует в базе данных - отправляем запрос на вход
             guard let email = emailTextField.text else { return }
             guard let password = passwordTextField.text else { return }
-            let user = User(email: email, name: nil, password: password)
-            interactor.loginUser(LoginModels.LoginUser.Request(user: user))
+            interactor.loginUser(LoginModels.LoginUser.Request(email: email, password: password))
         } else {
             emailNotExistsLabelConstraint?.isActive = false
             emailNotExistsLabelConstraint = emailNotExistsLabel.pinTop(to: passwordTextField.bottomAnchor, Constants.EmailNotExistsLabel.topIndent)
