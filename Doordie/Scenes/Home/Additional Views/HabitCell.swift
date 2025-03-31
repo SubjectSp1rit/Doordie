@@ -49,7 +49,8 @@ final class HabitCell: UITableViewCell {
         
         enum HabitImage {
             static let tintColor: UIColor = .white
-            static let width: CGFloat = 36
+            static let sizeMultiplier: CGFloat = 0.8
+            static let contentMode: UIImageView.ContentMode = .scaleAspectFit
         }
         
         enum HabitTitle {
@@ -163,11 +164,15 @@ final class HabitCell: UITableViewCell {
         
         habitImage.tintColor = Constants.HabitImage.tintColor
         
-        habitImage.contentMode = .scaleAspectFill
-        habitImage.setWidth(Constants.HabitImage.width)
+        habitImage.contentMode = Constants.HabitImage.contentMode
         
         habitImage.pinCenterX(to: habitImageWrap.centerXAnchor)
         habitImage.pinCenterY(to: habitImageWrap.centerYAnchor)
+        habitImage.pinWidth(to: habitImageWrap.widthAnchor, Constants.HabitImage.sizeMultiplier)
+        habitImage.pinHeight(to: habitImageWrap.heightAnchor, Constants.HabitImage.sizeMultiplier)
+        
+        let configuration = UIImage.SymbolConfiguration(scale: .medium)
+        habitImage.preferredSymbolConfiguration = configuration
     }
     
     private func configureHabitTitle() {

@@ -36,10 +36,11 @@ final class HabitIconCell: UICollectionViewCell {
         }
         
         enum SelectedIcon {
-            static let contentMode: UIImageView.ContentMode = .scaleAspectFill
+            static let contentMode: UIImageView.ContentMode = .scaleAspectFit
             static let tintColor: UIColor = .white
             static let height: CGFloat = 34
-            static let leadingIndent: CGFloat = 12
+            static let leadingIndent: CGFloat = 8
+            static let sizeMultiplier: CGFloat = 0.8
         }
         
         enum ShowColorsButton {
@@ -170,9 +171,13 @@ final class HabitIconCell: UICollectionViewCell {
         selectedIcon.tintColor = Constants.SelectedIcon.tintColor
         selectedIcon.contentMode = Constants.SelectedIcon.contentMode
         
-        selectedIcon.setHeight(Constants.SelectedIcon.height)
-        selectedIcon.pinCenterY(to: coloredWrap.centerYAnchor)
         selectedIcon.pinLeft(to: coloredWrap.leadingAnchor, Constants.SelectedIcon.leadingIndent)
+        selectedIcon.pinCenterY(to: coloredWrap.centerYAnchor)
+        selectedIcon.pinWidth(to: coloredWrap.heightAnchor, Constants.SelectedIcon.sizeMultiplier)
+        selectedIcon.pinHeight(to: coloredWrap.heightAnchor, Constants.SelectedIcon.sizeMultiplier)
+        
+        let configuration = UIImage.SymbolConfiguration(scale: .medium)
+        selectedIcon.preferredSymbolConfiguration = configuration
     }
     
     private func configureShowIconsButton() {
@@ -194,11 +199,12 @@ final class HabitIconCell: UICollectionViewCell {
             var menuActions: [UIAction] = []
             
             for iconName in iconNames {
-                let image: UIImage?
                 let userTheme = traitCollection.userInterfaceStyle
-                image = UIImage(systemName: iconName)?.getWithTint(for: userTheme)
-                let action = UIAction(title: "", image: image) { [weak self] _ in
-                    self?.selectedIcon.image = image
+                let menuImage = UIImage(systemName: iconName)?.getWithTint(for: userTheme)
+                let displayImage = UIImage(systemName: iconName)?.withRenderingMode(.alwaysTemplate)
+                let action = UIAction(title: "", image: menuImage) { [weak self] _ in
+                    self?.selectedIcon.image = displayImage
+                    self?.selectedIcon.tintColor = Constants.SelectedIcon.tintColor
                     self?.onIconChanged?(iconName)
                 }
                 menuActions.append(action)
