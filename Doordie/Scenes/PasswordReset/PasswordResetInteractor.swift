@@ -37,8 +37,8 @@ final class PasswordResetInteractor: PasswordResetBusinessLogic {
                 DispatchQueue.main.async {
                     switch result {
                         
-                    case .success(let isEmailExists):
-                        guard let isExists = isEmailExists.is_exists else { return }
+                    case .success(let response):
+                        guard let isExists = response.is_exists else { return }
                         self?.presenter.presentIfEmailExists(PasswordResetModels.CheckEmailExists.Response(isExists: isExists, email: request.email))
                         
                     case .failure(let error):

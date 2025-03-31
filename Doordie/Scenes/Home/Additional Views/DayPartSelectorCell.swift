@@ -43,7 +43,7 @@ final class DayPartSelectorCell: UITableViewCell {
     private let dayPartTable: UICollectionView
     
     // MARK: - Variables
-    var onDayPartTapped: (() -> Void)?
+    var onDayPartTapped: ((String) -> Void)?
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     
     // MARK: - Lifecycle
@@ -93,18 +93,10 @@ final class DayPartSelectorCell: UITableViewCell {
         dayPartTable.pinTop(to: contentView.topAnchor)
         dayPartTable.pinBottom(to: contentView.bottomAnchor)
     }
-    
-    // MARK: - Actions
-    @objc
-    private func dayPartTapped() {
-        onDayPartTapped?()
-    }
 }
 
 // MARK: - UICollectionViewDelegate
-extension DayPartSelectorCell: UICollectionViewDelegate {
-    
-}
+extension DayPartSelectorCell: UICollectionViewDelegate { }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension DayPartSelectorCell: UICollectionViewDelegateFlowLayout {
@@ -141,6 +133,11 @@ extension DayPartSelectorCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let previousIndexPath = selectedIndexPath
         selectedIndexPath = indexPath
+        
+        // Получаем текущее значение дня
+        let selectedPart = Constants.DayPartTable.parts[indexPath.row]
+        
+        onDayPartTapped?(selectedPart)
         
         // Обновляем текущую и предыдущую ячейки
         var indexPathsToReload = [indexPath]

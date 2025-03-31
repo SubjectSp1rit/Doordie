@@ -78,6 +78,7 @@ final class HomeViewController: UIViewController {
     private var blurredNavBarView: UIVisualEffectView?
     private var navBarRendered: Bool = false
     private var isHabitsLoaded: Bool = false
+    private var selectedDayPart: String = "All day"
     
     // MARK: - Lifecycle
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
@@ -354,7 +355,8 @@ extension HomeViewController: UITableViewDataSource {
             } else if interactor.habits.isEmpty {
                 return Constants.Table.numberOfAddHabitCells
             } else {
-                return interactor.habits.count
+                let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
+                return filteredHabits.count
             }
         }
         return Constants.Table.numberOfRowsInSection
@@ -386,7 +388,7 @@ extension HomeViewController: UITableViewDataSource {
             headerCell.configure(with: currentDate)
             
             headerCell.onProfileImageTapped = {
-                print(1)
+                print("profile image tapped")
             }
             
             headerCell.onTodayLabelTapped = {
@@ -408,6 +410,12 @@ extension HomeViewController: UITableViewDataSource {
             let cell = table.dequeueReusableCell(withIdentifier: DayPartSelectorCell.reuseId, for: indexPath)
             guard let dayPartSelectorCell = cell as? DayPartSelectorCell else { return cell }
             
+            dayPartSelectorCell.onDayPartTapped = { [weak self] dayPart in
+                self?.selectedDayPart = dayPart
+                
+                self?.table.reloadSections(IndexSet(integer: Constants.Table.habitCellSectionIndex), with: .automatic)
+            }
+            
             return dayPartSelectorCell
             
         // HabitCell
@@ -421,6 +429,7 @@ extension HomeViewController: UITableViewDataSource {
                 
                 return shimmerHabitCell
             }
+            
             if interactor.habits.isEmpty { // Если привычек нет - показываем ячейку для добавления привычек
                 let cell = table.dequeueReusableCell(withIdentifier: AddHabitCell.reuseId, for: indexPath)
                 guard let addHabitCell = cell as? AddHabitCell else { return cell }
@@ -428,11 +437,14 @@ extension HomeViewController: UITableViewDataSource {
                 
                 return addHabitCell
             }
+            
+            let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
+            
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
             habitCell.selectionStyle = .none
             
-            let habit = interactor.habits[indexPath.row]
+            let habit = filteredHabits[indexPath.row]
             habitCell.configure(with: habit)
             
             return habitCell
