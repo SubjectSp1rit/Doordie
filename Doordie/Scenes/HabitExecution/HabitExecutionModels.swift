@@ -37,4 +37,8 @@ enum HabitExecutionModels {
         }
         struct ViewModel { }
     }
+    
+    struct DeleteHabitResponse: Decodable {
+        var detail: String?
+    }
 }

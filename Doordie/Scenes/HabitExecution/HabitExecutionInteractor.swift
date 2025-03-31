@@ -10,12 +10,10 @@ import UIKit
 final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     // MARK: - Constants
     private let presenter: HabitExecutionPresentationLogic
-    private let worker: HabitExecutionWorker
     
     // MARK: - Lifecycle
-    init(presenter: HabitExecutionPresentationLogic, worker: HabitExecutionWorker) {
+    init(presenter: HabitExecutionPresentationLogic) {
         self.presenter = presenter
-        self.worker = worker
     }
     
     // MARK: - Public Methods
@@ -28,14 +26,24 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     }
     
     func deleteHabit(_ request: HabitExecutionModels.DeleteHabit.Request) {
-        DispatchQueue.global().async {
-            self.worker.deleteHabit(habit: request.habit) { [weak self] isSuccess, message in
+        DispatchQueue.global().async { [weak self] in
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .DELETE)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            let body: HabitModel = request.habit
+            
+            apiService.send(endpoint: habitsEndpoint, body: body, responseType: HabitExecutionModels.DeleteHabitResponse.self) { result in
                 DispatchQueue.main.async {
-                    if isSuccess {
-                        print("Привычка успешно удалена")
+                    switch result {
+                        
+                    case .success(let response):
+                        guard let message = response.detail else { return }
+                        print(message)
                         self?.presenter.presentHabitsAfterDeleting(HabitExecutionModels.DeleteHabit.Response())
-                    } else {
-                        print("Ошибка получения привычек: \(message)")
+                        
+                    case .failure(let error):
+                        print("Ошибка удаления привычки: \(error)")
                     }
                 }
             }
