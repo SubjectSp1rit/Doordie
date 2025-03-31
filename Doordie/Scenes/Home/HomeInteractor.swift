@@ -11,7 +11,6 @@ import UIKit
 final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     // MARK: - Constants
     private let presenter: HomePresentationLogic
-    private let worker: HomeWorker
     
     // MARK: - Properties
     private var isLoading: Bool = false
@@ -22,9 +21,8 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
 
     // MARK: - Lifecycle
-    init(presenter: HomePresentationLogic, worker: HomeWorker) {
+    init(presenter: HomePresentationLogic) {
         self.presenter = presenter
-        self.worker = worker
     }
     
     // MARK: - Public Methods
@@ -33,18 +31,23 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
         guard !isLoading else { return }
         isLoading = true
         
-        DispatchQueue.global().async {
-            self.worker.fetchHabits { [weak self] isSuccess, habits, message in
+        DispatchQueue.global().async { [weak self] in
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .GET)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            apiService.get(endpoint: habitsEndpoint, responseType: [HabitModel].self) { result in
                 DispatchQueue.main.async {
-                    if isSuccess {
+                    switch result {
+                        
+                    case .success(let habits):
                         print("Привычки успешно получены")
-                        guard let habits = habits else { return }
                         self?.habits = habits
-                        self?.isLoading = false
-                    } else {
-                        print("Ошибка получения привычек: \(message)")
-                        self?.isLoading = false
+                    case .failure(let error):
+                        print("Ошибка получения привычек: \(error)")
                     }
+                    
+                    self?.isLoading = false
                 }
             }
         }
