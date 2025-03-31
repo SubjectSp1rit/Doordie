@@ -10,12 +10,10 @@ import UIKit
 final class RegistrationEmailInteractor: RegistrationEmailBusinessLogic {
     // MARK: - Constants
     private let presenter: RegistrationEmailPresentationLogic
-    private let worker: RegistrationEmailWorker
     
     // MARK: - Lifecycle
-    init(presenter: RegistrationEmailPresentationLogic, worker: RegistrationEmailWorker) {
+    init(presenter: RegistrationEmailPresentationLogic) {
         self.presenter = presenter
-        self.worker = worker
     }
     
     // MARK: - Public Methods
@@ -28,14 +26,23 @@ final class RegistrationEmailInteractor: RegistrationEmailBusinessLogic {
     }
     
     func checkEmailExists(_ request: RegistrationEmailModels.CheckEmailExists.Request) {
-        DispatchQueue.global().async {
-            self.worker.checkEmailExists(email: request.email) { [weak self] isSuccess, isExists, message in
+        DispatchQueue.global().async { [weak self] in
+            let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            let body = LoginModels.Email(email: request.email)
+            
+            apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
                 DispatchQueue.main.async {
-                    if isSuccess {
-                        guard let isExists = isExists?.is_exists else { return }
+                    switch result {
+                        
+                    case .success(let isEmailExists):
+                        guard let isExists = isEmailExists.is_exists else { return }
                         self?.presenter.presentIfEmailExists(RegistrationEmailModels.CheckEmailExists.Response(isExists: isExists, email: request.email))
-                    } else {
-                        print("\(message)")
+                        
+                    case .failure(let error):
+                        print("Ошибка проверки существования почты при авторизации: \(error)")
                     }
                 }
             }

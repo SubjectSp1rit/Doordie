@@ -10,8 +10,7 @@ import UIKit
 enum RegistrationEmailAssembly {
     static func build(email: String? = nil) -> UIViewController {
         let presenter = RegistrationEmailPresenter()
-        let worker = RegistrationEmailWorker()
-        let interactor = RegistrationEmailInteractor(presenter: presenter, worker: worker)
+        let interactor = RegistrationEmailInteractor(presenter: presenter)
         let view = RegistrationEmailViewController(interactor: interactor, email: email)
         presenter.view = view
         

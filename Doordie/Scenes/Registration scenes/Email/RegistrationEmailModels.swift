@@ -41,7 +41,7 @@ enum RegistrationEmailModels {
     }
     
     struct IsEmailExists: Codable {
-        var is_exists: Bool
+        var is_exists: Bool?
     }
     
     struct Email: Codable {
