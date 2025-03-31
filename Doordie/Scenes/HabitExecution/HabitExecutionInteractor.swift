@@ -27,8 +27,10 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
     
     func deleteHabit(_ request: HabitExecutionModels.DeleteHabit.Request) {
         DispatchQueue.global().async { [weak self] in
+            guard let token = UserDefaultsManager.shared.authToken else { return }
             let headers = [
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Token": token
             ]
             
             let habitsEndpoint = APIEndpoint(path: .API.habits, method: .DELETE, headers: headers)
