@@ -24,5 +24,13 @@ enum AddHabitModels {
         struct Response { }
         struct ViewModel { }
     }
+    
+    struct UpdateHabitResponse: Decodable {
+        var detail: String?
+    }
+    
+    struct CreateHabitResponse: Decodable {
+        var detail: String?
+    }
 }
 

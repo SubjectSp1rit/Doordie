@@ -73,8 +73,8 @@ final class LoginInteractor: LoginBusinessLogic {
                 DispatchQueue.main.async {
                     switch result {
                         
-                    case .success(let isEmailExists):
-                        guard let isExists = isEmailExists.is_exists else { return }
+                    case .success(let response):
+                        guard let isExists = response.is_exists else { return }
                         self?.presenter.presentIfEmailExists(LoginModels.CheckEmailExists.Response(isExists: isExists, email: request.email))
                         
                     case .failure(let error):

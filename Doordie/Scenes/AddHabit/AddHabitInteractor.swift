@@ -11,40 +11,54 @@ import UIKit
 final class AddHabitInteractor: AddHabitBusinessLogic {
     // MARK: - Constants
     private let presenter: AddHabitPresentationLogic
-    private let worker: AddHabitWorker
     
     // MARK: - Lifecycle
-    init(presenter: AddHabitPresentationLogic, worker: AddHabitWorker) {
+    init(presenter: AddHabitPresentationLogic) {
         self.presenter = presenter
-        self.worker = worker
     }
     
     // MARK: - Methods
     func updateHabit(_ request: AddHabitModels.UpdateHabit.Request) {
-        DispatchQueue.global().async {
-            self.worker.updateHabit(request.habit) { [weak self] isSuccess, message in
-                DispatchQueue.main.async {
-                    if isSuccess {
-                        print("Привычки успешно обновлена")
-                        self?.presenter.presentUpdatedHabit(AddHabitModels.UpdateHabit.Response())
-                    } else {
-                        print("Ошибка обновления привычки: \(message)")
-                    }
+        DispatchQueue.global().async { [weak self] in
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .PUT)
+            
+            let apiService = APIService(baseURL: .API.baseURL)
+            
+            let body: HabitModel = request.habit
+            
+            apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.UpdateHabitResponse.self) { result in
+                switch result {
+                    
+                case .success(let response):
+                    guard let message = response.detail else { return }
+                    print(message)
+                    self?.presenter.presentUpdatedHabit(AddHabitModels.UpdateHabit.Response())
+                    
+                case .failure(let error):
+                    print("Ошибка обновления привычки: \(error)")
                 }
             }
         }
     }
     
     func createHabit(_ request: AddHabitModels.CreateHabit.Request) {
-        DispatchQueue.global().async {
-            self.worker.createHabit(request.habit) { [weak self] isSuccess, message in
-                DispatchQueue.main.async {
-                    if isSuccess {
-                        print("Привычка успешно добавлена")
-                        self?.presenter.presentHabitsAfterCreating(AddHabitModels.CreateHabit.Response())
-                    } else {
-                        print("Ошибка добавления привычки: \(message)")
-                    }
+        DispatchQueue.global().async { [weak self] in
+            let habitsEndpoint = APIEndpoint(path: .API.habits, method: .POST)
+            
+            let apiService = APIService(baseURL: .API.baseURL)
+            
+            let body: HabitModel = request.habit
+            
+            apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.CreateHabitResponse.self) { result in
+                switch result {
+                    
+                case .success(let response):
+                    guard let message = response.detail else { return }
+                    print(message)
+                    self?.presenter.presentHabitsAfterCreating(AddHabitModels.CreateHabit.Response())
+                    
+                case .failure(let error):
+                    print("Ошибка создания привычки: \(error)")
                 }
             }
         }
