@@ -41,9 +41,10 @@ final class HorizontalDateCollectionCell: UITableViewCell {
     // MARK: - UI Components
     private let dateTable: UICollectionView
     
-    // MARK: - Variables
-    var onDateTapped: (() -> Void)?
+    // MARK: - Properties
+    var onDateTapped: ((Date) -> Void)?
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
+    private var days: [DayInfo] = []
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -51,6 +52,9 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         configureUI()
+        
+        days = DateManager.shared.getDaysInfo()
+        dateTable.reloadData()
     }
     
     @available(*, unavailable)
@@ -59,8 +63,10 @@ final class HorizontalDateCollectionCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure() {
-        
+    func scrollToCurrentDate(animated: Bool = false) {
+        selectedIndexPath = IndexPath(row: 30, section: 0)
+        dateTable.scrollToItem(at: selectedIndexPath!, at: .centeredHorizontally, animated: animated)
+        dateTable.reloadItems(at: [selectedIndexPath!])
     }
     
     // MARK: - Private Methods
@@ -98,12 +104,6 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         dateTable.pinTop(to: contentView.topAnchor)
         dateTable.pinBottom(to: contentView.bottomAnchor)
     }
-    
-    // MARK: - Actions
-    @objc
-    private func dateTapped() {
-        onDateTapped?()
-    }
 }
 
 // MARK: - UICollectionViewDelegate
@@ -124,14 +124,15 @@ extension HorizontalDateCollectionCell: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDataSource
 extension HorizontalDateCollectionCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return days.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dateTable.dequeueReusableCell(withReuseIdentifier: DateCell.reuseId, for: indexPath)
         guard let dateCell = cell as? DateCell else { return cell }
         
-        dateCell.configure()
+        let dayInfo = days[indexPath.row]
+        dateCell.configure(dayNumber: dayInfo.dayNumber, weekDay: dayInfo.weekDay)
         
         // Устанавливаем цвет ячейки в зависимости от того, выбрана ли она
         if selectedIndexPath == indexPath {
@@ -146,6 +147,9 @@ extension HorizontalDateCollectionCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let previousIndexPath = selectedIndexPath
         selectedIndexPath = indexPath
+        
+        let selectedDay = days[indexPath.row]
+        onDateTapped?(selectedDay.date)
         
         // Обновляем текущую и предыдущую ячейкРи
         var indexPathsToReload = [indexPath]

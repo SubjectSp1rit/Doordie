@@ -74,9 +74,9 @@ final class DateCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configure() {
-        numberLabel.text = "31"
-        dayOfWeekLabel.text = "Tue"
+    func configure(dayNumber: String, weekDay: String) {
+        numberLabel.text = dayNumber
+        dayOfWeekLabel.text = weekDay
     }
     
     func didSelect() {

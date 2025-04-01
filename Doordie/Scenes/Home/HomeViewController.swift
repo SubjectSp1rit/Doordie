@@ -79,6 +79,7 @@ final class HomeViewController: UIViewController {
     private var navBarRendered: Bool = false
     private var isHabitsLoaded: Bool = false
     private var selectedDayPart: String = "All day"
+    private var selectedDay: Date = Date()
     
     // MARK: - Lifecycle
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
@@ -274,6 +275,36 @@ final class HomeViewController: UIViewController {
         }
     }
     
+    // Вспомогательный метод для определения, нужно ли показывать привычку на выбранную дату
+    private func shouldShowHabit(_ habit: HabitModel, on date: Date) -> Bool {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        // Для ежедневных привычек - показываем всегда
+        if habit.regularity == "Every day" {
+            return true
+        }
+        
+        guard let creationDateString = habit.creation_date,
+              let creationDate = formatter.date(from: creationDateString) else { return false }
+        
+        let components = calendar.dateComponents([.day], from: creationDate, to: date)
+        guard let daysBetween = components.day else { return false }
+        
+        // Для еженедельных привычек
+        if habit.regularity == "Every week" {
+            return daysBetween % 7 == 0
+        }
+        
+        // Для ежемесячных привычек
+        if habit.regularity == "Every month" {
+            return daysBetween % 30 == 0
+        }
+        
+        return false
+    }
+    
     // MARK: - Actions
     @objc private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
@@ -340,6 +371,13 @@ extension HomeViewController: UITableViewDelegate {
         }
         return nil
     }
+    
+    // Метод для скролла к текущей дате при открытии экрана
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let dateCell = cell as? HorizontalDateCollectionCell {
+            dateCell.scrollToCurrentDate(animated: false)
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -355,7 +393,16 @@ extension HomeViewController: UITableViewDataSource {
             } else if interactor.habits.isEmpty {
                 return Constants.Table.numberOfAddHabitCells
             } else {
-                let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
+                let filteredHabits = interactor.habits.filter { habit in
+                    // Фильтруем привычки по выбранной части дня
+                    let dayPartMatches = selectedDayPart == "All day" || habit.day_part == selectedDayPart
+                    
+                    // Фильтруем привычки по выбранной дате
+                    let dateMatches = self.shouldShowHabit(habit, on: selectedDay)
+                    
+                    return dayPartMatches && dateMatches
+                }
+                
                 return filteredHabits.count
             }
         }
@@ -403,6 +450,12 @@ extension HomeViewController: UITableViewDataSource {
             cell.selectionStyle = .none
             guard let horizontalDateCollectionCell = cell as? HorizontalDateCollectionCell else { return cell }
             
+            horizontalDateCollectionCell.onDateTapped = { [weak self] date in
+                self?.selectedDay = date
+                
+                self?.table.reloadSections(IndexSet(integer: Constants.Table.habitCellSectionIndex), with: .automatic)
+            }
+            
             return horizontalDateCollectionCell
             
         // DayPartSelectorCell
@@ -438,7 +491,15 @@ extension HomeViewController: UITableViewDataSource {
                 return addHabitCell
             }
             
-            let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
+            let filteredHabits = interactor.habits.filter { habit in
+                // Фильтруем привычки по выбранной части дня
+                let dayPartMatches = selectedDayPart == "All day" || habit.day_part == selectedDayPart
+                
+                // Фильтруем привычки по выбранной дате
+                let dateMatches = self.shouldShowHabit(habit, on: selectedDay)
+                
+                return dayPartMatches && dateMatches
+            }
             
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }
