@@ -157,12 +157,23 @@ final class HabitRegularityCell: UICollectionViewCell {
     private func configureChooseRegularityMenu() {
         var menuActions: [UIAction] = []
         
-        for measurement in Constants.RegularityMenu.options {
-            let title = measurement
-            let action = UIAction(title: title, image: nil) { [weak self] _ in
-                self?.currentRegularityLabel.text = title
-                self?.onRegularityChanged?(title)
+        for i in 0..<Constants.RegularityMenu.options.count {
+            let title = Constants.RegularityMenu.options[i]
+            
+            // ВРЕМЕННО: отключаем все элементы меню, кроме первого
+            var action: UIAction
+            if i > 0 {
+                action = UIAction(title: title, image: nil, attributes: .disabled) { [weak self] _ in
+                    self?.currentRegularityLabel.text = title
+                    self?.onRegularityChanged?(title)
+                }
+            } else {
+                action = UIAction(title: title, image: nil) { [weak self] _ in
+                    self?.currentRegularityLabel.text = title
+                    self?.onRegularityChanged?(title)
+                }
             }
+            
             menuActions.append(action)
         }
         
