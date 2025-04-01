@@ -156,18 +156,29 @@ final class HabitMeasurementCell: UICollectionViewCell {
     }
     
     private func configureChooseMeasurementMenu() {
-        var menuColors: [UIAction] = []
+        var menuMeasurements: [UIAction] = []
         
-        for measurement in Constants.ChooseMeasurementMenu.measurements {
-            let title = measurement
-            let action = UIAction(title: title, image: nil) { [weak self] _ in
-                self?.measurementValueLabel.text = title
-                self?.onMeasurementChanged?(title)
+        for i in 0..<Constants.ChooseMeasurementMenu.measurements.count {
+            let title = Constants.ChooseMeasurementMenu.measurements[i]
+            
+            // ВРЕМЕННО: отключаем все элементы меню, кроме первого
+            var action: UIAction
+            if i > 0 {
+                action = UIAction(title: title, image: nil, attributes: .disabled) { [weak self] _ in
+                    self?.measurementValueLabel.text = title
+                    self?.onMeasurementChanged?(title)
+                }
+            } else {
+                action = UIAction(title: title, image: nil) { [weak self] _ in
+                    self?.measurementValueLabel.text = title
+                    self?.onMeasurementChanged?(title)
+                }
             }
-            menuColors.append(action)
+            
+            menuMeasurements.append(action)
         }
         
-        let menu = UIMenu(title: Constants.ChooseMeasurementMenu.menuTitle, children: menuColors)
+        let menu = UIMenu(title: Constants.ChooseMeasurementMenu.menuTitle, children: menuMeasurements)
         
         chooseMeasurementButton.menu = menu
         chooseMeasurementButton.showsMenuAsPrimaryAction = true
