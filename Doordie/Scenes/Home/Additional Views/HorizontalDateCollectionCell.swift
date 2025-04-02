@@ -33,6 +33,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
             static let elementsTrailingIndent: CGFloat = 18
             static let elementsTopIndent: CGFloat = 0
             static let elementsBottomIndent: CGFloat = 0
+            static let isScrollEnabled: Bool = false
         }
     }
     
@@ -43,7 +44,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
     
     // MARK: - Properties
     var onDateTapped: ((Date) -> Void)?
-    private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
+    private var selectedIndexPath: IndexPath? = IndexPath(row: 30, section: 0)
     private var days: [DayInfo] = []
     private var isHabitsLoaded: Bool = true
     
@@ -106,6 +107,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         dateTable.backgroundColor = Constants.DateTable.bgColor
         dateTable.delegate = self
         dateTable.dataSource = self
+        dateTable.isScrollEnabled = Constants.DateTable.isScrollEnabled
         dateTable.register(DateCell.self, forCellWithReuseIdentifier: DateCell.reuseId)
         dateTable.register(ShimmerDateCell.self, forCellWithReuseIdentifier: ShimmerDateCell.reuseId)
         
@@ -164,20 +166,20 @@ extension HorizontalDateCollectionCell: UICollectionViewDataSource {
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let previousIndexPath = selectedIndexPath
-        selectedIndexPath = indexPath
-        
-        let selectedDay = days[indexPath.row]
-        onDateTapped?(selectedDay.date)
-        
-        // Обновляем текущую и предыдущую ячейкРи
-        var indexPathsToReload = [indexPath]
-        if let previousIndexPath = previousIndexPath {
-            indexPathsToReload.append(previousIndexPath)
-        }
-        collectionView.reloadItems(at: indexPathsToReload)
-        
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let previousIndexPath = selectedIndexPath
+//        selectedIndexPath = indexPath
+//        
+//        let selectedDay = days[indexPath.row]
+//        onDateTapped?(selectedDay.date)
+//        
+//        // Обновляем текущую и предыдущую ячейкРи
+//        var indexPathsToReload = [indexPath]
+//        if let previousIndexPath = previousIndexPath {
+//            indexPathsToReload.append(previousIndexPath)
+//        }
+//        collectionView.reloadItems(at: indexPathsToReload)
+//        
+//        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+//    }
 }

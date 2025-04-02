@@ -117,6 +117,11 @@ final class HomeViewController: UIViewController {
             navBarRendered = true
         }
         updateNavBarTransparency()
+        
+        // Скроллим к текущей дате
+        if let horizontalCollectionDateCell = table.cellForRow(at: IndexPath(row: 0, section: Constants.Table.horizontalDateCollectionCellSectionIndex)) as? HorizontalDateCollectionCell {
+            horizontalCollectionDateCell.scrollToCurrentDate(animated: false)
+        }
     }
     
     deinit {
@@ -343,11 +348,11 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     // Метод для скролла к текущей дате при открытии экрана
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let dateCell = cell as? HorizontalDateCollectionCell {
-            dateCell.scrollToCurrentDate(animated: false)
-        }
-    }
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if let dateCell = cell as? HorizontalDateCollectionCell {
+//            dateCell.scrollToCurrentDate(animated: false)
+//        }
+//    }
 }
 
 // MARK: - UITableViewDataSource
