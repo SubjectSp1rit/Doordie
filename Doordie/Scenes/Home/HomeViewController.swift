@@ -275,36 +275,6 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    // Вспомогательный метод для определения, нужно ли показывать привычку на выбранную дату
-    private func shouldShowHabit(_ habit: HabitModel, on date: Date) -> Bool {
-        let calendar = Calendar.current
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        
-        // Для ежедневных привычек - показываем всегда
-        if habit.regularity == "Every day" {
-            return true
-        }
-        
-        guard let creationDateString = habit.creation_date,
-              let creationDate = formatter.date(from: creationDateString) else { return false }
-        
-        let components = calendar.dateComponents([.day], from: creationDate, to: date)
-        guard let daysBetween = components.day else { return false }
-        
-        // Для еженедельных привычек
-        if habit.regularity == "Every week" {
-            return daysBetween % 7 == 0
-        }
-        
-        // Для ежемесячных привычек
-        if habit.regularity == "Every month" {
-            return daysBetween % 30 == 0
-        }
-        
-        return false
-    }
-    
     // MARK: - Actions
     @objc private func notificationButtonPressed() {
         print("NOTIFICATION SCREEN")
@@ -393,16 +363,7 @@ extension HomeViewController: UITableViewDataSource {
             } else if interactor.habits.isEmpty {
                 return Constants.Table.numberOfAddHabitCells
             } else {
-                let filteredHabits = interactor.habits.filter { habit in
-                    // Фильтруем привычки по выбранной части дня
-                    let dayPartMatches = selectedDayPart == "All day" || habit.day_part == selectedDayPart
-                    
-                    // Фильтруем привычки по выбранной дате
-                    let dateMatches = self.shouldShowHabit(habit, on: selectedDay)
-                    
-                    return dayPartMatches && dateMatches
-                }
-                
+                let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
                 return filteredHabits.count
             }
         }
@@ -491,15 +452,7 @@ extension HomeViewController: UITableViewDataSource {
                 return addHabitCell
             }
             
-            let filteredHabits = interactor.habits.filter { habit in
-                // Фильтруем привычки по выбранной части дня
-                let dayPartMatches = selectedDayPart == "All day" || habit.day_part == selectedDayPart
-                
-                // Фильтруем привычки по выбранной дате
-                let dateMatches = self.shouldShowHabit(habit, on: selectedDay)
-                
-                return dayPartMatches && dateMatches
-            }
+            let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
             
             let cell = table.dequeueReusableCell(withIdentifier: HabitCell.reuseId, for: indexPath)
             guard let habitCell = cell as? HabitCell else { return cell }

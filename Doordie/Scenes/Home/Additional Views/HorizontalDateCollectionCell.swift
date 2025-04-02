@@ -45,6 +45,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
     var onDateTapped: ((Date) -> Void)?
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     private var days: [DayInfo] = []
+    private var isHabitsLoaded: Bool = true
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -62,11 +63,19 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Public Methods
+    // MARK: - Methods
     func scrollToCurrentDate(animated: Bool = false) {
         selectedIndexPath = IndexPath(row: 30, section: 0)
         dateTable.scrollToItem(at: selectedIndexPath!, at: .centeredHorizontally, animated: animated)
         dateTable.reloadItems(at: [selectedIndexPath!])
+    }
+    
+    func ShowShimmer() {
+        isHabitsLoaded = false
+    }
+    
+    func HideShimmer() {
+        isHabitsLoaded = true
     }
     
     // MARK: - Private Methods
@@ -98,6 +107,7 @@ final class HorizontalDateCollectionCell: UITableViewCell {
         dateTable.delegate = self
         dateTable.dataSource = self
         dateTable.register(DateCell.self, forCellWithReuseIdentifier: DateCell.reuseId)
+        dateTable.register(ShimmerDateCell.self, forCellWithReuseIdentifier: ShimmerDateCell.reuseId)
         
         dateTable.pinLeft(to: contentView.leadingAnchor)
         dateTable.pinRight(to: contentView.trailingAnchor)
@@ -128,20 +138,30 @@ extension HorizontalDateCollectionCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dateTable.dequeueReusableCell(withReuseIdentifier: DateCell.reuseId, for: indexPath)
-        guard let dateCell = cell as? DateCell else { return cell }
-        
-        let dayInfo = days[indexPath.row]
-        dateCell.configure(dayNumber: dayInfo.dayNumber, weekDay: dayInfo.weekDay)
-        
-        // Устанавливаем цвет ячейки в зависимости от того, выбрана ли она
-        if selectedIndexPath == indexPath {
-            dateCell.didSelect()
-        } else {
-            dateCell.unselect()
+        switch isHabitsLoaded {
+        case true:
+            let cell = dateTable.dequeueReusableCell(withReuseIdentifier: DateCell.reuseId, for: indexPath)
+            guard let dateCell = cell as? DateCell else { return cell }
+            
+            let dayInfo = days[indexPath.row]
+            dateCell.configure(dayNumber: dayInfo.dayNumber, weekDay: dayInfo.weekDay)
+            
+            // Устанавливаем цвет ячейки в зависимости от того, выбрана ли она
+            if selectedIndexPath == indexPath {
+                dateCell.didSelect()
+            } else {
+                dateCell.unselect()
+            }
+            
+            return dateCell
+        case false:
+            let cell = dateTable.dequeueReusableCell(withReuseIdentifier: ShimmerDateCell.reuseId, for: indexPath)
+            guard let shimmerDateCell = cell as? ShimmerDateCell else { return cell }
+            
+            shimmerDateCell.startShimmer()
+            
+            return shimmerDateCell
         }
-        
-        return dateCell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
