@@ -475,8 +475,7 @@ extension HomeViewController: UITableViewDataSource {
             habitCell.selectionStyle = .none
             
             let habit = filteredHabits[indexPath.row]
-            let isCompleted = (habit.current_quantity == habit.quantity)
-            habitCell.configure(with: habit, completed: isCompleted)
+            habitCell.configure(with: habit)
             
             return habitCell
         

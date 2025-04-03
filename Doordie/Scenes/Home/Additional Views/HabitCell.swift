@@ -79,6 +79,7 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - Properties
     private var isCheckmarkVisible: Bool = false
+    private var isCompleted: Bool = false
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -91,11 +92,20 @@ final class HabitCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isCheckmarkVisible = false
+        checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
+        checkmarkButton.setImage(nil, for: .normal)
+    }
+    
     // MARK: - Public Methods
-    func configure(with habit: HabitModel, completed: Bool) {
+    func configure(with habit: HabitModel) {
         guard let title = habit.title else { return }
         guard let color = habit.color else { return }
         guard let iconName = habit.icon else { return }
+        guard let currentQuantity = habit.current_quantity else { return }
+        guard let targetQuantity = habit.quantity else { return }
         
         let image = UIImage(systemName: iconName)
         
@@ -103,8 +113,21 @@ final class HabitCell: UITableViewCell {
         habitImage.image = image
         habitImageWrap.backgroundColor = UIColor(hex: color)
         
-        if completed {
-            checkmarkButtonPressed()
+        // Сбрасываем состояние кнопки
+        isCheckmarkVisible = false
+        checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
+        checkmarkButton.setImage(nil, for: .normal)
+        
+        if currentQuantity == targetQuantity {
+            isCheckmarkVisible = true
+            let image = UIImage(named: Constants.CheckmarkButton.imageName)?
+                .withRenderingMode(.alwaysOriginal)
+                .resize(to: CGSize(
+                    width: Constants.CheckmarkButton.imageWidth,
+                    height: Constants.CheckmarkButton.imageHeight
+                ))
+            checkmarkButton.setImage(image, for: .normal)
+            checkmarkButton.backgroundColor = Constants.CheckmarkButton.selectedBgColor
         }
     }
     
