@@ -80,6 +80,7 @@ final class HomeViewController: UIViewController {
     private var isHabitsLoaded: Bool = false
     private var selectedDayPart: String = "All day"
     private var selectedDay: Date = Date()
+    private var previousDayPartIndex: Int = 0 // "All day"
     
     // MARK: - Lifecycle
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
@@ -435,10 +436,14 @@ extension HomeViewController: UITableViewDataSource {
             let cell = table.dequeueReusableCell(withIdentifier: DayPartSelectorCell.reuseId, for: indexPath)
             guard let dayPartSelectorCell = cell as? DayPartSelectorCell else { return cell }
             
-            dayPartSelectorCell.onDayPartTapped = { [weak self] dayPart in
-                self?.selectedDayPart = dayPart
+            dayPartSelectorCell.onDayPartTapped = { [weak self] dayPart, newDayPartIndex in
+                guard let self = self else { return }
                 
-                self?.table.reloadSections(IndexSet(integer: Constants.Table.habitCellSectionIndex), with: .automatic)
+                let animationDirection: UITableView.RowAnimation = newDayPartIndex > self.previousDayPartIndex ? .left : .right
+                self.previousDayPartIndex = newDayPartIndex
+                self.selectedDayPart = dayPart
+                
+                self.table.reloadSections(IndexSet(integer: Constants.Table.habitCellSectionIndex), with: animationDirection)
             }
             
             return dayPartSelectorCell
@@ -470,7 +475,8 @@ extension HomeViewController: UITableViewDataSource {
             habitCell.selectionStyle = .none
             
             let habit = filteredHabits[indexPath.row]
-            habitCell.configure(with: habit)
+            let isCompleted = (habit.current_quantity == habit.quantity)
+            habitCell.configure(with: habit, completed: isCompleted)
             
             return habitCell
         

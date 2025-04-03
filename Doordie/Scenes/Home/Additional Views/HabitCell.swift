@@ -92,7 +92,7 @@ final class HabitCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with habit: HabitModel) {
+    func configure(with habit: HabitModel, completed: Bool) {
         guard let title = habit.title else { return }
         guard let color = habit.color else { return }
         guard let iconName = habit.icon else { return }
@@ -102,6 +102,10 @@ final class HabitCell: UITableViewCell {
         habitTitle.text = title
         habitImage.image = image
         habitImageWrap.backgroundColor = UIColor(hex: color)
+        
+        if completed {
+            checkmarkButtonPressed()
+        }
     }
     
     // MARK: - Private Methods
