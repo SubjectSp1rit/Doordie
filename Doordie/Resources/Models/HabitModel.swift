@@ -16,7 +16,7 @@ struct HabitModel: Codable {
     let color: String?
     let icon: String?
     let quantity: String?
-    let current_quantity: String?
+    var current_quantity: String?
     let measurement: String?
     let regularity: String?
     let day_part: String?

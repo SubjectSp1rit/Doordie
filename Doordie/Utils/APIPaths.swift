@@ -10,6 +10,7 @@ internal extension String {
         static let baseURL = "http://localhost:8000"
         
         static let habits = "/habits"
+        static let habitExecution = "/habit_execution"
         static let login = "/login"
         static let emails = "/emails"
         static let register = "/register"

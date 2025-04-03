@@ -11,6 +11,7 @@ protocol HabitExecutionBusinessLogic {
     func showDeleteConfirmationMessage(_ request: HabitExecutionModels.ShowDeleteConfirmationMessage.Request)
     func showEditHabitScreen(_ request: HabitExecutionModels.ShowEditHabitScreen.Request)
     func deleteHabit(_ request: HabitExecutionModels.DeleteHabit.Request)
+    func updateHabitExecution(_ request: HabitExecutionModels.UpdateHabitExecution.Request)
 }
 
 protocol HabitExecutionPresentationLogic {

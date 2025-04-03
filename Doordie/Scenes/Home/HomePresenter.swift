@@ -18,7 +18,7 @@ final class HomePresenter: HomePresentationLogic {
     }
     
     func routeToHabitExecutionScreen(_ response: HomeModels.RouteToHabitExecutionScreen.Response) {
-        let habitExecutionVC = HabitExecutionAssembly.build(habit: response.habit)
+        let habitExecutionVC = HabitExecutionAssembly.build(habit: response.habit, onDismiss: response.onDismiss)
         let navController = UINavigationController(rootViewController: habitExecutionVC)
         navController.modalPresentationStyle = .overFullScreen
         

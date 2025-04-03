@@ -38,7 +38,18 @@ enum HabitExecutionModels {
         struct ViewModel { }
     }
     
+    enum UpdateHabitExecution {
+        struct Request {
+            var habit: HabitModel
+            var onDismiss: () -> Void
+        }
+    }
+    
     struct DeleteHabitResponse: Decodable {
+        var detail: String?
+    }
+    
+    struct UpdateHabitResponse: Decodable {
         var detail: String?
     }
 }

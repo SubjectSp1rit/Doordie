@@ -33,16 +33,22 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
         
         DispatchQueue.global().async { [weak self] in
             guard let token = UserDefaultsManager.shared.authToken else { return }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            let currentDate = dateFormatter.string(from: Date())
+            
             let headers = [
                 "Content-Type": "application/json",
-                "Token": token
+                "Token": token,
+                "Date": currentDate
             ]
             
             let habitsEndpoint = APIEndpoint(path: .API.habits, method: .GET, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             
-            apiService.get(endpoint: habitsEndpoint,responseType: [HabitModel].self) { result in
+            apiService.get(endpoint: habitsEndpoint, responseType: [HabitModel].self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -61,7 +67,7 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
     
     func routeToHabitExecutionScreen(_ request: HomeModels.RouteToHabitExecutionScreen.Request) {
-        presenter.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Response(habit: request.habit))
+        presenter.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Response(habit: request.habit, onDismiss: request.onDismiss))
     }
     
     func routeToAddHabitScreen(_ request: HomeModels.RouteToAddHabitScreen.Request) {

@@ -18,9 +18,11 @@ enum HomeModels {
     enum RouteToHabitExecutionScreen {
         struct Request {
             var habit: HabitModel
+            var onDismiss: () -> Void
         }
         struct Response {
             var habit: HabitModel
+            var onDismiss: () -> Void
         }
         struct ViewModel { }
     }

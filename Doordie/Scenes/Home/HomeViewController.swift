@@ -137,6 +137,8 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Private Methods
     private func fetchAllHabits() {
+        isHabitsLoaded = false
+        table.reloadData()
         interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
     
@@ -300,11 +302,15 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func handleHabitAddedNotification(_ notification: Notification) {
-        interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchAllHabits()
+        }
     }
     
     @objc private func handleHabitDeletedNotification(_ notification: Notification) {
-        interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchAllHabits()
+        }
     }
 }
 
@@ -486,7 +492,9 @@ extension HomeViewController: UITableViewDataSource {
             }
             // В остальных случаях направляем на экран выполнения привычки
             let habit = interactor.habits[indexPath.row]
-            interactor.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Request(habit: habit))
+            interactor.routeToHabitExecutionScreen(HomeModels.RouteToHabitExecutionScreen.Request(habit: habit, onDismiss: { [weak self] in
+                self?.fetchAllHabits()
+            }))
         default:
             return
         }

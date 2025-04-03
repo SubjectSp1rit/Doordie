@@ -90,8 +90,6 @@ final class HabitExecutionViewController: UIViewController {
         }
     }
     
-    let habit: HabitModel
-    
     // MARK: - UI Components
     private let background: UIImageView = UIImageView()
     private let closeScreenButton: UIButton = UIButton(type: .system)
@@ -107,11 +105,18 @@ final class HabitExecutionViewController: UIViewController {
     
     // MARK: - Properties
     private var interactor: HabitExecutionBusinessLogic
+    private var timer: Timer?
+    private var remainingSeconds: Int = 0
+    private var isPaused: Bool = true
+    
+    private var onDismiss: () -> Void
+    private var habit: HabitModel
     
     // MARK: - Lifecycle
-    init(interactor: HabitExecutionBusinessLogic, habit: HabitModel) {
+    init(interactor: HabitExecutionBusinessLogic, habit: HabitModel, onDismiss: @escaping () -> Void) {
         self.interactor = interactor
         self.habit = habit
+        self.onDismiss = onDismiss
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -123,6 +128,12 @@ final class HabitExecutionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopTimer()
+        interactor.updateHabitExecution(HabitExecutionModels.UpdateHabitExecution.Request(habit: habit, onDismiss: onDismiss))
     }
     
     // MARK: - Public Methods
@@ -137,6 +148,51 @@ final class HabitExecutionViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    
+    // Метод для форматирования времени в формат "чч:мм:сс"
+    private func formatTime(totalSeconds: Int) -> String {
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+    
+    private func startTimer() {
+        if isPaused {
+            isPaused = false
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+                self?.updateTimer()
+            }
+        }
+    }
+
+    private func stopTimer() {
+        isPaused = true
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func updateTimer() {
+        guard remainingSeconds > 0 else {
+            stopTimer()
+            return
+        }
+        
+        remainingSeconds -= 1
+        remainTimeValue.text = formatTime(totalSeconds: remainingSeconds)
+        
+        // Обновление текущего количества привычки каждую минуту
+        if remainingSeconds % 60 == 0 {
+            let currentMinutes = Int(habit.current_quantity ?? "0") ?? 0
+            habit.current_quantity = String(currentMinutes + 1)
+        }
+    }
+    
     private func configureUI() {
         configureBackground()
         configureCloseScreenButton()
@@ -215,6 +271,7 @@ final class HabitExecutionViewController: UIViewController {
         pauseButton.backgroundColor = Constants.PauseButton.bgColor
         pauseButton.layer.cornerRadius = Constants.PauseButton.cornerRadius
         pauseButton.setHeight(Constants.PauseButton.height)
+        pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
     }
     
     private func configureResumeButton() {
@@ -223,6 +280,7 @@ final class HabitExecutionViewController: UIViewController {
         resumeButton.backgroundColor = Constants.ResumeButton.bgColor
         resumeButton.layer.cornerRadius = Constants.ResumeButton.cornerRadius
         resumeButton.setHeight(Constants.ResumeButton.height)
+        resumeButton.addTarget(self, action: #selector(resumeButtonTapped), for: .touchUpInside)
     }
     
     private func configureButtonsStack() {
@@ -258,7 +316,12 @@ final class HabitExecutionViewController: UIViewController {
     private func configureRemainTimeValue() {
         view.addSubview(remainTimeValue)
         
-        remainTimeValue.text = "1:15:00"
+        let totalMinutes = Int(habit.quantity ?? "0") ?? 0
+        let currentMinutes = Int(habit.current_quantity ?? "0") ?? 0
+        remainingSeconds = (totalMinutes - currentMinutes) * 60
+            
+        remainTimeValue.text = formatTime(totalSeconds: remainingSeconds)
+        
         remainTimeValue.textColor = Constants.RemainTimeValue.textColor
         remainTimeValue.textAlignment = Constants.RemainTimeValue.textAlignment
         remainTimeValue.font = UIFont.systemFont(ofSize: Constants.RemainTimeValue.fontSize, weight: Constants.RemainTimeValue.fontWeigth)
@@ -283,6 +346,14 @@ final class HabitExecutionViewController: UIViewController {
     }
     
     // MARK: - Actions
+    @objc private func pauseButtonTapped() {
+        stopTimer()
+    }
+
+    @objc private func resumeButtonTapped() {
+        startTimer()
+    }
+    
     @objc
     private func closeScreenButtonPressed() {
         dismiss(animated: true)

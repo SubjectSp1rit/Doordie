@@ -55,4 +55,41 @@ final class HabitExecutionInteractor: HabitExecutionBusinessLogic {
             }
         }
     }
+    
+    func updateHabitExecution(_ request: HabitExecutionModels.UpdateHabitExecution.Request) {
+        DispatchQueue.global().async {
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            let currentDate = dateFormatter.string(from: Date())
+            
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token,
+                "Date": currentDate
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habitExecution, method: .PUT, headers: headers)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            let body: HabitModel = request.habit
+            
+            apiService.send(endpoint: habitsEndpoint, body: body, responseType: HabitExecutionModels.UpdateHabitResponse.self) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                        
+                    case .success(let response):
+                        print(response.detail ?? "Привычка успешно обновлена")
+                        request.onDismiss()
+                        
+                    case .failure(let error):
+                        print("Ошибка обновления привычки: \(error)")
+                        request.onDismiss()
+                    }
+                }
+            }
+        }
+    }
 }
