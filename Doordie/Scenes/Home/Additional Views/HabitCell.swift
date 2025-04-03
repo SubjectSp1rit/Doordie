@@ -79,7 +79,8 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - Properties
     private var isCheckmarkVisible: Bool = false
-    private var isCompleted: Bool = false
+    var onCheckmarkTapped: ((HabitModel) -> Void)?
+    private var habit: HabitModel?
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -101,6 +102,7 @@ final class HabitCell: UITableViewCell {
     
     // MARK: - Public Methods
     func configure(with habit: HabitModel) {
+        self.habit = habit
         guard let title = habit.title else { return }
         guard let color = habit.color else { return }
         guard let iconName = habit.icon else { return }
@@ -118,7 +120,7 @@ final class HabitCell: UITableViewCell {
         checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
         checkmarkButton.setImage(nil, for: .normal)
         
-        if currentQuantity == targetQuantity {
+        if currentQuantity >= targetQuantity {
             isCheckmarkVisible = true
             let image = UIImage(named: Constants.CheckmarkButton.imageName)?
                 .withRenderingMode(.alwaysOriginal)
@@ -223,18 +225,42 @@ final class HabitCell: UITableViewCell {
         chevronRight.pinRight(to: wrap.trailingAnchor, Constants.ChevronRight.trailingIndent)
     }
     
-    // MARK: - Actions
-    @objc
-    private func checkmarkButtonPressed() {
-        isCheckmarkVisible.toggle() // Переключаем состояние
+    private func updateCheckmarkAppearance() {
         if isCheckmarkVisible {
-            let image = UIImage(named: Constants.CheckmarkButton.imageName)?.withRenderingMode(.alwaysOriginal)
-            let resizedImage = image?.resize(to: CGSize(width: Constants.CheckmarkButton.imageWidth, height: Constants.CheckmarkButton.imageHeight))
-            checkmarkButton.setImage(resizedImage, for: .normal)
+            let image = UIImage(named: Constants.CheckmarkButton.imageName)?
+                .withRenderingMode(.alwaysOriginal)
+                .resize(to: CGSize(
+                    width: Constants.CheckmarkButton.imageWidth,
+                    height: Constants.CheckmarkButton.imageHeight
+                ))
+            checkmarkButton.setImage(image, for: .normal)
             checkmarkButton.backgroundColor = Constants.CheckmarkButton.selectedBgColor
         } else {
             checkmarkButton.backgroundColor = Constants.CheckmarkButton.unselectedBgColor
-            checkmarkButton.setImage(nil, for: .normal) // Убираем изображение
+            checkmarkButton.setImage(nil, for: .normal)
+        }
+    }
+    
+    // MARK: - Actions
+    @objc
+    private func checkmarkButtonPressed() {
+        guard var updatedHabit = habit else { return }
+        
+        if let current = updatedHabit.current_quantity,
+           let target = updatedHabit.quantity,
+           let currentInt = Int(current),
+           let targetInt = Int(target) {
+            if currentInt < targetInt { // Привычка выполнена
+                updatedHabit.current_quantity = target
+                isCheckmarkVisible = true
+                updateCheckmarkAppearance()
+            } else { // Привычка сброшена
+                updatedHabit.current_quantity = "0"
+                isCheckmarkVisible = false
+                updateCheckmarkAppearance()
+            }
+            
+            onCheckmarkTapped?(updatedHabit)
         }
     }
 }

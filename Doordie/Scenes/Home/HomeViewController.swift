@@ -477,6 +477,17 @@ extension HomeViewController: UITableViewDataSource {
             let habit = filteredHabits[indexPath.row]
             habitCell.configure(with: habit)
             
+            habitCell.onCheckmarkTapped = { [weak self] updatedHabit in
+                guard let self = self else { return }
+                
+                self.interactor.updateHabitExecution(HomeModels.UpdateHabitExecution.Request(
+                    habit: updatedHabit,
+                    onFinish: { [weak self] in
+                        self?.fetchAllHabits()
+                    }
+                ))
+            }
+            
             return habitCell
         
         default:

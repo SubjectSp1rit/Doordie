@@ -16,6 +16,7 @@ protocol HomeBusinessLogic {
     func fetchAllHabits(_ request: HomeModels.FetchAllHabits.Request)
     func routeToHabitExecutionScreen(_ request: HomeModels.RouteToHabitExecutionScreen.Request)
     func routeToAddHabitScreen(_ request: HomeModels.RouteToAddHabitScreen.Request)
+    func updateHabitExecution(_ request: HomeModels.UpdateHabitExecution.Request)
 }
 
 protocol HomePresentationLogic {

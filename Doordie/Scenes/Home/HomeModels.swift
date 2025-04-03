@@ -32,4 +32,15 @@ enum HomeModels {
         struct Response { }
         struct ViewModel { }
     }
+    
+    enum UpdateHabitExecution {
+        struct Request {
+            var habit: HabitModel
+            var onFinish: () -> Void
+        }
+    }
+    
+    struct UpdateHabitResponse: Decodable {
+        var detail: String?
+    }
 }
