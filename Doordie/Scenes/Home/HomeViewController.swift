@@ -407,8 +407,10 @@ extension HomeViewController: UITableViewDataSource {
             let currentDate = DateManager.shared.getLocalizedMonthAndDay()
             headerCell.configure(with: currentDate)
             
-            headerCell.onProfileImageTapped = {
-                print("profile image tapped")
+            headerCell.onProfileImageTapped = { [weak self] in
+                guard let self = self else { return }
+                
+                self.interactor.routeToProfileScreen(HomeModels.RouteToProfileScreen.Request())
             }
             
             headerCell.onTodayLabelTapped = {

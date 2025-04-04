@@ -9,6 +9,11 @@ import Foundation
 import UIKit
 
 enum SettingsModels {
+    enum RouteToProfileScreen {
+        struct Request { }
+        struct Response { }
+    }
+    
     enum OpenTelegram {
         struct Request {
             let link: String

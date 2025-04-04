@@ -32,4 +32,10 @@ final class HomePresenter: HomePresentationLogic {
         
         view?.present(navController, animated: true, completion: nil)
     }
+    
+    func routeToProfileScreen(_ response: HomeModels.RouteToProfileScreen.Response) {
+        let profileVC = ProfileAssembly.build()
+        profileVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(profileVC, animated: true)
+    }
 }

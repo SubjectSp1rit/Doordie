@@ -25,4 +25,8 @@ final class SettingsInteractor: SettingsBusinessLogic {
     func showLogoutAlert(_ request: SettingsModels.ShowLogoutAlert.Request) {
         presenter.presentLogoutAlert(SettingsModels.ShowLogoutAlert.Response())
     }
+    
+    func routeToProfileScreen(_ request: SettingsModels.RouteToProfileScreen.Request) {
+        presenter.routeToProfileScreen(SettingsModels.RouteToProfileScreen.Response())
+    }
 }

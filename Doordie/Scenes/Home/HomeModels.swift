@@ -33,6 +33,11 @@ enum HomeModels {
         struct ViewModel { }
     }
     
+    enum RouteToProfileScreen {
+        struct Request { }
+        struct Response { }
+    }
+    
     enum UpdateHabitExecution {
         struct Request {
             var habit: HabitModel

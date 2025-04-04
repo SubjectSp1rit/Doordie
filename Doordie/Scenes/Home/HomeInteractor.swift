@@ -110,4 +110,8 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     func routeToAddHabitScreen(_ request: HomeModels.RouteToAddHabitScreen.Request) {
         presenter.routeToAddHabitScreen(HomeModels.RouteToAddHabitScreen.Response())
     }
+    
+    func routeToProfileScreen(_ request: HomeModels.RouteToProfileScreen.Request) {
+        presenter.routeToProfileScreen(HomeModels.RouteToProfileScreen.Response())
+    }
 }

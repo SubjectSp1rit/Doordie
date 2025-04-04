@@ -78,4 +78,10 @@ final class SettingsPresenter: SettingsPresentationLogic {
             UIApplication.shared.open(webURL, options: [:], completionHandler: nil)
         }
     }
+    
+    func routeToProfileScreen(_ response: SettingsModels.RouteToProfileScreen.Response) {
+        let profileVC = ProfileAssembly.build()
+        profileVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(profileVC, animated: true)
+    }
 }

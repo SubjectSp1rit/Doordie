@@ -259,9 +259,15 @@ extension SettingsViewController: UITableViewDataSource {
         
         switch (section, row) {
             
+        // ProfileCell
+        case (0, 0):
+            interactor.routeToProfileScreen(SettingsModels.RouteToProfileScreen.Request())
+            
+        // TelegramLinkCell
         case (2, 3):
             interactor.openTelegram(SettingsModels.OpenTelegram.Request(link: Constants.Utilities.telegramChannelLink))
-            
+        
+        // LogoutCell
         case (3, 0):
             interactor.showLogoutAlert(SettingsModels.ShowLogoutAlert.Request())
             
