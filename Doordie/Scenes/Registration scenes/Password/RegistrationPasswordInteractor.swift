@@ -35,7 +35,9 @@ final class RegistrationPasswordInteractor: RegistrationPasswordBusinessLogic {
                         
                     case .success(let response):
                         guard let token = response.token else { return }
+                        guard let name = response.name else { return }
                         UserDefaultsManager.shared.authToken = token
+                        UserDefaultsManager.shared.name = name
                         print("Успешная регистрация и вход по токену: \(token)")
                         self?.presenter.presentCreateAccount(RegistrationPasswordModels.CreateAccount.Response())
                         

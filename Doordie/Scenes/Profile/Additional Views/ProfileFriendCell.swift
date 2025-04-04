@@ -1,13 +1,13 @@
 //
-//  ProfileCell.swift
+//  ProfileFriendCell.swift
 //  Doordie
 //
-//  Created by Arseniy on 25.01.2025.
+//  Created by Arseniy on 04.04.2025.
 //
 
 import UIKit
 
-final class ProfileCell: UITableViewCell {
+final class ProfileFriendCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -19,11 +19,31 @@ final class ProfileCell: UITableViewCell {
         }
         
         enum Wrap {
-            static let height: CGFloat = 90
+            static let height: CGFloat = 100
             static let bgColor: UIColor = UIColor(hex: "3A50C2").withAlphaComponent(0.6)
             static let cornerRadius: CGFloat = 20
             static let leadingIndent: CGFloat = 18
             static let trailingIndent: CGFloat = 18
+            static let bottomIndent: CGFloat = 10
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
+        }
+        
+        enum ProfileImage {
+            static let contentMode: UIView.ContentMode = .scaleAspectFill
+            static let cornerRadius: CGFloat = 35
+            static let imageSide: CGFloat = 70
+            static let leadingIndent: CGFloat = 14
+        }
+        
+        enum NameLabel {
+            static let textAlignment: NSTextAlignment = .left
+            static let textColor: UIColor = .white
+            static let numberOfLines: Int = 1
+            static let leadingIndent: CGFloat = 8
         }
         
         enum ChevronRight {
@@ -31,35 +51,19 @@ final class ProfileCell: UITableViewCell {
             static let trailingIndent: CGFloat = 12
             static let tintColor: UIColor = .white
         }
-        
-        enum ProfileImage {
-            static let contentMode: UIView.ContentMode = .scaleAspectFill
-            static let cornerRadius: CGFloat = 30
-            static let imageSide: CGFloat = 60
-            static let leadingIndent: CGFloat = 18
-        }
-        
-        enum NameLabel {
-            static let textColor: UIColor = .white
-            static let textAlignment: NSTextAlignment = .left
-            static let fontWeight: UIFont.Weight = .regular
-            static let fontSize: CGFloat = 22
-            static let leadingIndent: CGFloat = 12
-        }
     }
     
-    static let reuseId: String = "ProfileCell"
+    static let reuseId: String = "ProfileFriendCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
-    private let chevronRight: UIImageView = UIImageView()
     private let profileImage: UIImageView = UIImageView()
     private let nameLabel: UILabel = UILabel()
+    private let chevronRight: UIImageView = UIImageView()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         configureUI()
     }
     
@@ -68,9 +72,9 @@ final class ProfileCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Public Methods
+    // MARK: - Methods
     func configure() {
-        profileImage.image = UIImage(named: "profileImage")
+
     }
     
     // MARK: - Private Methods
@@ -80,9 +84,9 @@ final class ProfileCell: UITableViewCell {
         contentView.layer.masksToBounds = false
         
         configureWrap()
-        configureChevronRight()
         configureProfileImage()
         configureNameLabel()
+        configureChevronRight()
     }
     
     private func configureWrap() {
@@ -91,11 +95,46 @@ final class ProfileCell: UITableViewCell {
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
         
+        // Тень
+        wrap.layer.shadowColor = Constants.Wrap.shadowColor
+        wrap.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        wrap.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        wrap.layer.shadowRadius = Constants.Wrap.shadowRadius
+        wrap.layer.masksToBounds = false
+        
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
-        wrap.pinBottom(to: contentView.bottomAnchor)
+        wrap.pinBottom(to: contentView.bottomAnchor, Constants.Wrap.bottomIndent)
         wrap.pinLeft(to: contentView.leadingAnchor, Constants.Wrap.leadingIndent)
         wrap.pinRight(to: contentView.trailingAnchor, Constants.Wrap.trailingIndent)
+    }
+    
+    private func configureProfileImage() {
+        wrap.addSubview(profileImage)
+        
+        profileImage.layer.cornerRadius = Constants.ProfileImage.cornerRadius
+        profileImage.contentMode = Constants.ProfileImage.contentMode
+        profileImage.clipsToBounds = true
+        
+        profileImage.image = UIImage(named: "profileImage")
+        
+        profileImage.pinLeft(to: wrap.leadingAnchor, Constants.ProfileImage.leadingIndent)
+        profileImage.pinCenterY(to: wrap.centerYAnchor)
+        profileImage.setWidth(Constants.ProfileImage.imageSide)
+        profileImage.setHeight(Constants.ProfileImage.imageSide)
+    }
+    
+    private func configureNameLabel() {
+        wrap.addSubview(nameLabel)
+        
+        nameLabel.textColor = Constants.NameLabel.textColor
+        nameLabel.textAlignment = Constants.NameLabel.textAlignment
+        nameLabel.numberOfLines = Constants.NameLabel.numberOfLines
+        
+        nameLabel.text = "John Doe"
+        
+        nameLabel.pinCenterY(to: wrap.centerYAnchor)
+        nameLabel.pinLeft(to: profileImage.trailingAnchor, Constants.NameLabel.leadingIndent)
     }
     
     private func configureChevronRight() {
@@ -106,31 +145,5 @@ final class ProfileCell: UITableViewCell {
         
         chevronRight.pinCenterY(to: wrap.centerYAnchor)
         chevronRight.pinRight(to: wrap.trailingAnchor, Constants.ChevronRight.trailingIndent)
-    }
-    
-    private func configureProfileImage() {
-        wrap.addSubview(profileImage)
-        
-        profileImage.contentMode = Constants.ProfileImage.contentMode
-        profileImage.layer.cornerRadius = Constants.ProfileImage.cornerRadius
-        profileImage.clipsToBounds = true
-        profileImage.setWidth(Constants.ProfileImage.imageSide)
-        profileImage.setHeight(Constants.ProfileImage.imageSide)
-        
-        profileImage.pinCenterY(to: wrap.centerYAnchor)
-        profileImage.pinLeft(to: wrap.leadingAnchor, Constants.ProfileImage.leadingIndent)
-    }
-    
-    private func configureNameLabel() {
-        wrap.addSubview(nameLabel)
-        
-        let name = UserDefaultsManager.shared.name ?? "User"
-        nameLabel.text = name
-        nameLabel.textColor = Constants.NameLabel.textColor
-        nameLabel.textAlignment = Constants.NameLabel.textAlignment
-        nameLabel.font = UIFont.systemFont(ofSize: Constants.NameLabel.fontSize, weight: Constants.NameLabel.fontWeight)
-        
-        nameLabel.pinCenterY(to: wrap.centerYAnchor)
-        nameLabel.pinLeft(to: profileImage.trailingAnchor, Constants.NameLabel.leadingIndent)
     }
 }

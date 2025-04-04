@@ -42,7 +42,7 @@ final class DayPartSelectorCell: UITableViewCell {
     // MARK: - UI Components
     private let dayPartTable: UICollectionView
     
-    // MARK: - Variables
+    // MARK: - Properties
     var onDayPartTapped: ((String, Int) -> Void)?
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     

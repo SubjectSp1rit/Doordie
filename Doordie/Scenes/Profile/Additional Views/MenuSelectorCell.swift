@@ -1,13 +1,13 @@
 //
-//  DayPartCell.swift
+//  MenuSelectorCell.swift
 //  Doordie
 //
-//  Created by Arseniy on 31.12.2024.
+//  Created by Arseniy on 04.04.2025.
 //
 
 import UIKit
 
-final class DayPartCell: UICollectionViewCell {
+final class MenuSelectorCell: UICollectionViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -47,7 +47,7 @@ final class DayPartCell: UICollectionViewCell {
         }
     }
     
-    static let reuseId: String = "DayPartCell"
+    static let reuseId: String = "MenuSelectorCell"
     
     // MARK: - UI Components
     private let stack: UIStackView = UIStackView()

@@ -13,6 +13,7 @@ final class UserDefaultsManager {
     
     private enum Keys {
         static let authToken = "authToken"
+        static let name = "name"
     }
     
     // MARK: - Lifecycle
@@ -28,8 +29,21 @@ final class UserDefaultsManager {
         }
     }
     
+    var name: String? {
+        get {
+            return UserDefaults.standard.string(forKey: Keys.name)
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: Keys.name)
+        }
+    }
+    
     // MARK: - Methods
     func clearAuthToken() {
         UserDefaults.standard.removeObject(forKey: Keys.authToken)
+    }
+    
+    func clearName() {
+        UserDefaults.standard.removeObject(forKey: Keys.name)
     }
 }

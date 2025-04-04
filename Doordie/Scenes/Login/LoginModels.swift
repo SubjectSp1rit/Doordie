@@ -63,6 +63,7 @@ enum LoginModels {
 extension LoginModels {
     struct LoginResponse: Codable {
         var token: String?
+        var name: String?
         var is_success: Bool?
     }
     

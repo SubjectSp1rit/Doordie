@@ -32,6 +32,7 @@ final class SettingsPresenter: SettingsPresentationLogic {
         
         let okAction: UIAlertAction = UIAlertAction(title: Constants.LogoutAlert.okTitle, style: .default) { _ in
             UserDefaultsManager.shared.clearAuthToken()
+            UserDefaultsManager.shared.clearName()
             if let sceneDelegate = UIApplication.shared.connectedScenes
                 .first?.delegate as? SceneDelegate {
 

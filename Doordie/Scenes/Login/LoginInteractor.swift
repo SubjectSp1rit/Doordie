@@ -51,7 +51,9 @@ final class LoginInteractor: LoginBusinessLogic {
                         // Если пароль совпал - значит пришел и  токен, который нужно сохранить
                         if isPasswordCorrect {
                             guard let token = loginResponse.token else { return }
+                            guard let name = loginResponse.name else { return }
                             UserDefaultsManager.shared.authToken = token
+                            UserDefaultsManager.shared.name = name
                             print("Успешный вход по токену: \(token)")
                         }
                         
