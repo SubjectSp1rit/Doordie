@@ -11,6 +11,7 @@ internal extension String {
         
         static let habits = "/habits"
         static let habitExecution = "/habit_execution"
+        static let friends = "/friends"
         static let login = "/login"
         static let emails = "/emails"
         static let register = "/register"

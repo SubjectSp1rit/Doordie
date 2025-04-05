@@ -6,5 +6,8 @@
 //
 
 enum ProfileModels {
-    
+    enum RouteToAddFriendScreen {
+        struct Request { }
+        struct Response { }
+    }
 }

@@ -6,9 +6,9 @@
 //
 
 protocol ProfileBusinessLogic {
-    
+    func routeToAddFriendScreen(_ request: ProfileModels.RouteToAddFriendScreen.Request)
 }
 
 protocol ProfilePresentationLogic {
-    
+    func routeToAddFriendScreen(_ response: ProfileModels.RouteToAddFriendScreen.Response)
 }

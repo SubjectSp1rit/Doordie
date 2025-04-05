@@ -214,6 +214,7 @@ final class ProfileViewController: UIViewController {
         table.layer.masksToBounds = true
         table.alwaysBounceVertical = true
         table.register(ProfileFriendCell.self, forCellReuseIdentifier: ProfileFriendCell.reuseId)
+        table.register(ProfileAddFriendCell.self, forCellReuseIdentifier: ProfileAddFriendCell.reuseId)
         
         table.pinCenterX(to: wrap.centerXAnchor)
         table.pinLeft(to: wrap.leadingAnchor, Constants.Table.leadingIndent)
@@ -248,14 +249,48 @@ extension ProfileViewController: UITableViewDataSource {
             return UITableViewCell() // Пока ничего не возвращаем
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
-            let cell = table.dequeueReusableCell(withIdentifier: ProfileFriendCell.reuseId, for: indexPath)
-            guard let profileFriendCell = cell as? ProfileFriendCell else { return cell }
-            profileFriendCell.selectionStyle = .none
-            
-            return profileFriendCell
+            switch indexPath.row {
+                
+            case 0: // ProfileAddFriendCell
+                let cell = table.dequeueReusableCell(withIdentifier: ProfileAddFriendCell.reuseId, for: indexPath)
+                guard let profileAddFriendCell = cell as? ProfileAddFriendCell else { return cell }
+                profileAddFriendCell.selectionStyle = .none
+                
+                return profileAddFriendCell
+                
+            default: // ProfileFriendCell
+                let cell = table.dequeueReusableCell(withIdentifier: ProfileFriendCell.reuseId, for: indexPath)
+                guard let profileFriendCell = cell as? ProfileFriendCell else { return cell }
+                profileFriendCell.selectionStyle = .none
+                
+                return profileFriendCell
+            }
             
         default:
             return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch selectedDayPart {
+            
+        case Constants.MenuSelectorTable.parts[0]: // Stats
+            return // Пока ничего не делаем
+        
+        case Constants.MenuSelectorTable.parts[1]: // Friends
+            switch indexPath.row {
+                
+            case 0: // ProfileAddFriendCell
+                interactor.routeToAddFriendScreen(ProfileModels.RouteToAddFriendScreen.Request())
+                return
+                
+            default: // ProfileFriendCell
+                // route to friend profile screen
+                return
+            }
+            
+        default:
+            return
         }
     }
 }

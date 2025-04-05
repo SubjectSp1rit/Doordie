@@ -13,4 +13,9 @@ final class ProfileInteractor: ProfileBusinessLogic {
     init(presenter: ProfilePresentationLogic) {
         self.presenter = presenter
     }
+    
+    // MARK: - Methods
+    func routeToAddFriendScreen(_ request: ProfileModels.RouteToAddFriendScreen.Request) {
+        presenter.routeToAddFriendScreen(ProfileModels.RouteToAddFriendScreen.Response())
+    }
 }
