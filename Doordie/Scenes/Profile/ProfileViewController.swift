@@ -81,15 +81,18 @@ final class ProfileViewController: UIViewController {
     private let table: UITableView = UITableView()
     
     // MARK: - Properties
-    private var interactor: ProfileBusinessLogic
+    private var interactor: (ProfileBusinessLogic & FriendsStorage)
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     private var selectedDayPart: String = "Stats"
+    private var isFriendsLoaded: Bool = false
     
     // MARK: - Lifecycle
-    init(interactor: ProfileBusinessLogic) {
+    init(interactor: (ProfileBusinessLogic & FriendsStorage)) {
         self.interactor = interactor
         self.menuSelectorTable = ProfileViewController.createCollectionView()
         super.init(nibName: nil, bundle: nil)
+        
+        fetchAllFriends()
     }
     
     @available(*, unavailable)
@@ -102,7 +105,19 @@ final class ProfileViewController: UIViewController {
         configureUI()
     }
     
+    // MARK: - Methods
+    func displayFetchedFriends(_ viewModel: ProfileModels.FetchAllFriends.ViewModel) {
+        isFriendsLoaded = true
+        table.reloadData()
+    }
+    
     // MARK: - Private Methods
+    private func fetchAllFriends() {
+        isFriendsLoaded = false
+        table.reloadData()
+        interactor.fetchAllFriends(ProfileModels.FetchAllFriends.Request())
+    }
+    
     private static func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = Constants.Layout.scrollDirection
@@ -235,7 +250,11 @@ extension ProfileViewController: UITableViewDataSource {
             return 0
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
-            return 3
+            if isFriendsLoaded {
+                return interactor.friends.count + 1
+            } else {
+                return 0
+            }
             
         default:
             return 0
@@ -249,6 +268,8 @@ extension ProfileViewController: UITableViewDataSource {
             return UITableViewCell() // Пока ничего не возвращаем
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
+            guard isFriendsLoaded == true else { return UITableViewCell() }
+            
             switch indexPath.row {
                 
             case 0: // ProfileAddFriendCell
@@ -262,6 +283,9 @@ extension ProfileViewController: UITableViewDataSource {
                 let cell = table.dequeueReusableCell(withIdentifier: ProfileFriendCell.reuseId, for: indexPath)
                 guard let profileFriendCell = cell as? ProfileFriendCell else { return cell }
                 profileFriendCell.selectionStyle = .none
+                
+                let friendData = interactor.friends[indexPath.row - 1]
+                profileFriendCell.configure(with: friendData)
                 
                 return profileFriendCell
             }

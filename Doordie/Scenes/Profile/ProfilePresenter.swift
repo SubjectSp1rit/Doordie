@@ -6,7 +6,7 @@
 //
 
 final class ProfilePresenter: ProfilePresentationLogic {
-// MARK: - Properties
+    // MARK: - Properties
     weak var view: ProfileViewController?
     
     // MARK: - Methods
@@ -14,5 +14,9 @@ final class ProfilePresenter: ProfilePresentationLogic {
         let addFriendVC = AddFriendAssembly.build()
         addFriendVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(addFriendVC, animated: true)
+    }
+    
+    func presentAllFriends(_ response: ProfileModels.FetchAllFriends.Response) {
+        view?.displayFetchedFriends(ProfileModels.FetchAllFriends.ViewModel())
     }
 }

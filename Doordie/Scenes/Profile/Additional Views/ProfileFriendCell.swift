@@ -73,8 +73,8 @@ final class ProfileFriendCell: UITableViewCell {
     }
     
     // MARK: - Methods
-    func configure() {
-
+    func configure(with friend: ProfileModels.FriendUser) {
+        nameLabel.text = friend.name
     }
     
     // MARK: - Private Methods
@@ -130,8 +130,6 @@ final class ProfileFriendCell: UITableViewCell {
         nameLabel.textColor = Constants.NameLabel.textColor
         nameLabel.textAlignment = Constants.NameLabel.textAlignment
         nameLabel.numberOfLines = Constants.NameLabel.numberOfLines
-        
-        nameLabel.text = "John Doe"
         
         nameLabel.pinCenterY(to: wrap.centerYAnchor)
         nameLabel.pinLeft(to: profileImage.trailingAnchor, Constants.NameLabel.leadingIndent)
