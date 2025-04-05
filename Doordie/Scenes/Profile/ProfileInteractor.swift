@@ -37,11 +37,11 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
                 "Token": token
             ]
             
-            let emailEndpoint = APIEndpoint(path: .API.friends, method: .GET, headers: headers)
+            let friendsEndpoint = APIEndpoint(path: .API.friends, method: .GET, headers: headers)
             
             let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
             
-            apiService.get(endpoint: emailEndpoint, responseType: ProfileModels.GetFriendsResponse.self) { result in
+            apiService.get(endpoint: friendsEndpoint, responseType: ProfileModels.GetFriendsResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -54,6 +54,38 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
                         
                     case .failure(let error):
                         print("Error while loading friends: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func deleteFriend(_ request: ProfileModels.DeleteFriend.Request) {
+        DispatchQueue.global().async {
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token
+            ]
+            
+            let friendsEndpoint = APIEndpoint(path: .API.friends, method: .DELETE, headers: headers)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            let body = ProfileModels.Email(email: request.email)
+            
+            apiService.send(endpoint: friendsEndpoint, body: body, responseType: ProfileModels.DeleteFriendResponse.self) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                        
+                    case .success(let response):
+                        if let message = response.detail {
+                            print(message)
+                        }
+                        
+                    case .failure(let error):
+                        print("Error while deleting friend: \(error)")
                     }
                 }
             }

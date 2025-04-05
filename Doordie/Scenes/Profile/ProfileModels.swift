@@ -17,6 +17,12 @@ enum ProfileModels {
         struct ViewModel { }
     }
     
+    enum DeleteFriend {
+        struct Request {
+            var email: String
+        }
+    }
+    
     struct FriendUser: Decodable {
         var email: String?
         var name: String?
@@ -24,6 +30,14 @@ enum ProfileModels {
     
     struct GetFriendsResponse: Decodable {
         var friends: [FriendUser]?
+        var detail: String?
+    }
+    
+    struct Email: Encodable {
+        var email: String
+    }
+    
+    struct DeleteFriendResponse: Decodable {
         var detail: String?
     }
 }

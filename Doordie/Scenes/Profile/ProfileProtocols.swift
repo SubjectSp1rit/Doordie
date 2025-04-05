@@ -12,6 +12,7 @@ protocol FriendsStorage {
 protocol ProfileBusinessLogic {
     func routeToAddFriendScreen(_ request: ProfileModels.RouteToAddFriendScreen.Request)
     func fetchAllFriends(_ request: ProfileModels.FetchAllFriends.Request)
+    func deleteFriend(_ request: ProfileModels.DeleteFriend.Request)
 }
 
 protocol ProfilePresentationLogic {

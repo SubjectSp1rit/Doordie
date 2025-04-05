@@ -108,7 +108,9 @@ final class ProfileViewController: UIViewController {
     // MARK: - Methods
     func displayFetchedFriends(_ viewModel: ProfileModels.FetchAllFriends.ViewModel) {
         isFriendsLoaded = true
-        table.reloadData()
+        DispatchQueue.main.async {
+            self.table.reloadData()
+        }
     }
     
     // MARK: - Private Methods
@@ -284,6 +286,8 @@ extension ProfileViewController: UITableViewDataSource {
                 guard let profileFriendCell = cell as? ProfileFriendCell else { return cell }
                 profileFriendCell.selectionStyle = .none
                 
+                profileFriendCell.delegate = self
+                
                 let friendData = interactor.friends[indexPath.row - 1]
                 profileFriendCell.configure(with: friendData)
                 
@@ -315,6 +319,26 @@ extension ProfileViewController: UITableViewDataSource {
             
         default:
             return
+        }
+    }
+}
+
+// MARK: - ProfileCellDelegate
+extension ProfileViewController: ProfileCellDelegate {
+    func profileCellDidTriggerDelete(_ cell: ProfileFriendCell) {
+        if let indexPath = table.indexPath(for: cell) {
+            var friendsCopy = interactor.friends
+            
+            // отправляем запрос в бек на удаление друга
+            guard let friendEmail = interactor.friends[indexPath.row - 1].email else { return }
+            interactor.deleteFriend(ProfileModels.DeleteFriend.Request(email: friendEmail))
+            
+            friendsCopy.remove(at: indexPath.row - 1)
+            interactor.friends = friendsCopy
+            
+            self.table.performBatchUpdates({
+                self.table.deleteRows(at: [indexPath], with: .left)
+            }, completion: nil)
         }
     }
 }
