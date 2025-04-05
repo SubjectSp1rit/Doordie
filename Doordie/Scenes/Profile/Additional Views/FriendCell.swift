@@ -132,7 +132,7 @@ final class ProfileFriendCell: UITableViewCell {
     }
     
     // MARK: - Methods
-    func configure(with friend: ProfileModels.FriendUser) {
+    func configure(with friend: FriendUser) {
         nameLabel.text = friend.name
     }
     

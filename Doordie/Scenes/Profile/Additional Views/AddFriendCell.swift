@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ProfileAddFriendCell: UITableViewCell {
+final class AddFriendCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
