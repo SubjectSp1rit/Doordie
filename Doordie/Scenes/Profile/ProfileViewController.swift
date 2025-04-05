@@ -313,7 +313,10 @@ extension ProfileViewController: UITableViewDataSource {
                 return
                 
             default: // ProfileFriendCell
-                // route to friend profile screen
+                let friend = interactor.friends[indexPath.row - 1]
+                let email = friend.email ?? ""
+                let name = friend.name ?? "Unkown name"
+                interactor.routeToFriendProfileScreen(ProfileModels.RouteToFriendProfileScreen.Request(email: email, name: name))
                 return
             }
             

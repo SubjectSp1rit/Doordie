@@ -275,7 +275,7 @@ final class ProfileFriendCell: UITableViewCell {
             let totalTranslation = startingTranslation + translation.x
             // Не допускаем движения вправо: если totalTranslation > 0, то обнуляем
             let clampedTranslation = min(totalTranslation, 0)
-            // Ограничиваем максимальное смещение влево (например, -deleteButtonWidth)
+            // Ограничиваем максимальное смещение влево
             let finalTranslation = max(clampedTranslation, -Constants.Swipe.deleteButtonWidth)
             
             customContentView.transform = CGAffineTransform(translationX: finalTranslation, y: 0)

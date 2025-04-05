@@ -28,6 +28,10 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
         presenter.routeToAddFriendScreen(ProfileModels.RouteToAddFriendScreen.Response())
     }
     
+    func routeToFriendProfileScreen(_ request: ProfileModels.RouteToFriendProfileScreen.Request) {
+        presenter.routeToFriendProfileScreen(ProfileModels.RouteToFriendProfileScreen.Response(email: request.email, name: request.name))
+    }
+    
     func fetchAllFriends(_ request: ProfileModels.FetchAllFriends.Request) {
         DispatchQueue.global().async { [weak self] in
             guard let token = UserDefaultsManager.shared.authToken else { return }

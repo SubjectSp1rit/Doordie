@@ -16,6 +16,12 @@ final class ProfilePresenter: ProfilePresentationLogic {
         view?.navigationController?.pushViewController(addFriendVC, animated: true)
     }
     
+    func routeToFriendProfileScreen(_ response: ProfileModels.RouteToFriendProfileScreen.Response) {
+        let friendProfileVC = FriendProfileAssembly.build(email: response.email, name: response.name)
+        friendProfileVC.modalPresentationStyle = .fullScreen
+        view?.navigationController?.pushViewController(friendProfileVC, animated: true)
+    }
+    
     func presentAllFriends(_ response: ProfileModels.FetchAllFriends.Response) {
         view?.displayFetchedFriends(ProfileModels.FetchAllFriends.ViewModel())
     }

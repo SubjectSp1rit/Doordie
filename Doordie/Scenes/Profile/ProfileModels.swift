@@ -6,6 +6,17 @@
 //
 
 enum ProfileModels {
+    enum RouteToFriendProfileScreen {
+        struct Request {
+            var email: String
+            var name: String
+        }
+        struct Response {
+            var email: String
+            var name: String
+        }
+    }
+    
     enum RouteToAddFriendScreen {
         struct Request { }
         struct Response { }
