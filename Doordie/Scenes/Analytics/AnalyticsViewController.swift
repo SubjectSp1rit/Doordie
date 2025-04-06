@@ -29,12 +29,17 @@ final class AnalyticsViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
         }
+        
+        enum RefreshControl {
+            static let tintColor: UIColor = .systemGray
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let table: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Properties
     private var interactor: (AnalyticsBusinessLogic & HabitsAnalyticsStorage)
@@ -59,14 +64,19 @@ final class AnalyticsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchAllHabits()
-        view.layoutIfNeeded() // Нужна для вызова layoutSubviews() у tableView
-        table.reloadData() // Обновляем таблицу, чтобы мерцающие ячейки снова запустили анимацию
     }
     
     // MARK: - Methods
     func displayUpdatedHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
+        refreshControl.endRefreshing()
         isHabitsLoaded = true
         table.reloadData()
+        table.visibleCells.forEach { cell in // Обновляем вложенную таблицу с датами
+            if let habitCell = cell as? HabitAnalyticsCell {
+                habitCell.reloadData()
+                habitCell.scrollToCenter()
+            }
+        }
     }
     
     // MARK: - Private Methods
@@ -80,6 +90,7 @@ final class AnalyticsViewController: UIViewController {
         configureBackground()
         configureNavBar()
         configureTable()
+        configureRefreshControl()
     }
     
     private func configureBackground() {
@@ -113,6 +124,7 @@ final class AnalyticsViewController: UIViewController {
         table.dataSource = self
         table.separatorStyle = Constants.Table.separatorStyle
         table.layer.masksToBounds = true
+        table.refreshControl = refreshControl
         table.alwaysBounceVertical = true
         table.register(HabitAnalyticsCell.self, forCellReuseIdentifier: HabitAnalyticsCell.reuseId)
         
@@ -120,6 +132,19 @@ final class AnalyticsViewController: UIViewController {
         table.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.Table.leadingIndent)
         table.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.Table.topIndent)
         table.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor)
+    }
+    
+    private func configureRefreshControl() {
+        refreshControl.tintColor = Constants.RefreshControl.tintColor
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    // MARK: - Actions
+    @objc private func refreshData() {
+        isHabitsLoaded = false
+        table.reloadData()
+        refreshControl.endRefreshing()
+        fetchAllHabits()
     }
 }
 

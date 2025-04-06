@@ -98,7 +98,6 @@ final class HabitAnalyticsCell: UITableViewCell {
     }()
     
     // MARK: - Properties
-    private var didScrollToCenter: Bool = false
     private var dates: [DateModel] = DateManager.shared.getLastSevenDays()
     private var habitData: AnalyticsModels.HabitAnalytics?
     
@@ -121,11 +120,6 @@ final class HabitAnalyticsCell: UITableViewCell {
         
         scrollToCenter()
     }
-        
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        didScrollToCenter = false
-    }
     
     // MARK: - Methods
     func configure(with data: AnalyticsModels.HabitAnalytics) {
@@ -139,18 +133,18 @@ final class HabitAnalyticsCell: UITableViewCell {
     }
     
     func scrollToCenter() {
-        if !didScrollToCenter {
-            didScrollToCenter = true
-            
-            let numberOfItems = datesCollectionView.numberOfItems(inSection: 0)
-            guard numberOfItems > 0 else { return }
-            let centerItem = numberOfItems / 2
-            let centerIndexPath = IndexPath(item: centerItem, section: 0)
-            
-            datesCollectionView.scrollToItem(at: centerIndexPath,
-                                             at: .centeredHorizontally,
-                                             animated: false)
-        }
+        let numberOfItems = datesCollectionView.numberOfItems(inSection: 0)
+        guard numberOfItems > 0 else { return }
+        let centerItem = numberOfItems / 2
+        let centerIndexPath = IndexPath(item: centerItem, section: 0)
+        
+        datesCollectionView.scrollToItem(at: centerIndexPath,
+                                         at: .centeredHorizontally,
+                                         animated: false)
+    }
+    
+    func reloadData() {
+        datesCollectionView.reloadData()
     }
     
     // MARK: - Private Methods

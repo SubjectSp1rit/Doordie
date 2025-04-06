@@ -84,6 +84,9 @@ final class DateCollectionViewCell: UICollectionViewCell {
         if isCompleted {
             squareView.backgroundColor = UIColor(hex: "478039")
             dateLabel.tintColor = UIColor(hex: "8DFC63")
+        } else {
+            squareView.backgroundColor = UIColor(hex: "6475CC")
+            dateLabel.tintColor = .white
         }
     }
     
