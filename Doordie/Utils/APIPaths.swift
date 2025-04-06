@@ -9,6 +9,7 @@ internal extension String {
     enum API {
         static let baseURL = "http://localhost:8000"
         
+        static let habitAnalytics = "/habit_analytics"
         static let habits = "/habits"
         static let habitExecution = "/habit_execution"
         static let friends = "/friends"

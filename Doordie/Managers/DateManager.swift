@@ -80,4 +80,25 @@ final class DateManager {
     func isToday(_ date: Date) -> Bool {
         Calendar.current.isDateInToday(date)
     }
+    
+    func getLastSevenDays() -> [DateModel] {
+        let calendar = Calendar.current
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        
+        let weekdayFormatter = DateFormatter()
+        let preferredLanguage = Locale.preferredLanguages.first ?? "en"
+        let locale = Locale(identifier: preferredLanguage.starts(with: "ru") ? "ru" : "en")
+        weekdayFormatter.locale = locale
+        weekdayFormatter.dateFormat = "EEE"
+        
+        return (0...6).map { daysAgo -> DateModel in
+            let date = calendar.date(byAdding: .day, value: -daysAgo, to: today)!
+            return DateModel(
+                name: weekdayFormatter.string(from: date),
+                date: dateFormatter.string(from: date)
+            )
+        }.reversed()
+    }
 }
