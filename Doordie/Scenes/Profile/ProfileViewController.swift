@@ -69,6 +69,7 @@ final class ProfileViewController: UIViewController {
             static let numberOfRowsInSection: Int = 3
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
+            static let numberOfShimmerFriendCells: Int = 10
         }
     }
     
@@ -91,8 +92,6 @@ final class ProfileViewController: UIViewController {
         self.interactor = interactor
         self.menuSelectorTable = ProfileViewController.createCollectionView()
         super.init(nibName: nil, bundle: nil)
-        
-        fetchAllFriends()
     }
     
     @available(*, unavailable)
@@ -103,6 +102,12 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fetchAllFriends()
     }
     
     // MARK: - Methods
@@ -230,8 +235,9 @@ final class ProfileViewController: UIViewController {
         table.separatorStyle = Constants.Table.separatorStyle
         table.layer.masksToBounds = true
         table.alwaysBounceVertical = true
-        table.register(ProfileFriendCell.self, forCellReuseIdentifier: ProfileFriendCell.reuseId)
-        table.register(ProfileAddFriendCell.self, forCellReuseIdentifier: ProfileAddFriendCell.reuseId)
+        table.register(FriendCell.self, forCellReuseIdentifier: FriendCell.reuseId)
+        table.register(AddFriendCell.self, forCellReuseIdentifier: AddFriendCell.reuseId)
+        table.register(ShimmerFriendCell.self, forCellReuseIdentifier: ShimmerFriendCell.reuseId)
         
         table.pinCenterX(to: wrap.centerXAnchor)
         table.pinLeft(to: wrap.leadingAnchor, Constants.Table.leadingIndent)
@@ -255,7 +261,7 @@ extension ProfileViewController: UITableViewDataSource {
             if isFriendsLoaded {
                 return interactor.friends.count + 1
             } else {
-                return 0
+                return Constants.Table.numberOfShimmerFriendCells
             }
             
         default:
@@ -270,20 +276,28 @@ extension ProfileViewController: UITableViewDataSource {
             return UITableViewCell() // Пока ничего не возвращаем
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
-            guard isFriendsLoaded == true else { return UITableViewCell() }
+            if isFriendsLoaded == false { // Пока друзья не загружены, показываем шимер
+                let cell = table.dequeueReusableCell(withIdentifier: ShimmerFriendCell.reuseId, for: indexPath)
+                guard let shimmerFriendCell = cell as? ShimmerFriendCell else { return cell }
+                shimmerFriendCell.selectionStyle = .none
+                
+                shimmerFriendCell.startShimmer()
+                
+                return shimmerFriendCell
+            }
             
             switch indexPath.row {
                 
             case 0: // ProfileAddFriendCell
-                let cell = table.dequeueReusableCell(withIdentifier: ProfileAddFriendCell.reuseId, for: indexPath)
-                guard let profileAddFriendCell = cell as? ProfileAddFriendCell else { return cell }
+                let cell = table.dequeueReusableCell(withIdentifier: AddFriendCell.reuseId, for: indexPath)
+                guard let profileAddFriendCell = cell as? AddFriendCell else { return cell }
                 profileAddFriendCell.selectionStyle = .none
                 
                 return profileAddFriendCell
                 
             default: // ProfileFriendCell
-                let cell = table.dequeueReusableCell(withIdentifier: ProfileFriendCell.reuseId, for: indexPath)
-                guard let profileFriendCell = cell as? ProfileFriendCell else { return cell }
+                let cell = table.dequeueReusableCell(withIdentifier: FriendCell.reuseId, for: indexPath)
+                guard let profileFriendCell = cell as? FriendCell else { return cell }
                 profileFriendCell.selectionStyle = .none
                 
                 profileFriendCell.delegate = self
@@ -328,7 +342,7 @@ extension ProfileViewController: UITableViewDataSource {
 
 // MARK: - ProfileCellDelegate
 extension ProfileViewController: ProfileCellDelegate {
-    func profileCellDidTriggerDelete(_ cell: ProfileFriendCell) {
+    func profileCellDidTriggerDelete(_ cell: FriendCell) {
         if let indexPath = table.indexPath(for: cell) {
             var friendsCopy = interactor.friends
             

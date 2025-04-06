@@ -129,7 +129,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
     
     // MARK: - Properties
     private var interactor: RegistrationEmailCodeBusinessLogic
-    private var correctCode: String = "5252"
+    private var correctCode: String?
     private var email: String
     private var isErrorState: Bool = false // сигнализирует об ошибке ввода
     private var resendTimer: Timer?
@@ -140,6 +140,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
         self.interactor = interactor
         self.email = email
         super.init(nibName: nil, bundle: nil)
+        interactor.sendEmailMessage(RegistrationEmailCodeModels.SendEmailMessage.Request(email: email))
     }
     
     @available(*, unavailable)
@@ -153,6 +154,14 @@ final class RegistrationEmailCodeViewController: UIViewController {
         configureUI()
         configureCloseKeyboardGesture()
         startResendTimer() // Запускаем таймер на повторную отправку кода
+    }
+    
+    // MARK: - Methods
+    func updateVerificationCode(_ viewModel: RegistrationEmailCodeModels.SendEmailMessage.ViewModel) {
+        correctCode = viewModel.code
+        if let correctCode {
+            print(correctCode)
+        }
     }
     
     // MARK: - Private Methods
@@ -468,7 +477,7 @@ final class RegistrationEmailCodeViewController: UIViewController {
     // Обработка нажатия на resendLabel
     @objc private func resendLabelTapped() {
         if resendTimer == nil {
-            print("code was sent")
+            interactor.sendEmailMessage(RegistrationEmailCodeModels.SendEmailMessage.Request(email: email))
             startResendTimer()
         }
     }

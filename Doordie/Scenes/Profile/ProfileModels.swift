@@ -34,11 +34,6 @@ enum ProfileModels {
         }
     }
     
-    struct FriendUser: Decodable {
-        var email: String?
-        var name: String?
-    }
-    
     struct GetFriendsResponse: Decodable {
         var friends: [FriendUser]?
         var detail: String?

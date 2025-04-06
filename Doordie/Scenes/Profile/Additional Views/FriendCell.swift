@@ -8,10 +8,10 @@
 import UIKit
 
 protocol ProfileCellDelegate: AnyObject {
-    func profileCellDidTriggerDelete(_ cell: ProfileFriendCell)
+    func profileCellDidTriggerDelete(_ cell: FriendCell)
 }
 
-final class ProfileFriendCell: UITableViewCell {
+final class FriendCell: UITableViewCell {
     // MARK: - Constants
     private enum Constants {
         enum Cell {
@@ -65,7 +65,7 @@ final class ProfileFriendCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "ProfileFriendCell"
+    static let reuseId: String = "FriendCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()

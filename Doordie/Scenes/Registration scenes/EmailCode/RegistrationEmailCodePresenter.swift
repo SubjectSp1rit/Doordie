@@ -17,4 +17,8 @@ final class RegistrationEmailCodePresenter: RegistrationEmailCodePresentationLog
         registrationNameVC.modalPresentationStyle = .fullScreen
         view?.navigationController?.pushViewController(registrationNameVC, animated: true)
     }
+    
+    func presentCode(_ response: RegistrationEmailCodeModels.SendEmailMessage.Response) {
+        view?.updateVerificationCode(RegistrationEmailCodeModels.SendEmailMessage.ViewModel(code: response.code))
+    }
 }

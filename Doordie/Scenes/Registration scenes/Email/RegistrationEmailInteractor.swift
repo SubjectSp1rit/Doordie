@@ -9,6 +9,13 @@ import UIKit
 
 final class RegistrationEmailInteractor: RegistrationEmailBusinessLogic {
     // MARK: - Constants
+    private enum Constants {
+        enum EmailMessage {
+            static let subject = "Код подтверждения для Doordie"
+            static let message = "Ваш код подтверждения: "
+        }
+    }
+    
     private let presenter: RegistrationEmailPresentationLogic
     
     // MARK: - Lifecycle

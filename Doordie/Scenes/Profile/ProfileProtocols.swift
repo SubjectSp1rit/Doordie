@@ -6,7 +6,7 @@
 //
 
 protocol FriendsStorage {
-    var friends: [ProfileModels.FriendUser] { get set }
+    var friends: [FriendUser] { get set }
 }
 
 protocol ProfileBusinessLogic {

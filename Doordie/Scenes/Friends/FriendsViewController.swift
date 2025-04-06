@@ -22,17 +22,28 @@ final class FriendsViewController: UIViewController {
             static let fontSize: CGFloat = 18
             static let fontWeight: UIFont.Weight = .semibold
         }
+        
+        enum FriendTable {
+            static let bgColor: UIColor = .clear
+            static let separatorStyle: UITableViewCell.SeparatorStyle = .none
+            static let numberOfSections: Int = 1
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 12
+            static let numberOfShimmerFriendCells: Int = 10
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let navBarCenteredTitle: UILabel = UILabel()
+    private let friendTable: UITableView = UITableView()
     
     // MARK: - Variables
-    private var interactor: FriendsBusinessLogic
+    private var interactor: (FriendsBusinessLogic & FriendsStorage)
+    private var isFriendsLoaded: Bool = false
     
     // MARK: - Lifecycle
-    init(interactor: FriendsBusinessLogic) {
+    init(interactor: (FriendsBusinessLogic & FriendsStorage)) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
     }
@@ -47,10 +58,31 @@ final class FriendsViewController: UIViewController {
         configureUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fetchAllFriends()
+    }
+    
+    // MARK: - Methods
+    func displayFetchedFriends(_ viewModel: FriendsModels.FetchAllFriends.ViewModel) {
+        isFriendsLoaded = true
+        DispatchQueue.main.async {
+            self.friendTable.reloadData()
+        }
+    }
+    
     // MARK: - Private Methods
+    private func fetchAllFriends() {
+        isFriendsLoaded = false
+        friendTable.reloadData()
+        interactor.fetchAllFriends(FriendsModels.FetchAllFriends.Request())
+    }
+    
     private func configureUI() {
         configureBackground()
         configureNavBar()
+        configureFriendTable()
     }
     
     private func configureBackground() {
@@ -74,5 +106,109 @@ final class FriendsViewController: UIViewController {
         navBarCenteredTitle.textColor = Constants.NavBarCenteredTitle.color
         
         navigationItem.titleView = navBarCenteredTitle
+    }
+    
+    private func configureFriendTable() {
+        view.addSubview(friendTable)
+        
+        friendTable.backgroundColor = Constants.FriendTable.bgColor
+        friendTable.delegate = self
+        friendTable.dataSource = self
+        friendTable.separatorStyle = Constants.FriendTable.separatorStyle
+        friendTable.layer.masksToBounds = true
+        friendTable.alwaysBounceVertical = true
+        friendTable.register(FriendCell.self, forCellReuseIdentifier: FriendCell.reuseId)
+        friendTable.register(AddFriendCell.self, forCellReuseIdentifier: AddFriendCell.reuseId)
+        friendTable.register(ShimmerFriendCell.self, forCellReuseIdentifier: ShimmerFriendCell.reuseId)
+        
+        friendTable.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
+        friendTable.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.FriendTable.leadingIndent)
+        friendTable.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.FriendTable.topIndent)
+        friendTable.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor)
+    }
+}
+
+// MARK: - UITableViewDataSource
+extension FriendsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFriendsLoaded == false {
+            return Constants.FriendTable.numberOfShimmerFriendCells
+        }
+        return interactor.friends.count + 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if isFriendsLoaded == false { // Пока друзья не загрузилиь - показываем шиммер
+            let cell = friendTable.dequeueReusableCell(withIdentifier: ShimmerFriendCell.reuseId, for: indexPath)
+            guard let shimmerFriendCell = cell as? ShimmerFriendCell else { return cell }
+            shimmerFriendCell.selectionStyle = .none
+            
+            shimmerFriendCell.startShimmer()
+            
+            return shimmerFriendCell
+        }
+        
+        switch indexPath.row {
+            
+        case 0: // ProfileAddFriendCell
+            let cell = friendTable.dequeueReusableCell(withIdentifier: AddFriendCell.reuseId, for: indexPath)
+            guard let profileAddFriendCell = cell as? AddFriendCell else { return cell }
+            profileAddFriendCell.selectionStyle = .none
+            
+            return profileAddFriendCell
+            
+        default: // Friend Cell
+            let cell = friendTable.dequeueReusableCell(withIdentifier: FriendCell.reuseId, for: indexPath)
+            guard let profileFriendCell = cell as? FriendCell else { return cell }
+            profileFriendCell.selectionStyle = .none
+            
+            profileFriendCell.delegate = self
+            
+            let friendData = interactor.friends[indexPath.row - 1]
+            profileFriendCell.configure(with: friendData)
+            
+            return profileFriendCell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard isFriendsLoaded == true else { return }
+    
+        switch indexPath.row {
+                
+        case 0: // ProfileAddFriendCell
+            interactor.routeToAddFriendScreen(FriendsModels.RouteToAddFriendScreen.Request())
+            return
+            
+        default: // ProfileFriendCell
+            let friend = interactor.friends[indexPath.row - 1]
+            let email = friend.email ?? ""
+            let name = friend.name ?? "Unkown name"
+            interactor.routeToFriendProfileScreen(FriendsModels.RouteToFriendProfileScreen.Request(email: email, name: name))
+            return
+        }
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension FriendsViewController: UITableViewDelegate { }
+
+// MARK: - ProfileCellDelegate
+extension FriendsViewController: ProfileCellDelegate {
+    func profileCellDidTriggerDelete(_ cell: FriendCell) {
+        if let indexPath = friendTable.indexPath(for: cell) {
+            var friendsCopy = interactor.friends
+            
+            // отправляем запрос в бек на удаление друга
+            guard let friendEmail = interactor.friends[indexPath.row - 1].email else { return }
+            interactor.deleteFriend(FriendsModels.DeleteFriend.Request(email: friendEmail))
+            
+            friendsCopy.remove(at: indexPath.row - 1)
+            interactor.friends = friendsCopy
+            
+            self.friendTable.performBatchUpdates({
+                self.friendTable.deleteRows(at: [indexPath], with: .left)
+            }, completion: nil)
+        }
     }
 }

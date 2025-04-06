@@ -86,8 +86,6 @@ final class HomeViewController: UIViewController {
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
-        
-        fetchAllHabits()
     }
     
     @available(*, unavailable)
@@ -103,6 +101,7 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        fetchAllHabits()
         updateNavBarTransparency()
         table.reloadData() // Обновляем таблицу, чтобы мерцающие ячейки снова запустили анимацию
     }

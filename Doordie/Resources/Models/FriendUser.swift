@@ -5,4 +5,7 @@
 //  Created by Arseniy on 05.04.2025.
 //
 
-import Foundation
+struct FriendUser: Decodable {
+    var email: String?
+    var name: String?
+}

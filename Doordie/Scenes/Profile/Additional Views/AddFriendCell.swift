@@ -53,7 +53,7 @@ final class AddFriendCell: UITableViewCell {
         }
     }
     
-    static let reuseId: String = "ProfileAddFriendCell"
+    static let reuseId: String = "AddFriendCell"
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()

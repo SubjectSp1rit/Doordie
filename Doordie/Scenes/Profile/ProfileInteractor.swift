@@ -12,7 +12,7 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
     private let presenter: ProfilePresentationLogic
     
     // MARK: - Properties
-    internal var friends: [ProfileModels.FriendUser] = [] {
+    internal var friends: [FriendUser] = [] {
         didSet {
             presenter.presentAllFriends(ProfileModels.FetchAllFriends.Response())
         }
