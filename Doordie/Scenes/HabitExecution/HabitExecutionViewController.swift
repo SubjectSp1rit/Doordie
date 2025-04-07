@@ -44,6 +44,11 @@ final class HabitExecutionViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
             static let bottomIndent: CGFloat = 18
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.85
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum ButtonsStack {
@@ -61,6 +66,11 @@ final class HabitExecutionViewController: UIViewController {
             static let tintColor: UIColor = .white
             static let cornerRadius: CGFloat = 20
             static let height: CGFloat = 70
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum ResumeButton {
@@ -69,6 +79,11 @@ final class HabitExecutionViewController: UIViewController {
             static let tintColor: UIColor = UIColor(hex: "3A50C2")
             static let cornerRadius: CGFloat = 20
             static let height: CGFloat = 70
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum RemainTimeValue {
@@ -270,6 +285,11 @@ final class HabitExecutionViewController: UIViewController {
         pauseButton.tintColor = Constants.PauseButton.tintColor
         pauseButton.backgroundColor = Constants.PauseButton.bgColor
         pauseButton.layer.cornerRadius = Constants.PauseButton.cornerRadius
+        pauseButton.layer.shadowColor = Constants.PauseButton.shadowColor
+        pauseButton.layer.shadowOpacity = Constants.PauseButton.shadowOpacity
+        pauseButton.layer.shadowOffset = CGSize(width: Constants.PauseButton.shadowOffsetX, height: Constants.PauseButton.shadowOffsetY)
+        pauseButton.layer.shadowRadius = Constants.PauseButton.shadowRadius
+        pauseButton.layer.masksToBounds = false
         pauseButton.setHeight(Constants.PauseButton.height)
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
     }
@@ -279,6 +299,11 @@ final class HabitExecutionViewController: UIViewController {
         resumeButton.tintColor = Constants.ResumeButton.tintColor
         resumeButton.backgroundColor = Constants.ResumeButton.bgColor
         resumeButton.layer.cornerRadius = Constants.ResumeButton.cornerRadius
+        resumeButton.layer.shadowColor = Constants.ResumeButton.shadowColor
+        resumeButton.layer.shadowOpacity = Constants.ResumeButton.shadowOpacity
+        resumeButton.layer.shadowOffset = CGSize(width: Constants.ResumeButton.shadowOffsetX, height: Constants.ResumeButton.shadowOffsetY)
+        resumeButton.layer.shadowRadius = Constants.ResumeButton.shadowRadius
+        resumeButton.layer.masksToBounds = false
         resumeButton.setHeight(Constants.ResumeButton.height)
         resumeButton.addTarget(self, action: #selector(resumeButtonTapped), for: .touchUpInside)
     }
@@ -306,6 +331,11 @@ final class HabitExecutionViewController: UIViewController {
         
         coloredWrap.backgroundColor = Constants.ColoredWrap.bgColor
         coloredWrap.layer.cornerRadius = Constants.ColoredWrap.cornerRadius
+        coloredWrap.layer.masksToBounds = false
+        coloredWrap.layer.shadowColor = Constants.ColoredWrap.shadowColor
+        coloredWrap.layer.shadowOpacity = Constants.ColoredWrap.shadowOpacity
+        coloredWrap.layer.shadowOffset = CGSize(width: Constants.ColoredWrap.shadowOffsetX, height: Constants.ColoredWrap.shadowOffsetY)
+        coloredWrap.layer.shadowRadius = Constants.ColoredWrap.shadowRadius
         
         coloredWrap.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         coloredWrap.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.ColoredWrap.leadingIndent)

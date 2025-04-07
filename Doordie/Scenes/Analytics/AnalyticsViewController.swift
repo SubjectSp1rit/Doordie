@@ -139,7 +139,7 @@ final class AnalyticsViewController: UIViewController {
         table.delegate = self
         table.dataSource = self
         table.separatorStyle = Constants.Table.separatorStyle
-        table.layer.masksToBounds = true
+        table.layer.masksToBounds = false
         table.refreshControl = refreshControl
         table.alwaysBounceVertical = true
         table.register(HabitAnalyticsCell.self, forCellReuseIdentifier: HabitAnalyticsCell.reuseId)

@@ -24,6 +24,11 @@ final class FriendProfileViewController: UIViewController {
             static let cornerRadius: CGFloat = 20
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 100
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.85
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum ProfileImage {
@@ -104,6 +109,11 @@ final class FriendProfileViewController: UIViewController {
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
         wrap.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        wrap.layer.shadowColor = Constants.Wrap.shadowColor
+        wrap.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        wrap.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        wrap.layer.shadowRadius = Constants.Wrap.shadowRadius
+        wrap.layer.masksToBounds = false
         
         wrap.pinCenterX(to: view.centerXAnchor)
         wrap.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.Wrap.leadingIndent)

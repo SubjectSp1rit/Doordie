@@ -21,12 +21,22 @@ final class HabitAnalyticsCell: UITableViewCell {
         enum Wrap {
             static let height: CGFloat = 140
             static let bottomIndent: CGFloat = 10
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum ColoredWrap {
             static let side: CGFloat = 50
             static let topIndent: CGFloat = 8
             static let leadingIndent: CGFloat = 8
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum IconImageView {
@@ -53,6 +63,11 @@ final class HabitAnalyticsCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = UIColor(hex: "3A50C2").withAlphaComponent(0.6)
         view.layer.cornerRadius = 14
+        view.layer.shadowColor = Constants.Wrap.shadowColor
+        view.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        view.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        view.layer.shadowRadius = Constants.Wrap.shadowRadius
+        view.layer.masksToBounds = false
         return view
     }()
     
@@ -60,7 +75,11 @@ final class HabitAnalyticsCell: UITableViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 14
-        view.layer.masksToBounds = true
+        view.layer.shadowColor = Constants.ColoredWrap.shadowColor
+        view.layer.shadowOpacity = Constants.ColoredWrap.shadowOpacity
+        view.layer.shadowOffset = CGSize(width: Constants.ColoredWrap.shadowOffsetX, height: Constants.ColoredWrap.shadowOffsetY)
+        view.layer.shadowRadius = Constants.ColoredWrap.shadowRadius
+        view.layer.masksToBounds = false
         return view
     }()
     
@@ -151,6 +170,7 @@ final class HabitAnalyticsCell: UITableViewCell {
     private func configureUI() {
         backgroundColor = Constants.Cell.bgColor
         contentView.backgroundColor = Constants.ContentView.bgColor
+        contentView.layer.masksToBounds = false
         
         configureViews()
         configureConstraints()

@@ -25,21 +25,31 @@ final class AddHabitCell: UITableViewCell {
             static let leadingIndent: CGFloat = 18
             static let trailingIndent: CGFloat = 18
             static let bottomIndent: CGFloat = 10
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
-        enum HabitImageWrap {
-            static let height: CGFloat = 46
-            static let width: CGFloat = 46
-            static let cornerRadius: CGFloat = 23
-            static let bgColor: UIColor = UIColor(hex: "6475CC")
-            static let leadingIndent: CGFloat = 14
-        }
-        
-        enum HabitImage {
+        enum AddImage {
             static let imageName: String = "plus"
             static let tintColor: UIColor = .white
-            static let height: CGFloat = 24
-            static let width: CGFloat = 24
+            static let contentMode: UIView.ContentMode = .scaleAspectFill
+            static let imageSide: CGFloat = 25
+        }
+        
+        enum AddHabitLabel {
+            static let text: String = "Add first habit..."
+            static let textAlignment: NSTextAlignment = .left
+            static let textColor: UIColor = .white
+            static let numberOfLines: Int = 1
+        }
+        
+        enum Stack {
+            static let axis: NSLayoutConstraint.Axis = .horizontal
+            static let spacing: CGFloat = 12
+            static let alignment: UIStackView.Alignment = .center
         }
     }
     
@@ -47,8 +57,9 @@ final class AddHabitCell: UITableViewCell {
     
     // MARK: - UI Components
     private let wrap: UIView = UIView()
-    private let habitImageWrap: UIView = UIView()
-    private let habitImage: UIImageView = UIImageView()
+    private let addImage: UIImageView = UIImageView()
+    private let addHabitLabel: UILabel = UILabel()
+    private let stack: UIStackView = UIStackView()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -69,8 +80,9 @@ final class AddHabitCell: UITableViewCell {
         contentView.layer.masksToBounds = false
         
         configureWrap()
-        configureHabitImageWrap()
-        configureHabitImage()
+        configureAddImage()
+        configureAddHabitLabel()
+        configureStack()
     }
     
     private func configureWrap() {
@@ -79,6 +91,13 @@ final class AddHabitCell: UITableViewCell {
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
         
+        // Тень
+        wrap.layer.shadowColor = Constants.Wrap.shadowColor
+        wrap.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        wrap.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        wrap.layer.shadowRadius = Constants.Wrap.shadowRadius
+        wrap.layer.masksToBounds = false
+        
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
         wrap.pinBottom(to: contentView.bottomAnchor, Constants.Wrap.bottomIndent)
@@ -86,31 +105,39 @@ final class AddHabitCell: UITableViewCell {
         wrap.pinRight(to: contentView.trailingAnchor, Constants.Wrap.trailingIndent)
     }
     
-    private func configureHabitImageWrap() {
-        wrap.addSubview(habitImageWrap)
+    private func configureAddImage() {
+        wrap.addSubview(addImage)
         
-        habitImageWrap.backgroundColor = Constants.HabitImageWrap.bgColor
-        habitImageWrap.layer.cornerRadius = Constants.HabitImageWrap.cornerRadius
+        addImage.image = UIImage(systemName: Constants.AddImage.imageName)
+        addImage.tintColor = Constants.AddImage.tintColor
+        addImage.contentMode = Constants.AddImage.contentMode
+        addImage.clipsToBounds = true
         
-        habitImageWrap.setHeight(Constants.HabitImageWrap.height)
-        habitImageWrap.setWidth(Constants.HabitImageWrap.width)
-        
-        habitImageWrap.pinCenterX(to: wrap.centerXAnchor)
-        habitImageWrap.pinCenterY(to: wrap.centerYAnchor)
+        addImage.setWidth(Constants.AddImage.imageSide)
+        addImage.setHeight(Constants.AddImage.imageSide)
     }
     
-    private func configureHabitImage() {
-        habitImageWrap.addSubview(habitImage)
+    private func configureAddHabitLabel() {
+        wrap.addSubview(addHabitLabel)
         
-        habitImage.tintColor = Constants.HabitImage.tintColor
+        addHabitLabel.text = Constants.AddHabitLabel.text
+        addHabitLabel.textColor = Constants.AddHabitLabel.textColor
+        addHabitLabel.textAlignment = Constants.AddHabitLabel.textAlignment
+        addHabitLabel.numberOfLines = Constants.AddHabitLabel.numberOfLines
+    }
+    
+    private func configureStack() {
+        wrap.addSubview(stack)
         
-        habitImage.contentMode = .scaleAspectFill
-        habitImage.image = UIImage(systemName: Constants.HabitImage.imageName)
-        habitImage.setHeight(Constants.HabitImage.height)
-        habitImage.setWidth(Constants.HabitImage.width)
+        stack.axis =  Constants.Stack.axis
+        stack.spacing = Constants.Stack.spacing
+        stack.alignment = Constants.Stack.alignment
         
-        habitImage.pinCenterX(to: habitImageWrap.centerXAnchor)
-        habitImage.pinCenterY(to: habitImageWrap.centerYAnchor)
+        stack.addArrangedSubview(addImage)
+        stack.addArrangedSubview(addHabitLabel)
+        
+        stack.pinCenterY(to: wrap.centerYAnchor)
+        stack.pinCenterX(to: wrap.centerXAnchor)
     }
 }
 

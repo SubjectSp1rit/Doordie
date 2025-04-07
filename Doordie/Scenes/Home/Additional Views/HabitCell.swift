@@ -25,6 +25,11 @@ final class HabitCell: UITableViewCell {
             static let leadingIndent: CGFloat = 18
             static let trailingIndent: CGFloat = 18
             static let bottomIndent: CGFloat = 10
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum CheckmarkButton {
@@ -37,6 +42,11 @@ final class HabitCell: UITableViewCell {
             static let leadingIndent: CGFloat = 12
             static let imageHeight: CGFloat = 14
             static let imageWidth: CGFloat = 14
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum HabitImageWrap {
@@ -45,6 +55,11 @@ final class HabitCell: UITableViewCell {
             static let cornerRadius: CGFloat = 14
             static let bgColor: UIColor = UIColor(hex: "6475CC")
             static let leadingIndent: CGFloat = 14
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum HabitImage {
@@ -153,6 +168,12 @@ final class HabitCell: UITableViewCell {
         wrap.backgroundColor = Constants.Wrap.bgColor
         wrap.layer.cornerRadius = Constants.Wrap.cornerRadius
         
+        wrap.layer.shadowColor = Constants.Wrap.shadowColor
+        wrap.layer.shadowOpacity = Constants.Wrap.shadowOpacity
+        wrap.layer.shadowOffset = CGSize(width: Constants.Wrap.shadowOffsetX, height: Constants.Wrap.shadowOffsetY)
+        wrap.layer.shadowRadius = Constants.Wrap.shadowRadius
+        wrap.layer.masksToBounds = false
+        
         wrap.setHeight(Constants.Wrap.height)
         wrap.pinTop(to: contentView.topAnchor)
         wrap.pinBottom(to: contentView.bottomAnchor, Constants.Wrap.bottomIndent)
@@ -167,6 +188,11 @@ final class HabitCell: UITableViewCell {
         checkmarkButton.layer.cornerRadius = Constants.CheckmarkButton.cornerRadius
         checkmarkButton.setImage(nil, for: .normal)
         checkmarkButton.addTarget(self, action: #selector(checkmarkButtonPressed), for: .touchUpInside)
+        checkmarkButton.layer.shadowColor = Constants.CheckmarkButton.shadowColor
+        checkmarkButton.layer.shadowOpacity = Constants.CheckmarkButton.shadowOpacity
+        checkmarkButton.layer.shadowOffset = CGSize(width: Constants.CheckmarkButton.shadowOffsetX, height: Constants.CheckmarkButton.shadowOffsetY)
+        checkmarkButton.layer.shadowRadius = Constants.CheckmarkButton.shadowRadius
+        checkmarkButton.layer.masksToBounds = false
         
         checkmarkButton.setHeight(Constants.CheckmarkButton.height)
         checkmarkButton.setWidth(Constants.CheckmarkButton.width)
@@ -180,6 +206,11 @@ final class HabitCell: UITableViewCell {
         
         habitImageWrap.backgroundColor = Constants.HabitImageWrap.bgColor
         habitImageWrap.layer.cornerRadius = Constants.HabitImageWrap.cornerRadius
+        habitImageWrap.layer.shadowColor = Constants.HabitImageWrap.shadowColor
+        habitImageWrap.layer.shadowOpacity = Constants.HabitImageWrap.shadowOpacity
+        habitImageWrap.layer.shadowOffset = CGSize(width: Constants.HabitImageWrap.shadowOffsetX, height: Constants.HabitImageWrap.shadowOffsetY)
+        habitImageWrap.layer.shadowRadius = Constants.HabitImageWrap.shadowRadius
+        habitImageWrap.layer.masksToBounds = false
         
         habitImageWrap.setHeight(Constants.HabitImageWrap.height)
         habitImageWrap.setWidth(Constants.HabitImageWrap.width)

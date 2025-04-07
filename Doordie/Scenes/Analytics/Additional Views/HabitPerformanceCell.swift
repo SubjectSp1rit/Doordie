@@ -29,6 +29,11 @@ final class HabitPerformanceCell: UITableViewCell {
             static let bgColor: UIColor = UIColor(hex: "3A50C2").withAlphaComponent(0.6)
             static let cornerRadius: CGFloat = 20
             static let topIndent: CGFloat = 30
+            static let shadowColor: CGColor = UIColor.black.cgColor
+            static let shadowOpacity: Float = 0.5
+            static let shadowOffsetX: CGFloat = 0
+            static let shadowOffsetY: CGFloat = 4
+            static let shadowRadius: CGFloat = 8
         }
         
         enum DailyPerformanceLabel {
@@ -69,6 +74,11 @@ final class HabitPerformanceCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = Constants.ColoredWrap.bgColor
         view.layer.cornerRadius = Constants.ColoredWrap.cornerRadius
+        view.layer.shadowColor = Constants.ColoredWrap.shadowColor
+        view.layer.shadowOpacity = Constants.ColoredWrap.shadowOpacity
+        view.layer.shadowOffset = CGSize(width: Constants.ColoredWrap.shadowOffsetX, height: Constants.ColoredWrap.shadowOffsetY)
+        view.layer.shadowRadius = Constants.ColoredWrap.shadowRadius
+        view.layer.masksToBounds = false
         return view
     }()
     
@@ -100,6 +110,7 @@ final class HabitPerformanceCell: UITableViewCell {
         collection.backgroundColor = .clear
         collection.showsHorizontalScrollIndicator = false
         collection.alwaysBounceHorizontal = true
+        collection.layer.masksToBounds = false
         
         collection.register(AnalyticsCollectionViewCell.self, forCellWithReuseIdentifier: AnalyticsCollectionViewCell.reuseId)
         
@@ -177,6 +188,7 @@ final class HabitPerformanceCell: UITableViewCell {
     private func configureUI() {
         backgroundColor = Constants.Cell.bgColor
         contentView.backgroundColor = Constants.ContentView.bgColor
+        contentView.layer.masksToBounds = false
         
         configureSubviews()
         configureConstraints()
