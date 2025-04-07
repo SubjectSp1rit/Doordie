@@ -81,7 +81,12 @@ final class AnalyticsCollectionViewCell: UICollectionViewCell {
     func configure(dayText: String, count: Int, height: CGFloat) {
         dayLabel.text = dayText
         quantityLabel.text = "\(count)"
-        rectangleHeightConstraint.constant = height
+        
+        if height == 0 {
+            rectangleHeightConstraint.constant = 10
+        } else {
+            rectangleHeightConstraint.constant = height
+        }
         layoutIfNeeded()
     }
     
