@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController {
         enum Table {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
-            static let numberOfSections: Int = 4
+            static let numberOfSections: Int = 6
             static let numberOfRowsInSection: Int = 1
             static let indentBetweenSections: CGFloat = 20
             static let numberOfShimmerCells: Int = 10
@@ -27,12 +27,16 @@ final class HomeViewController: UIViewController {
             static let headerCellHeight: CGFloat = 60
             static let horizontalDateCollectionCellHeight: CGFloat = 100
             static let dayPartSelectorCellHeight: CGFloat = 40
+            static let homeMotivationCellHeight: CGFloat = 100
+            static let yourHabitsCellHeight: CGFloat = 40
             static let habitCellHeight: CGFloat = 80
             
             static let headerCellSectionIndex: Int = 0
             static let horizontalDateCollectionCellSectionIndex: Int = 1
             static let dayPartSelectorCellSectionIndex: Int = 2
-            static let habitCellSectionIndex: Int = 3
+            static let homeMotivationCellSectionIndex: Int = 3
+            static let yourHabitsCellSectionIndex: Int = 4
+            static let habitCellSectionIndex: Int = 5
         }
         
         enum RefreshControl {
@@ -78,9 +82,13 @@ final class HomeViewController: UIViewController {
     private var blurredNavBarView: UIVisualEffectView?
     private var navBarRendered: Bool = false
     private var isHabitsLoaded: Bool = false
+    private var shouldShowMotivationCell: Bool {
+        return isHabitsLoaded && isMotivationsCellVisible
+    }
     private var selectedDayPart: String = "All day"
     private var selectedDay: Date = Date()
     private var previousDayPartIndex: Int = 0 // "All day"
+    private var isMotivationsCellVisible: Bool = true
     
     // MARK: - Lifecycle
     init(interactor: (HomeBusinessLogic & HabitsStorage)) {
@@ -262,6 +270,8 @@ final class HomeViewController: UIViewController {
         table.register(HabitCell.self, forCellReuseIdentifier: HabitCell.reuseId)
         table.register(ShimmerHabitCell.self, forCellReuseIdentifier: ShimmerHabitCell.reuseId)
         table.register(AddHabitCell.self, forCellReuseIdentifier: AddHabitCell.reuseId)
+        table.register(HomeMotivationsCell.self, forCellReuseIdentifier: HomeMotivationsCell.reuseId)
+        table.register(YourHabitsCell.self, forCellReuseIdentifier: YourHabitsCell.reuseId)
         table.layer.masksToBounds = false
         table.alwaysBounceVertical = true
         table.refreshControl = refreshControl
@@ -330,6 +340,10 @@ extension HomeViewController: UITableViewDelegate {
             
         case Constants.Table.dayPartSelectorCellSectionIndex: return Constants.Table.dayPartSelectorCellHeight
             
+        case Constants.Table.homeMotivationCellSectionIndex: return Constants.Table.homeMotivationCellHeight
+            
+        case Constants.Table.yourHabitsCellSectionIndex: return Constants.Table.yourHabitsCellHeight
+            
         case Constants.Table.habitCellSectionIndex: return Constants.Table.habitCellHeight
             
         default: return UITableView.automaticDimension
@@ -355,13 +369,6 @@ extension HomeViewController: UITableViewDelegate {
         }
         return nil
     }
-    
-    // Метод для скролла к текущей дате при открытии экрана
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if let dateCell = cell as? HorizontalDateCollectionCell {
-//            dateCell.scrollToCurrentDate(animated: false)
-//        }
-//    }
 }
 
 // MARK: - UITableViewDataSource
@@ -371,7 +378,9 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == Constants.Table.habitCellSectionIndex {
+        switch section {
+            
+        case Constants.Table.habitCellSectionIndex:
             if isHabitsLoaded == false {
                 return Constants.Table.numberOfShimmerCells
             } else if interactor.habits.isEmpty {
@@ -380,11 +389,27 @@ extension HomeViewController: UITableViewDataSource {
                 let filteredHabits = selectedDayPart == "All day" ? interactor.habits : interactor.habits.filter { $0.day_part == selectedDayPart }
                 return filteredHabits.count
             }
+            
+        case Constants.Table.homeMotivationCellSectionIndex:
+            if interactor.habits.isEmpty {
+                return 0
+            }
+            return shouldShowMotivationCell ? 1 : 0
+            
+        default:
+            return Constants.Table.numberOfRowsInSection
         }
-        return Constants.Table.numberOfRowsInSection
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == Constants.Table.yourHabitsCellSectionIndex { // Убираем отступ после секции YourHabits
+            return 0
+        }
+        
+        if isMotivationsCellVisible == false  && section == Constants.Table.homeMotivationCellSectionIndex { // Если ячейка с мотивацией скрыта, то убираем отступ между секциями
+            return 0
+        }
+        
         return Constants.Table.indentBetweenSections
     }
     
@@ -451,6 +476,35 @@ extension HomeViewController: UITableViewDataSource {
             }
             
             return dayPartSelectorCell
+            
+        // HomeMotivationsCell
+        case Constants.Table.homeMotivationCellSectionIndex:
+            let cell = table.dequeueReusableCell(withIdentifier: HomeMotivationsCell.reuseId, for: indexPath)
+            guard let homeMotivationsCell = cell as? HomeMotivationsCell else { return cell }
+            homeMotivationsCell.selectionStyle = .none
+            
+            let habitCount = interactor.habits.count
+            let completedHabitsCount = interactor.habits.filter { $0.current_quantity == $0.quantity }.count
+            let percentage = habitCount > 0 ? (completedHabitsCount * 100 / habitCount) : 0
+            let header = MotivationsManager.shared.motivationalPhrase(for: percentage)
+            let descriptionText = "\(completedHabitsCount) of \(habitCount) completed"
+            
+            homeMotivationsCell.configure(percentage: "\(percentage)%", header: header, description: descriptionText)
+            
+            homeMotivationsCell.onCloseButtonTapped = { [weak self] in
+                self?.isMotivationsCellVisible = false
+                self?.table.reloadData()
+            }
+            
+            return homeMotivationsCell
+            
+        // YourHabitsCell
+        case Constants.Table.yourHabitsCellSectionIndex:
+            let cell = table.dequeueReusableCell(withIdentifier: YourHabitsCell.reuseId, for: indexPath)
+            guard let yourHabitsCell = cell as? YourHabitsCell else { return cell }
+            yourHabitsCell.selectionStyle = .none
+            
+            return yourHabitsCell
             
         // HabitCell
         case Constants.Table.habitCellSectionIndex:
