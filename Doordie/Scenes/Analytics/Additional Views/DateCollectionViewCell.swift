@@ -13,10 +13,26 @@ final class DateCollectionViewCell: UICollectionViewCell {
         enum Wrap {
             static let height: CGFloat = 60
             static let width: CGFloat = 36
+            static let bgColor: UIColor = .clear
         }
         
         enum SquareView {
+            static let bgColor: UIColor = UIColor(hex: "6475CC")
+            static let cornerRadius: CGFloat = 14
+            static let masksToBounds: Bool = true
             static let side: CGFloat = 36
+        }
+        
+        enum DayLabel {
+            static let font: UIFont = UIFont.systemFont(ofSize: 12)
+            static let textColor: UIColor = .white
+            static let textAlignment: NSTextAlignment = .center
+        }
+        
+        enum DateLabel {
+            static let font: UIFont = UIFont.systemFont(ofSize: 14)
+            static let textColor: UIColor = .white
+            static let textAlignment: NSTextAlignment = .center
         }
     }
     
@@ -25,36 +41,31 @@ final class DateCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Components
     private let wrap: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = Constants.Wrap.bgColor
         return view
     }()
     
     private let dayLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Tue"
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .white
-        label.textAlignment = .center
+        label.font = Constants.DayLabel.font
+        label.textColor = Constants.DayLabel.textColor
+        label.textAlignment = Constants.DayLabel.textAlignment
         return label
     }()
     
     private let squareView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(hex: "6475CC")
-        view.layer.cornerRadius = 14
-        view.layer.masksToBounds = true
+        view.backgroundColor = Constants.SquareView.bgColor
+        view.layer.cornerRadius = Constants.SquareView.cornerRadius
+        view.layer.masksToBounds = Constants.SquareView.masksToBounds
         return view
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "31"
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
-        label.textAlignment = .center
+        label.font = Constants.DateLabel.font
+        label.textColor = Constants.DateLabel.textColor
+        label.textAlignment = Constants.DateLabel.textAlignment
         return label
     }()
     

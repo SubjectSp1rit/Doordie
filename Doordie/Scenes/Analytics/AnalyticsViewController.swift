@@ -30,6 +30,8 @@ final class AnalyticsViewController: UIViewController {
             static let numberOfShimmerCells: Int = 5
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
+            static let habitPerformanceCellSectionIndex: Int = 0
+            static let habitAnalyticsCellSectionIndex: Int = 1
         }
         
         enum RefreshControl {
@@ -142,6 +144,7 @@ final class AnalyticsViewController: UIViewController {
         table.layer.masksToBounds = false
         table.refreshControl = refreshControl
         table.alwaysBounceVertical = true
+        table.showsVerticalScrollIndicator = false
         table.register(HabitAnalyticsCell.self, forCellReuseIdentifier: HabitAnalyticsCell.reuseId)
         table.register(ShimmerHabitAnalyticsCell.self, forCellReuseIdentifier: ShimmerHabitAnalyticsCell.reuseId)
         table.register(HabitPerformanceCell.self, forCellReuseIdentifier: HabitPerformanceCell.reuseId)
@@ -178,10 +181,10 @@ extension AnalyticsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             
-        case 0:
+        case Constants.Table.habitPerformanceCellSectionIndex:
             return Constants.Table.numberOfPerformanceCells
             
-        case 1:
+        case Constants.Table.habitAnalyticsCellSectionIndex:
             if isHabitsLoaded == false {
                 return Constants.Table.numberOfShimmerCells
             }
@@ -198,7 +201,7 @@ extension AnalyticsViewController: UITableViewDataSource {
         
         switch section {
             
-        case 0:
+        case Constants.Table.habitPerformanceCellSectionIndex:
             let cell = table.dequeueReusableCell(withIdentifier: HabitPerformanceCell.reuseId, for: indexPath)
             guard let habitPerformanceCell = cell as? HabitPerformanceCell else { return cell }
             habitPerformanceCell.selectionStyle = .none
@@ -207,7 +210,7 @@ extension AnalyticsViewController: UITableViewDataSource {
             
             return habitPerformanceCell
             
-        case 1:
+        case Constants.Table.habitAnalyticsCellSectionIndex:
             if isHabitsLoaded == false { // Если привычки не загружены - показываем шиммер
                 let cell = table.dequeueReusableCell(withIdentifier: ShimmerHabitAnalyticsCell.reuseId, for: indexPath)
                 guard let shimmerHabitAnalyticsCell = cell as? ShimmerHabitAnalyticsCell else { return cell }
