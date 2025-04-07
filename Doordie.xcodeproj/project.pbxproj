@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		AECD38C22DA4514A003B7B24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AEA828D42D1EE7B6002D934D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AEA828DB2D1EE7B6002D934D;
+			remoteInfo = Doordie;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		AEA828DC2D1EE7B6002D934D /* Doordie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doordie.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AECD38BC2DA45149003B7B24 /* DoordieUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoordieUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = Doordie;
 			sourceTree = "<group>";
 		};
+		AECD38BD2DA45149003B7B24 /* DoordieUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DoordieUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AEA828D92D1EE7B6002D934D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECD38B92DA45149003B7B24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				AEA828DE2D1EE7B6002D934D /* Doordie */,
+				AECD38BD2DA45149003B7B24 /* DoordieUITests */,
 				AEA828DD2D1EE7B6002D934D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				AEA828DC2D1EE7B6002D934D /* Doordie.app */,
+				AECD38BC2DA45149003B7B24 /* DoordieUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,29 @@
 			productReference = AEA828DC2D1EE7B6002D934D /* Doordie.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AECD38BB2DA45149003B7B24 /* DoordieUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AECD38C42DA4514A003B7B24 /* Build configuration list for PBXNativeTarget "DoordieUITests" */;
+			buildPhases = (
+				AECD38B82DA45149003B7B24 /* Sources */,
+				AECD38B92DA45149003B7B24 /* Frameworks */,
+				AECD38BA2DA45149003B7B24 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AECD38C32DA4514A003B7B24 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AECD38BD2DA45149003B7B24 /* DoordieUITests */,
+			);
+			name = DoordieUITests;
+			packageProductDependencies = (
+			);
+			productName = DoordieUITests;
+			productReference = AECD38BC2DA45149003B7B24 /* DoordieUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -90,11 +138,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					AEA828DB2D1EE7B6002D934D = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					AECD38BB2DA45149003B7B24 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = AEA828DB2D1EE7B6002D934D;
 					};
 				};
 			};
@@ -114,12 +166,20 @@
 			projectRoot = "";
 			targets = (
 				AEA828DB2D1EE7B6002D934D /* Doordie */,
+				AECD38BB2DA45149003B7B24 /* DoordieUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AEA828DA2D1EE7B6002D934D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECD38BA2DA45149003B7B24 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,7 +196,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AECD38B82DA45149003B7B24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AECD38C32DA4514A003B7B24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AEA828DB2D1EE7B6002D934D /* Doordie */;
+			targetProxy = AECD38C22DA4514A003B7B24 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AEA828F32D1EE7B7002D934D /* Debug */ = {
@@ -316,6 +391,42 @@
 			};
 			name = Release;
 		};
+		AECD38C52DA4514A003B7B24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7GVT955FJ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.hse.DoordieUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Doordie;
+			};
+			name = Debug;
+		};
+		AECD38C62DA4514A003B7B24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J7GVT955FJ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = se.hse.DoordieUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Doordie;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -333,6 +444,15 @@
 			buildConfigurations = (
 				AEA828F32D1EE7B7002D934D /* Debug */,
 				AEA828F42D1EE7B7002D934D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AECD38C42DA4514A003B7B24 /* Build configuration list for PBXNativeTarget "DoordieUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AECD38C52DA4514A003B7B24 /* Debug */,
+				AECD38C62DA4514A003B7B24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
