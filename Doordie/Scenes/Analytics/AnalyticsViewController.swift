@@ -26,6 +26,7 @@ final class AnalyticsViewController: UIViewController {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
             static let numberOfSections: Int = 2
+            static let numberOfPerformanceCells: Int = 1
             static let numberOfShimmerCells: Int = 5
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
@@ -81,9 +82,12 @@ final class AnalyticsViewController: UIViewController {
         isHabitsLoaded = true
         table.reloadData()
         table.visibleCells.forEach { cell in // Обновляем вложенную таблицу с датами
-            if let habitCell = cell as? HabitAnalyticsCell {
-                habitCell.reloadData()
-                habitCell.scrollToCenter()
+            if let habitAnalyticsCell = cell as? HabitAnalyticsCell {
+                habitAnalyticsCell.reloadData()
+                habitAnalyticsCell.scrollToCenter()
+            }
+            if let habitPerformanceCell = cell as? HabitPerformanceCell {
+                habitPerformanceCell.scrollToCenter()
             }
         }
     }
@@ -140,6 +144,7 @@ final class AnalyticsViewController: UIViewController {
         table.alwaysBounceVertical = true
         table.register(HabitAnalyticsCell.self, forCellReuseIdentifier: HabitAnalyticsCell.reuseId)
         table.register(ShimmerHabitAnalyticsCell.self, forCellReuseIdentifier: ShimmerHabitAnalyticsCell.reuseId)
+        table.register(HabitPerformanceCell.self, forCellReuseIdentifier: HabitPerformanceCell.reuseId)
         
         table.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         table.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.Table.leadingIndent)
@@ -174,7 +179,7 @@ extension AnalyticsViewController: UITableViewDataSource {
         switch section {
             
         case 0:
-            return 0
+            return Constants.Table.numberOfPerformanceCells
             
         case 1:
             if isHabitsLoaded == false {
@@ -194,7 +199,13 @@ extension AnalyticsViewController: UITableViewDataSource {
         switch section {
             
         case 0:
-            return UITableViewCell()
+            let cell = table.dequeueReusableCell(withIdentifier: HabitPerformanceCell.reuseId, for: indexPath)
+            guard let habitPerformanceCell = cell as? HabitPerformanceCell else { return cell }
+            habitPerformanceCell.selectionStyle = .none
+            
+            habitPerformanceCell.configure(with: interactor.habitsAnalytics)
+            
+            return habitPerformanceCell
             
         case 1:
             if isHabitsLoaded == false { // Если привычки не загружены - показываем шиммер
