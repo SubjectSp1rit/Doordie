@@ -26,6 +26,7 @@ final class AnalyticsViewController: UIViewController {
             static let bgColor: UIColor = .clear
             static let separatorStyle: UITableViewCell.SeparatorStyle = .none
             static let numberOfSections: Int = 2
+            static let numberOfShimmerCells: Int = 5
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
         }
@@ -64,6 +65,14 @@ final class AnalyticsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchAllHabits()
+        
+        // Необходимо для обновления анимации шиммера
+        table.visibleCells.forEach { cell in
+            if let shimmerHabitCell = cell as? ShimmerHabitAnalyticsCell {
+                shimmerHabitCell.scrollToCenter()
+                shimmerHabitCell.reloadData()
+            }
+        }
     }
     
     // MARK: - Methods
@@ -127,6 +136,7 @@ final class AnalyticsViewController: UIViewController {
         table.refreshControl = refreshControl
         table.alwaysBounceVertical = true
         table.register(HabitAnalyticsCell.self, forCellReuseIdentifier: HabitAnalyticsCell.reuseId)
+        table.register(ShimmerHabitAnalyticsCell.self, forCellReuseIdentifier: ShimmerHabitAnalyticsCell.reuseId)
         
         table.pinCenterX(to: view.safeAreaLayoutGuide.centerXAnchor)
         table.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.Table.leadingIndent)
@@ -164,6 +174,10 @@ extension AnalyticsViewController: UITableViewDataSource {
             return 0
             
         case 1:
+            if isHabitsLoaded == false {
+                return Constants.Table.numberOfShimmerCells
+            }
+            
             return interactor.habitsAnalytics.count
             
         default:
@@ -180,6 +194,16 @@ extension AnalyticsViewController: UITableViewDataSource {
             return UITableViewCell()
             
         case 1:
+            if isHabitsLoaded == false { // Если привычки не загружены - показываем шиммер
+                let cell = table.dequeueReusableCell(withIdentifier: ShimmerHabitAnalyticsCell.reuseId, for: indexPath)
+                guard let shimmerHabitAnalyticsCell = cell as? ShimmerHabitAnalyticsCell else { return cell }
+                shimmerHabitAnalyticsCell.selectionStyle = .none
+                
+                shimmerHabitAnalyticsCell.startShimmer()
+                
+                return shimmerHabitAnalyticsCell
+            }
+            
             let cell = table.dequeueReusableCell(withIdentifier: HabitAnalyticsCell.reuseId, for: indexPath)
             guard let habitAnalyticsCell = cell as? HabitAnalyticsCell else { return cell }
             habitAnalyticsCell.selectionStyle = .none

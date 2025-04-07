@@ -39,7 +39,6 @@ final class DateCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    /// Квадратная вью 36x36, cornerRadius = 14
     private let squareView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
