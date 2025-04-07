@@ -17,4 +17,5 @@ protocol AnalyticsBusinessLogic {
 
 protocol AnalyticsPresentationLogic {
     func presentHabits(_ response: AnalyticsModels.FetchAllHabitsAnalytics.Response)
+    func retryFetchHabits(_ response: AnalyticsModels.FetchAllHabitsAnalytics.Response)
 }

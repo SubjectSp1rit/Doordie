@@ -58,6 +58,7 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
                         
                     case .failure(let error):
                         print("Error while loading friends: \(error)")
+                        self?.presenter.retryFetachAllFriends(ProfileModels.FetchAllFriends.Response())
                     }
                 }
             }

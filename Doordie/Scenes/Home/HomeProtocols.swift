@@ -5,7 +5,6 @@
 //  Created by Arseniy on 27.12.2024.
 //
 
-import Foundation
 import UIKit
 
 protocol HabitsStorage {
@@ -22,6 +21,7 @@ protocol HomeBusinessLogic {
 
 protocol HomePresentationLogic {
     func presentHabits(_ response: HomeModels.FetchAllHabits.Response)
+    func retryFetchHabits(_ response: HomeModels.FetchAllHabits.Response)
     func routeToHabitExecutionScreen(_ response: HomeModels.RouteToHabitExecutionScreen.Response)
     func routeToAddHabitScreen(_ response: HomeModels.RouteToAddHabitScreen.Response)
     func routeToProfileScreen(_ response: HomeModels.RouteToProfileScreen.Response)

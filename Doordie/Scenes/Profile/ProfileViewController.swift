@@ -51,6 +51,10 @@ final class ProfileViewController: UIViewController {
             static let minimumInteritemSpacing: CGFloat = 0
         }
         
+        enum RefreshControl {
+            static let tintColor: UIColor = .systemGray
+        }
+        
         enum MenuSelectorTable {
             static let parts: [String] = ["Stats", "Friends"]
             static let bgColor: UIColor = .clear
@@ -80,6 +84,7 @@ final class ProfileViewController: UIViewController {
     private let nameLabel: UILabel = UILabel()
     private let menuSelectorTable: UICollectionView
     private let table: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Properties
     private var interactor: (ProfileBusinessLogic & FriendsStorage)
@@ -112,16 +117,20 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Methods
     func displayFetchedFriends(_ viewModel: ProfileModels.FetchAllFriends.ViewModel) {
+        refreshControl.endRefreshing()
         isFriendsLoaded = true
         DispatchQueue.main.async {
             self.table.reloadData()
         }
     }
     
+    func retryFetchAllFriends(_ viewModel: ProfileModels.FetchAllFriends.ViewModel) {
+        fetchAllFriends()
+    }
+    
     // MARK: - Private Methods
     private func fetchAllFriends() {
         isFriendsLoaded = false
-        table.reloadData()
         interactor.fetchAllFriends(ProfileModels.FetchAllFriends.Request())
     }
     
@@ -148,6 +157,7 @@ final class ProfileViewController: UIViewController {
         configureNameLabel()
         configureMenuSelectorTable()
         configureTable()
+        configureRefreshControl()
     }
     
     private func configureBackground() {
@@ -235,6 +245,7 @@ final class ProfileViewController: UIViewController {
         table.separatorStyle = Constants.Table.separatorStyle
         table.layer.masksToBounds = true
         table.alwaysBounceVertical = true
+        table.refreshControl = refreshControl
         table.register(FriendCell.self, forCellReuseIdentifier: FriendCell.reuseId)
         table.register(AddFriendCell.self, forCellReuseIdentifier: AddFriendCell.reuseId)
         table.register(ShimmerFriendCell.self, forCellReuseIdentifier: ShimmerFriendCell.reuseId)
@@ -243,6 +254,19 @@ final class ProfileViewController: UIViewController {
         table.pinLeft(to: wrap.leadingAnchor, Constants.Table.leadingIndent)
         table.pinTop(to: menuSelectorTable.bottomAnchor, Constants.Table.topIndent)
         table.pinBottom(to: wrap.bottomAnchor)
+    }
+    
+    private func configureRefreshControl() {
+        refreshControl.tintColor = Constants.RefreshControl.tintColor
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    // MARK: - Actions
+    @objc private func refreshData() {
+        isFriendsLoaded = false
+        table.reloadData()
+        refreshControl.endRefreshing()
+        fetchAllFriends()
     }
 }
 

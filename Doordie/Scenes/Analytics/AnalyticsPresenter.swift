@@ -14,6 +14,10 @@ final class AnalyticsPresenter: AnalyticsPresentationLogic {
     
     // MARK: - Methods
     func presentHabits(_ response: AnalyticsModels.FetchAllHabitsAnalytics.Response) {
-        view?.displayUpdatedHabits(HomeModels.FetchAllHabits.ViewModel())
+        view?.displayUpdatedHabits(AnalyticsModels.FetchAllHabitsAnalytics.ViewModel())
+    }
+    
+    func retryFetchHabits(_ response: AnalyticsModels.FetchAllHabitsAnalytics.Response) {
+        view?.retryFetchHabits(AnalyticsModels.FetchAllHabitsAnalytics.ViewModel())
     }
 }

@@ -55,6 +55,7 @@ final class AnalyticsInteractor: AnalyticsBusinessLogic, HabitsAnalyticsStorage 
                         
                     case .failure(let error):
                         print("Ошибка получения аналити по привычкам: \(error)")
+                        self?.presenter.retryFetchHabits(AnalyticsModels.FetchAllHabitsAnalytics.Response())
                     }
                 }
             }

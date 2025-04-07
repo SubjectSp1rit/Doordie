@@ -28,4 +28,8 @@ final class FriendsPresenter: FriendsPresentationLogic {
     func presentAllFriends(_ response: FriendsModels.FetchAllFriends.Response) {
         view?.displayFetchedFriends(FriendsModels.FetchAllFriends.ViewModel())
     }
+    
+    func retryFetchAllFriends(_ response: FriendsModels.FetchAllFriends.Response) {
+        view?.retryFetchAllFriends(FriendsModels.FetchAllFriends.ViewModel())
+    }
 }

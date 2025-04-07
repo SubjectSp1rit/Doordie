@@ -76,7 +76,7 @@ final class AnalyticsViewController: UIViewController {
     }
     
     // MARK: - Methods
-    func displayUpdatedHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
+    func displayUpdatedHabits(_ viewModel: AnalyticsModels.FetchAllHabitsAnalytics.ViewModel) {
         refreshControl.endRefreshing()
         isHabitsLoaded = true
         table.reloadData()
@@ -88,10 +88,13 @@ final class AnalyticsViewController: UIViewController {
         }
     }
     
+    func retryFetchHabits(_ viewModel: AnalyticsModels.FetchAllHabitsAnalytics.ViewModel) {
+        fetchAllHabits()
+    }
+    
     // MARK: - Private Methods
     private func fetchAllHabits() {
         isHabitsLoaded = false
-        table.reloadData()
         interactor.fetchAllHabits(AnalyticsModels.FetchAllHabitsAnalytics.Request())
     }
     

@@ -18,4 +18,5 @@ protocol FriendsPresentationLogic {
     func routeToFriendProfileScreen(_ response: FriendsModels.RouteToFriendProfileScreen.Response)
     func routeToAddFriendScreen(_ response: FriendsModels.RouteToAddFriendScreen.Response)
     func presentAllFriends(_ response: FriendsModels.FetchAllFriends.Response)
+    func retryFetchAllFriends(_ response: FriendsModels.FetchAllFriends.Response)
 }

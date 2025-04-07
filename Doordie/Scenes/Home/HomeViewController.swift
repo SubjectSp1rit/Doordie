@@ -135,10 +135,13 @@ final class HomeViewController: UIViewController {
         table.reloadData()
     }
     
+    func retryFetchHabits(_ viewModel: HomeModels.FetchAllHabits.ViewModel) {
+        fetchAllHabits()
+    }
+    
     // MARK: - Private Methods
     private func fetchAllHabits() {
         isHabitsLoaded = false
-        table.reloadData()
         interactor.fetchAllHabits(HomeModels.FetchAllHabits.Request())
     }
     

@@ -12,7 +12,6 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     private let presenter: HomePresentationLogic
     
     // MARK: - Properties
-    private var isLoading: Bool = false
     internal var habits: [HabitModel] = [] {
         didSet {
             presenter.presentHabits(HomeModels.FetchAllHabits.Response())
@@ -26,11 +25,7 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     
     // MARK: - Public Methods
     func fetchAllHabits(_ request: HomeModels.FetchAllHabits.Request) {
-        // Если данные уже загружаются - ничего не делаем
-        guard !isLoading else { return }
-        isLoading = true
-        
-        DispatchQueue.global().async { [weak self] in
+       DispatchQueue.global().async { [weak self] in
             guard let token = UserDefaultsManager.shared.authToken else { return }
             
             let dateFormatter = DateFormatter()
@@ -57,9 +52,8 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
                         
                     case .failure(let error):
                         print("Ошибка получения привычек: \(error)")
+                        self?.presenter.retryFetchHabits(HomeModels.FetchAllHabits.Response())
                     }
-                    
-                    self?.isLoading = false
                 }
             }
         }

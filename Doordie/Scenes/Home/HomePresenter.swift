@@ -17,6 +17,10 @@ final class HomePresenter: HomePresentationLogic {
         view?.displayUpdatedHabits(HomeModels.FetchAllHabits.ViewModel())
     }
     
+    func retryFetchHabits(_ response: HomeModels.FetchAllHabits.Response) {
+        view?.retryFetchHabits(HomeModels.FetchAllHabits.ViewModel())
+    }
+    
     func routeToHabitExecutionScreen(_ response: HomeModels.RouteToHabitExecutionScreen.Response) {
         let habitExecutionVC = HabitExecutionAssembly.build(habit: response.habit, onDismiss: response.onDismiss)
         let navController = UINavigationController(rootViewController: habitExecutionVC)

@@ -31,12 +31,17 @@ final class FriendsViewController: UIViewController {
             static let topIndent: CGFloat = 12
             static let numberOfShimmerFriendCells: Int = 10
         }
+        
+        enum RefreshControl {
+            static let tintColor: UIColor = .systemGray
+        }
     }
     
     // UI Components
     private let background: UIImageView = UIImageView()
     private let navBarCenteredTitle: UILabel = UILabel()
     private let friendTable: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Variables
     private var interactor: (FriendsBusinessLogic & FriendsStorage)
@@ -66,16 +71,20 @@ final class FriendsViewController: UIViewController {
     
     // MARK: - Methods
     func displayFetchedFriends(_ viewModel: FriendsModels.FetchAllFriends.ViewModel) {
+        refreshControl.endRefreshing()
         isFriendsLoaded = true
         DispatchQueue.main.async {
             self.friendTable.reloadData()
         }
     }
     
+    func retryFetchAllFriends(_ viewModel: FriendsModels.FetchAllFriends.ViewModel) {
+        fetchAllFriends()
+    }
+    
     // MARK: - Private Methods
     private func fetchAllFriends() {
         isFriendsLoaded = false
-        friendTable.reloadData()
         interactor.fetchAllFriends(FriendsModels.FetchAllFriends.Request())
     }
     
@@ -83,6 +92,7 @@ final class FriendsViewController: UIViewController {
         configureBackground()
         configureNavBar()
         configureFriendTable()
+        configureRefreshControl()
     }
     
     private func configureBackground() {
@@ -117,6 +127,7 @@ final class FriendsViewController: UIViewController {
         friendTable.separatorStyle = Constants.FriendTable.separatorStyle
         friendTable.layer.masksToBounds = true
         friendTable.alwaysBounceVertical = true
+        friendTable.refreshControl = refreshControl
         friendTable.register(FriendCell.self, forCellReuseIdentifier: FriendCell.reuseId)
         friendTable.register(AddFriendCell.self, forCellReuseIdentifier: AddFriendCell.reuseId)
         friendTable.register(ShimmerFriendCell.self, forCellReuseIdentifier: ShimmerFriendCell.reuseId)
@@ -125,6 +136,19 @@ final class FriendsViewController: UIViewController {
         friendTable.pinLeft(to: view.safeAreaLayoutGuide.leadingAnchor, Constants.FriendTable.leadingIndent)
         friendTable.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Constants.FriendTable.topIndent)
         friendTable.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor)
+    }
+    
+    private func configureRefreshControl() {
+        refreshControl.tintColor = Constants.RefreshControl.tintColor
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    // MARK: - Actions
+    @objc private func refreshData() {
+        isFriendsLoaded = false
+        friendTable.reloadData()
+        refreshControl.endRefreshing()
+        fetchAllFriends()
     }
 }
 

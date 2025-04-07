@@ -25,4 +25,8 @@ final class ProfilePresenter: ProfilePresentationLogic {
     func presentAllFriends(_ response: ProfileModels.FetchAllFriends.Response) {
         view?.displayFetchedFriends(ProfileModels.FetchAllFriends.ViewModel())
     }
+    
+    func retryFetachAllFriends(_ response: ProfileModels.FetchAllFriends.Response) {
+        view?.retryFetchAllFriends(ProfileModels.FetchAllFriends.ViewModel())
+    }
 }
