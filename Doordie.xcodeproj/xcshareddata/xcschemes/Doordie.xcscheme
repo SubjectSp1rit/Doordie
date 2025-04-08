@@ -41,6 +41,17 @@
                ReferencedContainer = "container:Doordie.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AECD38CA2DA52260003B7B24"
+               BuildableName = "DoordieUnitTests.xctest"
+               BlueprintName = "DoordieUnitTests"
+               ReferencedContainer = "container:Doordie.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
