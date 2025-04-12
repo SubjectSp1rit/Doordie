@@ -1,0 +1,43 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+xcuserdata/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# SwiftPM
+.build/
+Packages/
+.swiftpm/xcode/
+
+# User/IDE/Tooling Files
+*.DS_Store
+*.swp
+*.lock
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Carthage / CocoaPods / SwiftPM artifacts
+Carthage/
+Pods/
+*.xcframework
+*.xcarchive
+
+# Build artifacts
+*.o
+*.d
+*.so
+*.a
+*.exe
+*.out
+
+# Ignored except for docs
+!readme-assets/
+README.md
