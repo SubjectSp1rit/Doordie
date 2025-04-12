@@ -5,8 +5,8 @@
 </p>
 
 Проект построен на архитектурном паттерне <strong>SVIP (Simplified View Interactor Presenter)</strong>, адаптированном под iOS-приложения.
-Подробнее об этом подходе можно прочитать в статье на <a href="https://habr.com/ru/companies/wildberries/articles/798275/" target="_blank">Habr</a>.
-<p>Дизайн приложения: </p href="https://www.figma.com/design/nKdCb02c5DBx66UjQYCNoD/Doordie?node-id=0-1&t=gqPoeCU1PH40X5Xp-1" target="_blank"><a>Figma</a>
+Подробнее об этом подходе можно прочитать в статье на <a href="https://habr.com/ru/companies/wildberries/articles/798275/" target="_blank">Habr</a>. <br><br>
+Дизайн приложения: <a href="https://www.figma.com/design/nKdCb02c5DBx66UjQYCNoD/Doordie?node-id=0-1&t=gqPoeCU1PH40X5Xp-1" target="_blank">Figma</a> <br>
 
 <table align="center">
   <tr>
