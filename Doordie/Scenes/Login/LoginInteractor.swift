@@ -10,10 +10,12 @@ import UIKit
 final class LoginInteractor: LoginBusinessLogic {
     // MARK: - Constants
     private let presenter: LoginPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: LoginPresentationLogic) {
+    init(presenter: LoginPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -37,11 +39,9 @@ final class LoginInteractor: LoginBusinessLogic {
             
             let loginEndpoint = APIEndpoint(path: .API.login, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = User(email: request.email, name: nil, password: request.password)
             
-            apiService.send(endpoint: loginEndpoint, body: body, responseType: LoginModels.LoginResponse.self) { result in
+            self?.apiService.send(endpoint: loginEndpoint, body: body, responseType: LoginModels.LoginResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -75,11 +75,9 @@ final class LoginInteractor: LoginBusinessLogic {
             
             let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = LoginModels.Email(email: request.email)
             
-            apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
+            self?.apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

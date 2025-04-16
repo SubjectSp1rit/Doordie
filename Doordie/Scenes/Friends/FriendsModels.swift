@@ -37,11 +37,6 @@ enum FriendsModels {
         }
     }
     
-    struct FriendUser: Decodable {
-        var email: String?
-        var name: String?
-    }
-    
     struct Email: Encodable {
         var email: String
     }

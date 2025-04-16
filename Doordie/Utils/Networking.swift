@@ -42,13 +42,18 @@ protocol APIServiceProtocol {
         completion: @escaping (Result<T, Error>) -> Void)
 }
 
+/// Network layer for sending and receiving data over the network
+///
+/// This class is responsible for making network requests and handling responses.
 final class APIService: APIServiceProtocol {
     // MARK: - Constants
     private let baseURL: String
+    private let session: URLSession
     
     // MARK: - Lifecycle
-    init(baseURL: String) {
+    init(baseURL: String, session: URLSession = URLSession.shared) {
         self.baseURL = baseURL
+        self.session = session
     }
     
     // MARK: - Methods
@@ -132,13 +137,13 @@ final class APIService: APIServiceProtocol {
         responseType: T.Type,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
-            guard let data = data else {
+            guard let data = data, !data.isEmpty else {
                 completion(.failure(NetworkError.noData))
                 return
             }

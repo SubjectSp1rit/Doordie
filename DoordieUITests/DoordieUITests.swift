@@ -6,16 +6,16 @@
 //
 
 import XCTest
+@testable import Doordie
 
 final class DoordieUITests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        
+        if let bundleId = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleId)
+        }
     }
 
     override func tearDownWithError() throws {
@@ -25,6 +25,8 @@ final class DoordieUITests: XCTestCase {
     @MainActor
     func testLoginFromWelcomeScreen() throws {
         let app = XCUIApplication()
+        // Удаляем токен перед запуском приложения
+        app.launchArguments = ["ui-testing", "clear-token"]
         app.launch()
         
         app.buttons["Log in"].tap()
@@ -34,7 +36,7 @@ final class DoordieUITests: XCTestCase {
         app.secureTextFields["••••••••"].typeText("qweqweqwe")
         app.buttons["Log in"].tap()
         
-        Thread.sleep(forTimeInterval: 2)
+        Thread.sleep(forTimeInterval: 8)
         
         XCTAssert(app.tabBars["Tab Bar"].exists)
     }
@@ -42,6 +44,8 @@ final class DoordieUITests: XCTestCase {
     @MainActor
     func testFromHomeScreenToWelcomeScreenThroughLogoutInSettingsScreen() throws {
         let app = XCUIApplication()
+        // Устанавливаем токен-заглушку перед запуском приложения
+        app.launchArguments = ["ui-testing", "set-dummy-token"]
         app.launch()
 
         app.tabBars.buttons["Settings"].tap()

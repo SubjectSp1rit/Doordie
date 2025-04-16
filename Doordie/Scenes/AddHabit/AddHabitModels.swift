@@ -29,7 +29,7 @@ enum AddHabitModels {
         var detail: String?
     }
     
-    struct CreateHabitResponse: Decodable {
+    struct CreateHabitResponse: Codable {
         var detail: String?
     }
 }

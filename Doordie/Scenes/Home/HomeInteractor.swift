@@ -10,6 +10,7 @@ import UIKit
 final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     // MARK: - Constants
     private let presenter: HomePresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Properties
     internal var habits: [HabitModel] = [] {
@@ -19,8 +20,9 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
 
     // MARK: - Lifecycle
-    init(presenter: HomePresentationLogic) {
+    init(presenter: HomePresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Public Methods
@@ -40,9 +42,7 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
             
             let habitsEndpoint = APIEndpoint(path: .API.habits, method: .GET, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
-            apiService.get(endpoint: habitsEndpoint, responseType: [HabitModel].self) { result in
+           self?.apiService.get(endpoint: habitsEndpoint, responseType: [HabitModel].self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -60,7 +60,7 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
     }
     
     func updateHabitExecution(_ request: HomeModels.UpdateHabitExecution.Request) {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             guard let token = UserDefaultsManager.shared.authToken else { return }
             
             let dateFormatter = DateFormatter()
@@ -75,11 +75,9 @@ final class HomeInteractor: HomeBusinessLogic, HabitsStorage {
             
             let habitsEndpoint = APIEndpoint(path: .API.habitExecution, method: .PUT, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body: HabitModel = request.habit
             
-            apiService.send(endpoint: habitsEndpoint, body: body, responseType: HomeModels.UpdateHabitResponse.self) { result in
+            self?.apiService.send(endpoint: habitsEndpoint, body: body, responseType: HomeModels.UpdateHabitResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
