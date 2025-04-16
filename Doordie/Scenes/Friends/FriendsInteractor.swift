@@ -11,6 +11,7 @@ import UIKit
 final class FriendsInteractor: FriendsBusinessLogic, FriendsStorage {
     // MARK: - Constants
     private let presenter: FriendsPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Properties
     internal var friends: [FriendUser] = [] {
@@ -20,8 +21,9 @@ final class FriendsInteractor: FriendsBusinessLogic, FriendsStorage {
     }
     
     // MARK: - Lifecycle
-    init(presenter: FriendsPresentationLogic) {
+    init(presenter: FriendsPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -44,9 +46,7 @@ final class FriendsInteractor: FriendsBusinessLogic, FriendsStorage {
             
             let friendsEndpoint = APIEndpoint(path: .API.friends, method: .GET, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
-            apiService.get(endpoint: friendsEndpoint, responseType: ProfileModels.GetFriendsResponse.self) { result in
+            self?.apiService.get(endpoint: friendsEndpoint, responseType: FriendsModels.GetFriendsResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -67,7 +67,7 @@ final class FriendsInteractor: FriendsBusinessLogic, FriendsStorage {
     }
     
     func deleteFriend(_ request: FriendsModels.DeleteFriend.Request) {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             guard let token = UserDefaultsManager.shared.authToken else { return }
             
             let headers = [
@@ -77,11 +77,9 @@ final class FriendsInteractor: FriendsBusinessLogic, FriendsStorage {
             
             let friendsEndpoint = APIEndpoint(path: .API.friends, method: .DELETE, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = FriendsModels.Email(email: request.email)
             
-            apiService.send(endpoint: friendsEndpoint, body: body, responseType: FriendsModels.DeleteFriendResponse.self) { result in
+            self?.apiService.send(endpoint: friendsEndpoint, body: body, responseType: FriendsModels.DeleteFriendResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

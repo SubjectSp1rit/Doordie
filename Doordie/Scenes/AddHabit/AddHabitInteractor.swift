@@ -11,10 +11,12 @@ import UIKit
 final class AddHabitInteractor: AddHabitBusinessLogic {
     // MARK: - Constants
     private let presenter: AddHabitPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: AddHabitPresentationLogic) {
+    init(presenter: AddHabitPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -28,11 +30,9 @@ final class AddHabitInteractor: AddHabitBusinessLogic {
             
             let habitsEndpoint = APIEndpoint(path: .API.habits, method: .PUT, headers: headers)
             
-            let apiService = APIService(baseURL: .API.baseURL)
-            
             let body: HabitModel = request.habit
             
-            apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.UpdateHabitResponse.self) { result in
+            self?.apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.UpdateHabitResponse.self) { result in
                 switch result {
                     
                 case .success(let response):
@@ -57,11 +57,9 @@ final class AddHabitInteractor: AddHabitBusinessLogic {
             
             let habitsEndpoint = APIEndpoint(path: .API.habits, method: .POST, headers: headers)
             
-            let apiService = APIService(baseURL: .API.baseURL)
-            
             let body: HabitModel = request.habit
             
-            apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.CreateHabitResponse.self) { result in
+            self?.apiService.send(endpoint: habitsEndpoint, body: body, responseType: AddHabitModels.CreateHabitResponse.self) { result in
                 switch result {
                     
                 case .success(let response):

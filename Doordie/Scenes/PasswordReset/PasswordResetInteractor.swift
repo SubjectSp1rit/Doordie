@@ -10,10 +10,12 @@ import UIKit
 final class PasswordResetInteractor: PasswordResetBusinessLogic {
     // MARK: - Constants
     private let presenter: PasswordResetPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: PasswordResetPresentationLogic) {
+    init(presenter: PasswordResetPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -33,11 +35,9 @@ final class PasswordResetInteractor: PasswordResetBusinessLogic {
             
             let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = LoginModels.Email(email: request.email)
             
-            apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
+            self?.apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

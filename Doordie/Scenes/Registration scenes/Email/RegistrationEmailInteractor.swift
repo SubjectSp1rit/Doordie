@@ -17,10 +17,12 @@ final class RegistrationEmailInteractor: RegistrationEmailBusinessLogic {
     }
     
     private let presenter: RegistrationEmailPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: RegistrationEmailPresentationLogic) {
+    init(presenter: RegistrationEmailPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Public Methods
@@ -40,11 +42,9 @@ final class RegistrationEmailInteractor: RegistrationEmailBusinessLogic {
             
             let emailEndpoint = APIEndpoint(path: .API.emails, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = LoginModels.Email(email: request.email)
             
-            apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
+            self?.apiService.send(endpoint: emailEndpoint, body: body, responseType: LoginModels.IsEmailExists.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

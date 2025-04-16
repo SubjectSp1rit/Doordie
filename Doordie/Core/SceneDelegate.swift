@@ -13,6 +13,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        // Для проведения UI-тестов
+        if CommandLine.arguments.contains("ui-testing") {
+            if CommandLine.arguments.contains("clear-token") {
+                UserDefaultsManager.shared.clearAuthToken()
+            } else if CommandLine.arguments.contains("set-dummy-token") {
+                UserDefaultsManager.shared.authToken = "dummy-token"
+            }
+        }
+        
         // Если пользователь уже авторизован - показываем главный экран
         if UserDefaultsManager.shared.authToken != nil {
             let window = UIWindow(windowScene: windowScene)

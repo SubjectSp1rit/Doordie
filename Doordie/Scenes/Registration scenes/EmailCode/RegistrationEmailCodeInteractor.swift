@@ -18,10 +18,12 @@ final class RegistrationEmailCodeInteractor: RegistrationEmailCodeBusinessLogic 
     
     // MARK: - Constants
     private let presenter: RegistrationEmailCodePresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: RegistrationEmailCodePresentationLogic) {
+    init(presenter: RegistrationEmailCodePresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -30,7 +32,7 @@ final class RegistrationEmailCodeInteractor: RegistrationEmailCodeBusinessLogic 
     }
     
     func sendEmailMessage(_ request: RegistrationEmailCodeModels.SendEmailMessage.Request) {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             let code = (0..<4).map { _ in String(Int.random(in: 0...9)) }.joined()
             
             let headers = [
@@ -39,15 +41,13 @@ final class RegistrationEmailCodeInteractor: RegistrationEmailCodeBusinessLogic 
             
             let sendEmailEndpoint = APIEndpoint(path: .API.sendEmail, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = RegistrationEmailCodeModels.EmailMessageRequest(
                 email: request.email,
                 subject: Constants.EmailMessage.subject,
                 message: code + Constants.EmailMessage.message
             )
             
-            apiService.send(endpoint: sendEmailEndpoint, body: body, responseType: RegistrationEmailCodeModels.EmailMessageResponse.self) { result in
+            self?.apiService.send(endpoint: sendEmailEndpoint, body: body, responseType: RegistrationEmailCodeModels.EmailMessageResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
@@ -55,7 +55,7 @@ final class RegistrationEmailCodeInteractor: RegistrationEmailCodeBusinessLogic 
                         if let message = response.detail {
                             print(message)
                         }
-                        self.presenter.presentCode(RegistrationEmailCodeModels.SendEmailMessage.Response(code: code))
+                        self?.presenter.presentCode(RegistrationEmailCodeModels.SendEmailMessage.Response(code: code))
                         
                     case .failure(let error):
                         print("Ошибка проверки существования почты при авторизации: \(error)")

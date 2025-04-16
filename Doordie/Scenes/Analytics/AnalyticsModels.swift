@@ -15,12 +15,12 @@ enum AnalyticsModels {
         struct ViewModel { }
     }
     
-    struct AnalyticsResponse: Decodable {
+    struct AnalyticsResponse: Codable {
         var data: [HabitAnalytics]?
         var detail: String?
     }
     
-    struct HabitAnalytics: Decodable {
+    struct HabitAnalytics: Codable {
         var id: Int?
         var title: String?
         var color: String?
@@ -28,7 +28,7 @@ enum AnalyticsModels {
         var executions: [HabitExecution]
     }
     
-    struct HabitExecution: Decodable {
+    struct HabitExecution: Codable {
         var execution_date: String?
     }
 }

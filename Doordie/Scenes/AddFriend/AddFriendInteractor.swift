@@ -10,10 +10,12 @@ import UIKit
 final class AddFriendInteractor: AddFriendBusinessLogic {
     // MARK: - Constants
     private let presenter: AddFriendPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: AddFriendPresentationLogic) {
+    init(presenter: AddFriendPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -28,11 +30,9 @@ final class AddFriendInteractor: AddFriendBusinessLogic {
             
             let emailEndpoint = APIEndpoint(path: .API.friends, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = AddFriendModels.Email(email: request.email)
             
-            apiService.send(endpoint: emailEndpoint, body: body, responseType: AddFriendModels.AddFriendResponse.self) { result in
+            self?.apiService.send(endpoint: emailEndpoint, body: body, responseType: AddFriendModels.AddFriendResponse.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         

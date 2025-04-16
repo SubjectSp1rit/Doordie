@@ -10,6 +10,7 @@ import UIKit
 final class AnalyticsInteractor: AnalyticsBusinessLogic, HabitsAnalyticsStorage {
     // MARK: - Constants
     private let presenter: AnalyticsPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Properties
     internal var habitsAnalytics: [AnalyticsModels.HabitAnalytics] = [] {
@@ -19,8 +20,9 @@ final class AnalyticsInteractor: AnalyticsBusinessLogic, HabitsAnalyticsStorage 
     }
     
     // MARK: - Lifecycle
-    init(presenter: AnalyticsPresentationLogic) {
+    init(presenter: AnalyticsPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods

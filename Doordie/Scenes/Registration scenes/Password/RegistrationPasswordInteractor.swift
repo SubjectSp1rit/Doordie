@@ -10,10 +10,12 @@ import UIKit
 final class RegistrationPasswordInteractor: RegistrationPasswordBusinessLogic {
     // MARK: - Constants
     private let presenter: RegistrationPasswordPresentationLogic
+    private let apiService: APIServiceProtocol
     
     // MARK: - Lifecycle
-    init(presenter: RegistrationPasswordPresentationLogic) {
+    init(presenter: RegistrationPasswordPresentationLogic, apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)) {
         self.presenter = presenter
+        self.apiService = apiService
     }
     
     // MARK: - Methods
@@ -25,11 +27,9 @@ final class RegistrationPasswordInteractor: RegistrationPasswordBusinessLogic {
             
             let registerEndpoint = APIEndpoint(path: .API.register, method: .POST, headers: headers)
             
-            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
-            
             let body = User(email: request.email, name: request.name, password: request.password)
             
-            apiService.send(endpoint: registerEndpoint, body: body, responseType: Token.self) { result in
+            self?.apiService.send(endpoint: registerEndpoint, body: body, responseType: Token.self) { result in
                 DispatchQueue.main.async {
                     switch result {
                         
