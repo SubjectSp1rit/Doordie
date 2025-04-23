@@ -110,7 +110,7 @@ final class HabitPerformanceCell: UITableViewCell {
         collection.backgroundColor = .clear
         collection.showsHorizontalScrollIndicator = false
         collection.alwaysBounceHorizontal = true
-        collection.layer.masksToBounds = false
+        collection.layer.masksToBounds = true
         
         collection.register(AnalyticsCollectionViewCell.self, forCellWithReuseIdentifier: AnalyticsCollectionViewCell.reuseId)
         
@@ -119,7 +119,7 @@ final class HabitPerformanceCell: UITableViewCell {
     
     // MARK: - Properties
     private var dates: [DateModel] = DateManager.shared.getLastSevenDays()
-    private var habitData: [AnalyticsModels.HabitAnalytics] = []
+    private var habitData: [HabitAnalytics] = []
     private var barCounts: [Int] = []
     private var barHeights: [CGFloat] = []
     
@@ -138,7 +138,7 @@ final class HabitPerformanceCell: UITableViewCell {
     }
     
     // MARK: - Methods
-    func configure(with habits: [AnalyticsModels.HabitAnalytics]) {
+    func configure(with habits: [HabitAnalytics]) {
         self.habitData = habits
         computeBarData()
         analyticsCollectionView.reloadData()

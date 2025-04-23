@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
+final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage, HabitsAnalyticsStorage {
     // MARK: - Constants
     private let presenter: ProfilePresentationLogic
     private let apiService: APIServiceProtocol
@@ -16,6 +16,12 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
     internal var friends: [FriendUser] = [] {
         didSet {
             presenter.presentAllFriends(ProfileModels.FetchAllFriends.Response())
+        }
+    }
+    
+    internal var habitsAnalytics: [HabitAnalytics] = [] {
+        didSet {
+            presenter.presentHabits(ProfileModels.FetchAllHabitsAnalytics.Response())
         }
     }
     
@@ -59,6 +65,44 @@ final class ProfileInteractor: ProfileBusinessLogic, FriendsStorage {
                     case .failure(let error):
                         print("Error while loading friends: \(error)")
                         self?.presenter.retryFetachAllFriends(ProfileModels.FetchAllFriends.Response())
+                    }
+                }
+            }
+        }
+    }
+    
+    func fetchAllHabits(_ request: ProfileModels.FetchAllHabitsAnalytics.Request) {
+        DispatchQueue.global().async { [weak self] in
+            guard let token = UserDefaultsManager.shared.authToken else { return }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            let currentDate = dateFormatter.string(from: Date())
+            
+            let headers = [
+                "Content-Type": "application/json",
+                "Token": token,
+                "Date": currentDate
+            ]
+            
+            let habitsEndpoint = APIEndpoint(path: .API.habitAnalytics, method: .GET, headers: headers)
+            
+            let apiService: APIServiceProtocol = APIService(baseURL: .API.baseURL)
+            
+            apiService.get(endpoint: habitsEndpoint, responseType: ProfileModels.AnalyticsResponse.self) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                        
+                    case .success(let response):
+                        if let message = response.detail {
+                            print(message)
+                        }
+                        guard let habitsData = response.data else { return }
+                        self?.habitsAnalytics = habitsData
+                        
+                    case .failure(let error):
+                        print("Ошибка получения аналити по привычкам: \(error)")
+                        self?.presenter.retryFetchHabits(ProfileModels.FetchAllHabitsAnalytics.Response())
                     }
                 }
             }

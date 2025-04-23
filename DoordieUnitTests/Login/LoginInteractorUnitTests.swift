@@ -72,16 +72,16 @@ class LoginInteractorUnitTests: XCTestCase {
     
     /// Тест успешного входа пользователя:
     /// - эмулируем ответ API с флагом is_success = true, а также возвращаем token и name;
-    /// - проверяем, что presenter.presentLoginResult вызывается с isSuccess = true,
-    ///   а также что токен и имя сохраняются в UserDefaultsManager.
+    /// - проверяем, что presenter.presentLoginResult вызывается с isSuccess = true;
+    /// - проверяем, что токен и имя сохраняются в UserDefaultsManager.
     func testLoginUserSuccess() {
-        // Arrange:
+        // Arrange
         let dummyResponse = LoginModels.LoginResponse(token: "dummyToken", name: "John Doe", is_success: true)
         mockAPIService.sendResult = dummyResponse
         
         let expectation = self.expectation(description: "Ожидаем вызова presentLoginResult для успешного входа")
         
-        // Act:
+        // Act
         interactor.loginUser(LoginModels.LoginUser.Request(email: "test@example.com", password: "password123"))
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -92,7 +92,7 @@ class LoginInteractorUnitTests: XCTestCase {
         
         waitForExpectations(timeout: 2.0, handler: nil)
         
-        // Assert:
+        // Assert
         XCTAssertTrue(presenterSpy.loginResultCalled, "presentLoginResult должен быть вызван при успешном входе")
         XCTAssertEqual(presenterSpy.loginResultResponse?.isSuccess, true, "isSuccess должен быть true при корректном входе")
         XCTAssertEqual(UserDefaultsManager.shared.authToken, "dummyToken", "Токен должен быть сохранён")

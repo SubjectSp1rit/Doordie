@@ -8,7 +8,7 @@
 import UIKit
 
 protocol HabitsAnalyticsStorage {
-    var habitsAnalytics: [AnalyticsModels.HabitAnalytics] { get set }
+    var habitsAnalytics: [HabitAnalytics] { get set }
 }
 
 protocol AnalyticsBusinessLogic {

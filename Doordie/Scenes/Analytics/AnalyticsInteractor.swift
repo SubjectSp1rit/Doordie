@@ -13,7 +13,7 @@ final class AnalyticsInteractor: AnalyticsBusinessLogic, HabitsAnalyticsStorage 
     private let apiService: APIServiceProtocol
     
     // MARK: - Properties
-    internal var habitsAnalytics: [AnalyticsModels.HabitAnalytics] = [] {
+    internal var habitsAnalytics: [HabitAnalytics] = [] {
         didSet {
             presenter.presentHabits(AnalyticsModels.FetchAllHabitsAnalytics.Response())
         }

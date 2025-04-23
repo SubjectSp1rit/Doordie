@@ -22,6 +22,14 @@ final class ProfilePresenter: ProfilePresentationLogic {
         view?.navigationController?.pushViewController(friendProfileVC, animated: true)
     }
     
+    func presentHabits(_ response: ProfileModels.FetchAllHabitsAnalytics.Response) {
+        view?.displayUpdatedHabits(ProfileModels.FetchAllHabitsAnalytics.ViewModel())
+    }
+    
+    func retryFetchHabits(_ response: ProfileModels.FetchAllHabitsAnalytics.Response) {
+        view?.retryFetchHabits(ProfileModels.FetchAllHabitsAnalytics.ViewModel())
+    }
+    
     func presentAllFriends(_ response: ProfileModels.FetchAllFriends.Response) {
         view?.displayFetchedFriends(ProfileModels.FetchAllFriends.ViewModel())
     }
