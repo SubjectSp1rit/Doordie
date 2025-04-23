@@ -302,9 +302,11 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     @objc private func refreshData() {
         isFriendsLoaded = false
+        isHabitsLoaded = false
         table.reloadData()
         refreshControl.endRefreshing()
         fetchAllFriends()
+        fetchAllHabits()
     }
 }
 
