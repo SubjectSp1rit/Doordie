@@ -28,7 +28,7 @@ final class HomeInteractorUnitTests: XCTestCase {
     
     // MARK: - Tests
     func testPresenterCalledWhenHabitsSet() {
-        // Arrange: создаем dummy привычку
+        // Arrange
         let dummyHabit = HabitModel(
             id: 1,
             creationDate: Date(),
@@ -43,26 +43,26 @@ final class HomeInteractorUnitTests: XCTestCase {
             dayPart: "All day"
         )
         
-        // Act: устанавливаем полученные привычки – срабатывает didSet
+        // Act
         interactor.habits = [dummyHabit]
         
-        // Assert: проверяем, что у презентера вызван метод presentHabits
+        // Assert
         XCTAssertTrue(mockPresenter.presentHabitsCalled, "presentHabits должен быть вызван при установке привычек")
     }
     
     func testRetryFetchHabitsCalledOnError() {
-        // Arrange: готовим пустой response (симуляция ошибки)
+        // Arrange
         let response = HomeModels.FetchAllHabits.Response()
         
-        // Act: вызываем метод retryFetchHabits у мок-презентера
+        // Act
         mockPresenter.retryFetchHabits(response)
         
-        // Assert: убеждаемся, что метод вызван
+        // Assert
         XCTAssertTrue(mockPresenter.retryFetchHabitsCalled, "retryFetchHabits должен быть вызван при ошибке получения привычек")
     }
     
     func testRouteToHabitExecutionScreen() {
-        // Arrange: создаем dummy привычку и запрос на маршрут к экрану выполнения привычки
+        // Arrange
         let dummyHabit = HabitModel(
             id: 1,
             creationDate: Date(),
@@ -81,32 +81,32 @@ final class HomeInteractorUnitTests: XCTestCase {
             onDismiss: { }
         )
         
-        // Act: вызываем метод маршрутизации в интеракторе
+        // Act
         interactor.routeToHabitExecutionScreen(request)
         
-        // Assert: проверяем, что вызов был передан презентеру
+        // Assert
         XCTAssertTrue(mockPresenter.routeToHabitExecutionScreenCalled, "routeToHabitExecutionScreen должен вызывать соответствующий метод презентера")
     }
     
     func testRouteToAddHabitScreen() {
-        // Arrange: готовим запрос для маршрута на экран добавления привычки
+        // Arrange
         let request = HomeModels.RouteToAddHabitScreen.Request()
         
-        // Act: вызываем соответствующий метод маршрутизации
+        // Act
         interactor.routeToAddHabitScreen(request)
         
-        // Assert: проверяем вызов
+        // Assert
         XCTAssertTrue(mockPresenter.routeToAddHabitScreenCalled, "routeToAddHabitScreen должен вызывать соответствующий метод презентера")
     }
     
     func testRouteToProfileScreen() {
-        // Arrange: готовим запрос для перехода на экран профиля
+        // Arrange
         let request = HomeModels.RouteToProfileScreen.Request()
         
-        // Act: вызываем метод маршрутизации
+        // Act
         interactor.routeToProfileScreen(request)
         
-        // Assert: проверяем, что соответствующий метод презентера вызван
+        // Assert
         XCTAssertTrue(mockPresenter.routeToProfileScreenCalled, "routeToProfileScreen должен вызывать соответствующий метод презентера")
     }
 }

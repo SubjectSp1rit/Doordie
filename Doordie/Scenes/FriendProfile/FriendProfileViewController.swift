@@ -44,6 +44,19 @@ final class FriendProfileViewController: UIViewController {
             static let fontWeigth: UIFont.Weight = .semibold
             static let topIndent: CGFloat = 12
         }
+        
+        enum RefreshControl {
+            static let tintColor: UIColor = .systemGray
+        }
+        
+        enum Table {
+            static let bgColor: UIColor = .clear
+            static let separatorStyle: UITableViewCell.SeparatorStyle = .none
+            static let numberOfSections: Int = 1
+            static let numberOfRowsInSection: Int = 1
+            static let leadingIndent: CGFloat = 18
+            static let topIndent: CGFloat = 12
+        }
     }
     
     // MARK: - UI Components
@@ -51,14 +64,17 @@ final class FriendProfileViewController: UIViewController {
     private let wrap: UIView = UIView()
     private let profileImage: UIImageView = UIImageView()
     private let nameLabel: UILabel = UILabel()
+    private let table: UITableView = UITableView()
+    private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Properties
-    private var interactor: FriendProfileBusinessLogic
+    private var interactor: (FriendProfileBusinessLogic & HabitsAnalyticsStorage)
     private var email: String
     private var name: String
+    private var isHabitsLoaded: Bool = false
     
     // MARK: - Lifecycle
-    init(interactor: FriendProfileBusinessLogic, email: String, name: String) {
+    init(interactor: (FriendProfileBusinessLogic & HabitsAnalyticsStorage), email: String, name: String) {
         self.interactor = interactor
         self.email = email
         self.name = name
@@ -75,13 +91,46 @@ final class FriendProfileViewController: UIViewController {
         configureUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        fetchAllHabits()
+    }
+    
+    // MARK: - Methods
+    func displayUpdatedHabits(_ viewModel: FriendProfileModels.FetchAllHabitsAnalytics.ViewModel) {
+        refreshControl.endRefreshing()
+        isHabitsLoaded = true
+        table.reloadData()
+        table.visibleCells.forEach { cell in // Обновляем вложенную таблицу с датами
+            if let habitAnalyticsCell = cell as? HabitAnalyticsCell {
+                habitAnalyticsCell.reloadData()
+                habitAnalyticsCell.scrollToCenter()
+            }
+            if let habitPerformanceCell = cell as? HabitPerformanceCell {
+                habitPerformanceCell.scrollToCenter()
+            }
+        }
+    }
+    
+    func retryFetchHabits(_ viewModel: FriendProfileModels.FetchAllHabitsAnalytics.ViewModel) {
+        fetchAllHabits()
+    }
+    
     // MARK: - Private Methods
+    private func fetchAllHabits() {
+        isHabitsLoaded = false
+        interactor.fetchAllHabits(FriendProfileModels.FetchAllHabitsAnalytics.Request(email: email))
+    }
+    
     private func configureUI() {
         configureBackground()
         configureNavBar()
         configureWrap()
         configureProfileImage()
         configureNameLabel()
+        configureTable()
+        configureRefreshControl()
     }
     
     private func configureBackground() {
@@ -147,5 +196,65 @@ final class FriendProfileViewController: UIViewController {
         
         nameLabel.pinCenterX(to: wrap.centerXAnchor)
         nameLabel.pinTop(to: profileImage.bottomAnchor, Constants.NameLabel.topIndent)
+    }
+    
+    private func configureTable() {
+        view.addSubview(table)
+        
+        table.backgroundColor = Constants.Table.bgColor
+        table.delegate = self
+        table.dataSource = self
+        table.separatorStyle = Constants.Table.separatorStyle
+        table.layer.masksToBounds = false
+        table.alwaysBounceVertical = true
+        table.refreshControl = refreshControl
+        table.register(HabitPerformanceCell.self, forCellReuseIdentifier: HabitPerformanceCell.reuseId)
+        
+        table.pinCenterX(to: wrap.centerXAnchor)
+        table.pinLeft(to: wrap.leadingAnchor, Constants.Table.leadingIndent)
+        table.pinTop(to: nameLabel.bottomAnchor, Constants.Table.topIndent)
+        table.pinBottom(to: wrap.bottomAnchor)
+    }
+    
+    private func configureRefreshControl() {
+        refreshControl.tintColor = Constants.RefreshControl.tintColor
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    // MARK: - Actions
+    @objc private func refreshData() {
+        isHabitsLoaded = false
+        table.reloadData()
+        refreshControl.endRefreshing()
+        fetchAllHabits()
+    }
+}
+
+// MARK: - FriendProfileViewController
+extension FriendProfileViewController: UITableViewDelegate { }
+
+// MARK: - FriendProfileViewController
+extension FriendProfileViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return Constants.Table.numberOfRowsInSection
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let row = indexPath.row
+        
+        switch row {
+            
+        case 0:
+            let cell = table.dequeueReusableCell(withIdentifier: HabitPerformanceCell.reuseId, for: indexPath)
+            guard let habitPerformanceCell = cell as? HabitPerformanceCell else { return cell }
+            habitPerformanceCell.selectionStyle = .none
+            
+            habitPerformanceCell.configure(with: interactor.habitsAnalytics)
+            
+            return habitPerformanceCell
+            
+        default:
+            return UITableViewCell()
+        }
     }
 }

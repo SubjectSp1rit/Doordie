@@ -86,7 +86,7 @@ final class ShimmerHabitAnalyticsCell: UITableViewCell {
     
     // MARK: - Properties
     private var dates: [DateModel] = DateManager.shared.getLastSevenDays()
-    private var habitData: AnalyticsModels.HabitAnalytics?
+    private var habitData: HabitAnalytics?
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

@@ -118,7 +118,7 @@ final class HabitAnalyticsCell: UITableViewCell {
     
     // MARK: - Properties
     private var dates: [DateModel] = DateManager.shared.getLastSevenDays()
-    private var habitData: AnalyticsModels.HabitAnalytics?
+    private var habitData: HabitAnalytics?
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -141,7 +141,7 @@ final class HabitAnalyticsCell: UITableViewCell {
     }
     
     // MARK: - Methods
-    func configure(with data: AnalyticsModels.HabitAnalytics) {
+    func configure(with data: HabitAnalytics) {
         habitData = data
         guard let title = data.title else { return }
         guard let icon = data.icon else { return }

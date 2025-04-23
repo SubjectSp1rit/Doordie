@@ -46,4 +46,15 @@ enum ProfileModels {
     struct DeleteFriendResponse: Decodable {
         var detail: String?
     }
+    
+    enum FetchAllHabitsAnalytics {
+        struct Request { }
+        struct Response { }
+        struct ViewModel { }
+    }
+    
+    struct AnalyticsResponse: Codable {
+        var data: [HabitAnalytics]?
+        var detail: String?
+    }
 }

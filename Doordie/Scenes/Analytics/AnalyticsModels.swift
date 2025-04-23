@@ -19,17 +19,5 @@ enum AnalyticsModels {
         var data: [HabitAnalytics]?
         var detail: String?
     }
-    
-    struct HabitAnalytics: Codable {
-        var id: Int?
-        var title: String?
-        var color: String?
-        var icon: String?
-        var executions: [HabitExecution]
-    }
-    
-    struct HabitExecution: Codable {
-        var execution_date: String?
-    }
 }
 

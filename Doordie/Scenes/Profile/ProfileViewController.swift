@@ -79,6 +79,7 @@ final class ProfileViewController: UIViewController {
             static let leadingIndent: CGFloat = 18
             static let topIndent: CGFloat = 12
             static let numberOfShimmerFriendCells: Int = 10
+            static let numberOfStatsCells: Int = 1
         }
     }
     
@@ -92,13 +93,14 @@ final class ProfileViewController: UIViewController {
     private let refreshControl: UIRefreshControl = UIRefreshControl()
     
     // MARK: - Properties
-    private var interactor: (ProfileBusinessLogic & FriendsStorage)
+    private var interactor: (ProfileBusinessLogic & FriendsStorage & HabitsAnalyticsStorage)
     private var selectedIndexPath: IndexPath? = IndexPath(row: 0, section: 0)
     private var selectedDayPart: String = "Stats"
     private var isFriendsLoaded: Bool = false
+    private var isHabitsLoaded: Bool = false
     
     // MARK: - Lifecycle
-    init(interactor: (ProfileBusinessLogic & FriendsStorage)) {
+    init(interactor: (ProfileBusinessLogic & FriendsStorage & HabitsAnalyticsStorage)) {
         self.interactor = interactor
         self.menuSelectorTable = ProfileViewController.createCollectionView()
         super.init(nibName: nil, bundle: nil)
@@ -118,6 +120,7 @@ final class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         
         fetchAllFriends()
+        fetchAllHabits()
     }
     
     // MARK: - Methods
@@ -133,10 +136,34 @@ final class ProfileViewController: UIViewController {
         fetchAllFriends()
     }
     
+    func displayUpdatedHabits(_ viewModel: ProfileModels.FetchAllHabitsAnalytics.ViewModel) {
+        refreshControl.endRefreshing()
+        isHabitsLoaded = true
+        table.reloadData()
+        table.visibleCells.forEach { cell in // Обновляем вложенную таблицу с датами
+            if let habitAnalyticsCell = cell as? HabitAnalyticsCell {
+                habitAnalyticsCell.reloadData()
+                habitAnalyticsCell.scrollToCenter()
+            }
+            if let habitPerformanceCell = cell as? HabitPerformanceCell {
+                habitPerformanceCell.scrollToCenter()
+            }
+        }
+    }
+    
+    func retryFetchHabits(_ viewModel: ProfileModels.FetchAllHabitsAnalytics.ViewModel) {
+        fetchAllHabits()
+    }
+    
     // MARK: - Private Methods
     private func fetchAllFriends() {
         isFriendsLoaded = false
         interactor.fetchAllFriends(ProfileModels.FetchAllFriends.Request())
+    }
+    
+    private func fetchAllHabits() {
+        isHabitsLoaded = false
+        interactor.fetchAllHabits(ProfileModels.FetchAllHabitsAnalytics.Request())
     }
     
     private static func createCollectionView() -> UICollectionView {
@@ -253,12 +280,13 @@ final class ProfileViewController: UIViewController {
         table.delegate = self
         table.dataSource = self
         table.separatorStyle = Constants.Table.separatorStyle
-        table.layer.masksToBounds = true
+        table.layer.masksToBounds = false
         table.alwaysBounceVertical = true
         table.refreshControl = refreshControl
         table.register(FriendCell.self, forCellReuseIdentifier: FriendCell.reuseId)
         table.register(AddFriendCell.self, forCellReuseIdentifier: AddFriendCell.reuseId)
         table.register(ShimmerFriendCell.self, forCellReuseIdentifier: ShimmerFriendCell.reuseId)
+        table.register(HabitPerformanceCell.self, forCellReuseIdentifier: HabitPerformanceCell.reuseId)
         
         table.pinCenterX(to: wrap.centerXAnchor)
         table.pinLeft(to: wrap.leadingAnchor, Constants.Table.leadingIndent)
@@ -274,9 +302,11 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     @objc private func refreshData() {
         isFriendsLoaded = false
+        isHabitsLoaded = false
         table.reloadData()
         refreshControl.endRefreshing()
         fetchAllFriends()
+        fetchAllHabits()
     }
 }
 
@@ -289,7 +319,7 @@ extension ProfileViewController: UITableViewDataSource {
         switch selectedDayPart {
             
         case Constants.MenuSelectorTable.parts[0]: // Stats
-            return 0
+            return Constants.Table.numberOfStatsCells
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
             if isFriendsLoaded {
@@ -307,7 +337,21 @@ extension ProfileViewController: UITableViewDataSource {
         switch selectedDayPart {
             
         case Constants.MenuSelectorTable.parts[0]: // Stats
-            return UITableViewCell() // Пока ничего не возвращаем
+            let row = indexPath.row
+            
+            switch row {
+            case 0:
+                let cell = table.dequeueReusableCell(withIdentifier: HabitPerformanceCell.reuseId, for: indexPath)
+                guard let habitPerformanceCell = cell as? HabitPerformanceCell else { return cell }
+                habitPerformanceCell.selectionStyle = .none
+                
+                habitPerformanceCell.configure(with: interactor.habitsAnalytics)
+                
+                return habitPerformanceCell
+                
+            default:
+                return UITableViewCell()
+            }
             
         case Constants.MenuSelectorTable.parts[1]: // Friends
             if isFriendsLoaded == false { // Пока друзья не загружены, показываем шимер
